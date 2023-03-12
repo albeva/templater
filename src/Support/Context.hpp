@@ -13,21 +13,21 @@ public:
     }
 
     template <typename T, typename... Args>
-    T* create(Args&&... args)
+    [[nodiscard]] T* create(Args&&... args)
     {
         T* res = static_cast<T*>(allocate(sizeof(T), alignof(T)));
         return std::construct_at(res, std::forward<Args>(args)...);
     }
 
     template <typename T>
-    std::pmr::vector<T> vector()
+    [[nodiscard]] std::pmr::vector<T> vector()
     {
-        return std::pmr::vector<T>(m_ma);
+        return std::pmr::vector<T>(m_pa);
     }
 
 private:
     std::pmr::monotonic_buffer_resource m_mbr {};
-    std::pmr::polymorphic_allocator<std::byte> m_ma { &m_mbr };
+    std::pmr::polymorphic_allocator<std::byte> m_pa { &m_mbr };
 };
 
 } // namespace templater
