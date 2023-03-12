@@ -6,10 +6,13 @@
 #include "Ast.hpp"
 namespace templater::table::ast {
 
-#define VISIT(KIND)                                                                     \
-    if (node.getKind() == Kind::KIND) {                                                 \
-        return static_cast<Super*>(this)->visit(static_cast<KIND&>(node)); /* NOLINT */ \
+#define VISIT(KIND)                                                        \
+    if (node.getKind() == Kind::KIND) {                                    \
+        return static_cast<Super*>(this)->visit(static_cast<KIND&>(node)); \
     }
+
+// We know static casts here are safe.
+// NOLINTBEGIN cppcoreguidelines-pro-type-static-cast-downcast
 
 template <typename Super>
 struct Visitor {
@@ -33,6 +36,8 @@ struct Visitor {
         VISIT(TableBody)
     }
 };
+
+// NOLINTEND
 
 #undef VISIT
 

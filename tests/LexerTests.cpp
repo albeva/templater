@@ -1,10 +1,10 @@
 //
 // Created by Albert on 11/03/2023.
 //
-#include "Table/Lexer.hpp"
-#include "Table/Token.hpp"
 #include "Support/Source.hpp"
 #include "Support/SourceLoc.hpp"
+#include "Table/Lexer.hpp"
+#include "Table/Token.hpp"
 #include "gtest/gtest.h"
 
 // NOLINTBEGIN (cppcoreguidelines-avoid-non-const-global-variables,
@@ -18,12 +18,14 @@ using namespace templater::table;
 
 class LexerTests : public testing::Test {
 protected:
-    void load(std::string_view source) {
+    void load(std::string_view source)
+    {
         m_source = std::make_unique<Source>("unnamed", std::string(source));
         m_lexer = std::make_unique<Lexer>(*m_source);
     }
 
-    void expect(TokenKind kind, std::string_view lexeme = "", unsigned line = 0, unsigned col = 0, unsigned len = 0) {
+    void expect(TokenKind kind, std::string_view lexeme = "", unsigned line = 0, unsigned col = 0, unsigned len = 0)
+    {
         table::Token token;
         m_lexer->next(token);
         EXPECT_EQ(token.getKind(), kind);
@@ -54,14 +56,15 @@ private:
     std::unique_ptr<Source> m_source;
 };
 
-#define EXPECT_TOKEN(KIND, ...)             \
-    {                                       \
-        SCOPED_TRACE(#KIND); /* NOLINT */   \
+#define EXPECT_TOKEN(KIND, ...)      \
+    {                                \
+        SCOPED_TRACE(#KIND);         \
         expect(KIND, ##__VA_ARGS__); \
     }
 
-TEST_F(LexerTests, Empty) { // NOLINT
-    static constexpr std::array inputs{
+TEST_F(LexerTests, Empty)
+{
+    static constexpr std::array inputs {
         "",
         "   ",
         "\t\t",
@@ -77,33 +80,31 @@ TEST_F(LexerTests, Empty) { // NOLINT
     }
 }
 
-TEST_F(LexerTests, Invalid) { // NOLINT
-    static constexpr auto source =
-        "&|@\n"
-        "\"open string\n"
-        "\"open string"
-        ;
+TEST_F(LexerTests, Invalid)
+{
+    static constexpr auto source = "&|@\n"
+                                   "\"open string\n"
+                                   "\"open string";
     load(source);
 
-    EXPECT_TOKEN(TokenKind::Invalid,   "'&'. Did you mean '&&'?",  1, 1,  1)
-    EXPECT_TOKEN(TokenKind::Invalid,   "'|'. Did you mean '||'?",  1, 2,  1)
-    EXPECT_TOKEN(TokenKind::Invalid,   "@",                        1, 3,  1)
-    EXPECT_TOKEN(TokenKind::Invalid,   "end of line",              2, 13, 1)
-    EXPECT_TOKEN(TokenKind::Invalid,   "end of line",              3, 13, 0)
+    EXPECT_TOKEN(TokenKind::Invalid, "'&'. Did you mean '&&'?", 1, 1, 1)
+    EXPECT_TOKEN(TokenKind::Invalid, "'|'. Did you mean '||'?", 1, 2, 1)
+    EXPECT_TOKEN(TokenKind::Invalid, "@", 1, 3, 1)
+    EXPECT_TOKEN(TokenKind::Invalid, "end of line", 2, 13, 1)
+    EXPECT_TOKEN(TokenKind::Invalid, "end of line", 3, 13, 0)
 
-    EXPECT_TOKEN(TokenKind::EndOfFile, "",                         3, 13, 0)
+    EXPECT_TOKEN(TokenKind::EndOfFile, "", 3, 13, 0)
 }
 
-TEST_F(LexerTests, Stream) { // NOLINT
-    static constexpr auto source =
-        "one \"two\" three 42 = ( ) []\n"
-        "# comment should be ignored\n"
-        ".+== != &&|| !\n"
-        "table import as order by\n"
-        "Table iMport AS orderby\n"
-        "foo _ bar \n"
-        "__foo _bar"
-        ;
+TEST_F(LexerTests, Stream)
+{
+    static constexpr auto source = "one \"two\" three 42 = ( ) []\n"
+                                   "# comment should be ignored\n"
+                                   ".+== != &&|| !\n"
+                                   "table import as order by\n"
+                                   "Table iMport AS orderby\n"
+                                   "foo _ bar \n"
+                                   "__foo _bar";
     load(source);
 
     // clang-format off
