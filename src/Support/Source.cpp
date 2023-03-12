@@ -29,11 +29,12 @@ Source::Source(std::string name, std::string source)
 auto Source::getLineAndCol(SourceLoc loc) const -> Source::LineAndCol
 {
     verify(loc);
-    auto line = std::count(data(), loc.start, '\n');
-    auto start = std::find(std::make_reverse_iterator(loc.start), std::make_reverse_iterator(data()), '\n');
+
+    auto line = std::count(data(), loc.getStart(), '\n');
+    auto start = std::find(std::make_reverse_iterator(loc.getStart()), std::make_reverse_iterator(data()), '\n');
     return {
         .line = static_cast<unsigned>(line + 1),
-        .col = static_cast<unsigned>(std::distance(start.base(), loc.start) + 1)
+        .col = static_cast<unsigned>(std::distance(start.base(), loc.getStart()) + 1)
     };
 }
 
@@ -45,7 +46,7 @@ void Source::verify(const SourceLoc& loc) const
         return ptr < start || ptr > end();
     };
 
-    if (invalid(loc.start) || invalid(loc.end)) {
+    if (invalid(loc.getStart()) || invalid(loc.getEnd())) {
         throw SourceException("SourceLoc outside Source range");
     }
 }
@@ -63,7 +64,9 @@ auto Source::getString(std::size_t line) const -> std::string_view
             return --line == 1;
         });
         if (from == end()) {
-            throw SourceException(std::format("Line {} out of source range", line));
+            std::stringstream is;
+            is << "Line " << line << "out of Source range";
+            throw SourceException(is.str());
         }
         std::advance(from, 1);
     }
@@ -75,5 +78,5 @@ auto Source::getString(std::size_t line) const -> std::string_view
 auto Source::getString(SourceLoc loc) const -> std::string_view
 {
     verify(loc);
-    return { loc.start, loc.end };
+    return { loc.getStart(), loc.getEnd() };
 }

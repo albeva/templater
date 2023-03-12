@@ -9,7 +9,7 @@ using namespace templater::table::ast;
 
 void Printer::visit(StatementList& node)
 {
-    for (const auto& stmt : node.statements) {
+    for (const auto& stmt : node.getStatements()) {
         visit(*stmt);
         m_output << "\n";
     }
@@ -17,17 +17,17 @@ void Printer::visit(StatementList& node)
 
 void Printer::visit(Import& node)
 {
-    m_output << spaces() << "import \"" << node.file << "\" as " << node.identifier;
+    m_output << spaces() << "import \"" << node.getFile() << "\" as " << node.getIdentifier();
 }
 
 void Printer::visit(Table& node)
 {
     m_output << '\n'
-             << spaces() << "table " << node.identifier;
-    if (!node.columns.empty()) {
+             << spaces() << "table " << node.getIdentifier();
+    if (!node.getColumns().empty()) {
         m_output << "(";
         bool isFirst = true;
-        for (const auto& col : node.columns) {
+        for (const auto& col : node.getColumns()) {
             if (isFirst) {
                 isFirst = false;
             } else {
@@ -38,10 +38,10 @@ void Printer::visit(Table& node)
         m_output << ")";
     }
 
-    if (!node.content.empty()) {
+    if (!node.getContent().empty()) {
         m_output << " = ";
         bool isFirst = true;
-        for (const auto& content : node.content) {
+        for (const auto& content : node.getContent()) {
             if (isFirst) {
                 isFirst = false;
             } else {
@@ -54,8 +54,8 @@ void Printer::visit(Table& node)
 
 void Printer::visit(TableColumn& node)
 {
-    m_output << node.identifier;
-    if (auto* value = node.value) {
+    m_output << node.getIdentifier();
+    if (auto* value = node.getValue()) {
         m_output << " = ";
         visit(*value);
     }
@@ -63,8 +63,8 @@ void Printer::visit(TableColumn& node)
 
 void Printer::visit(TableInherit& node)
 {
-    visit(*node.member);
-    if (auto* expr = node.expression) {
+    visit(*node.getMember());
+    if (auto* expr = node.getExpression()) {
         m_output << "(";
         visit(*expr);
         m_output << ")";
@@ -75,7 +75,7 @@ void Printer::visit(TableBody& node)
 {
     m_output << "[";
     m_indent++;
-    for (const auto& row : node.rows) {
+    for (const auto& row : node.getRows()) {
         m_output << '\n'
                  << spaces();
         visit(*row);
@@ -88,7 +88,7 @@ void Printer::visit(TableBody& node)
 void Printer::visit(TableRow& node)
 {
     bool isFirst = true;
-    for (const auto& value : node.values) {
+    for (const auto& value : node.getValues()) {
         if (isFirst) {
             isFirst = false;
         } else {
@@ -102,18 +102,18 @@ void Printer::visit(TableValue& node)
 {
     std::visit(
         templater::Visitor {
-            [&](const Literal* node) {
-                if (node->type == TokenKind::String) {
-                    m_output << '"' << node->value << '"';
+            [&](const Literal* lit) {
+                if (lit->getType() == TokenKind::String) {
+                    m_output << '"' << lit->getValue() << '"';
                 } else {
-                    m_output << node->value;
+                    m_output << lit->getValue();
                 }
             },
-            [&](StructBody* node) {
-                visit(*node);
+            [&](StructBody* body) {
+                visit(*body);
             },
         },
-        node.value);
+        node.getValue());
 }
 
 void Printer::visit(StructBody& node)
@@ -124,33 +124,33 @@ void Printer::visit(StructBody& node)
 
 void Printer::visit(UnaryExpression& node)
 {
-    m_output << Token::describe(node.type) << '(';
-    visit(*node.rhs);
+    m_output << Token::describe(node.getType()) << '(';
+    visit(*node.getRhs());
     m_output << ')';
 }
 
 void Printer::visit(BinaryExpression& node)
 {
     m_output << '(';
-    visit(*node.lhs);
-    m_output << ' ' << Token::describe(node.type) << ' ';
-    visit(*node.rhs);
+    visit(*node.getLhs());
+    m_output << ' ' << Token::describe(node.getType()) << ' ';
+    visit(*node.getRhs());
     m_output << ')';
 }
 
 void Printer::visit(Literal& node)
 {
-    if (node.type == TokenKind::String) {
-        m_output << '"' << node.value << '"';
+    if (node.getType() == TokenKind::String) {
+        m_output << '"' << node.getValue() << '"';
     } else {
-        m_output << node.value;
+        m_output << node.getValue();
     }
 }
 
 void Printer::visit(Member& node)
 {
     bool isFirst = true;
-    for (const auto& id : node.identifiers) {
+    for (const auto& id : node.getIdentifiers()) {
         if (isFirst) {
             isFirst = false;
         } else {

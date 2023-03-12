@@ -8,29 +8,33 @@ namespace templater {
 
 struct SourceLoc final {
     SourceLoc()
-        : start { nullptr }
-        , end { nullptr }
+        : m_start { nullptr }
+        , m_end { nullptr }
     {
     }
 
     SourceLoc(const char* start, const char* end)
-        : start { start }
-        , end { end }
+        : m_start { start }
+        , m_end { end }
     {
     }
 
     SourceLoc(const SourceLoc& lhs, const SourceLoc& rhs)
-        : start { lhs.start }
-        , end { rhs.end }
+        : m_start { lhs.m_start }
+        , m_end { rhs.m_end }
     {
     }
+
+    [[nodiscard]] auto getStart() const { return m_start; }
+    [[nodiscard]] auto getEnd() const { return m_end; }
 
     [[nodiscard]] auto length() const -> unsigned
     {
-        return static_cast<unsigned>(std::distance(start, end));
+        return static_cast<unsigned>(std::distance(m_start, m_end));
     }
 
-    const char *start, *end;
+private:
+    const char *m_start, *m_end;
 };
 
 } // namespace templater

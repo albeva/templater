@@ -88,7 +88,7 @@ auto Parser::kwTable() -> ast::Table*
 
     expect(TokenKind::Assign);
     auto content = tableContentList();
-    auto end = content.back()->loc;
+    auto end = content.back()->getLoc();
 
     return m_ast.node<ast::Table>(loc(start, end), ident, std::move(columns), std::move(content));
 }
@@ -114,7 +114,7 @@ auto Parser::tableColumn() -> ast::TableColumn*
     if (accept(TokenKind::Assign)) {
         value = tableValue();
     }
-    auto end = value != nullptr ? value->loc : start;
+    auto end = value != nullptr ? value->getLoc() : start;
     return m_ast.node<ast::TableColumn>(loc(start, end), ident, value);
 }
 
@@ -157,7 +157,7 @@ auto Parser::tableInherit() -> ast::TableInherit*
         end = m_token.getLoc();
         expect(TokenKind::ParenClose);
     } else {
-        end = mber->loc;
+        end = mber->getLoc();
     }
 
     return m_ast.node<ast::TableInherit>(loc(start, end), mber, expr);
@@ -206,7 +206,7 @@ auto Parser::tableRow() -> ast::TableRow*
         values.push_back(tableValue());
     } while (m_token.isNot(TokenKind::EndOfLine, TokenKind::BracketClose));
 
-    auto end = values.back()->loc;
+    auto end = values.back()->getLoc();
 
     return m_ast.node<ast::TableRow>(loc(start, end), std::move(values));
 }
@@ -216,7 +216,7 @@ auto Parser::tableValue() -> ast::TableValue*
 {
     if (m_token.isValue()) {
         auto* val = literal();
-        return m_ast.node<ast::TableValue>(val->loc, val);
+        return m_ast.node<ast::TableValue>(val->getLoc(), val);
     }
 
     if (m_token.is(TokenKind::BraceOpen)) {
@@ -248,7 +248,7 @@ auto Parser::primary() -> ast::Expression*
         auto start = m_token.getLoc();
         next();
         auto* rhs = primary();
-        return m_ast.node<ast::UnaryExpression>(loc(start, rhs->loc), TokenKind::LogicalNot, rhs);
+        return m_ast.node<ast::UnaryExpression>(loc(start, rhs->getLoc()), TokenKind::LogicalNot, rhs);
     }
     case TokenKind::ParenOpen: {
         next();
@@ -274,7 +274,7 @@ auto Parser::expression(ast::Expression* lhs, int minPrec) -> ast::Expression*
             rhs = expression(rhs, m_token.getPrecedence());
         }
 
-        lhs = m_ast.node<ast::BinaryExpression>(loc(lhs->loc, rhs->loc), op, lhs, rhs);
+        lhs = m_ast.node<ast::BinaryExpression>(loc(lhs->getLoc(), rhs->getLoc()), op, lhs, rhs);
     }
     return lhs;
 }

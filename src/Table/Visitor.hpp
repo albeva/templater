@@ -7,7 +7,7 @@
 namespace templater::table::ast {
 
 #define VISIT(KIND)                                                                     \
-    if (node.kind == Kind::KIND) {                                                      \
+    if (node.getKind() == Kind::KIND) {                                                 \
         return static_cast<Super*>(this)->visit(static_cast<KIND&>(node)); /* NOLINT */ \
     }
 

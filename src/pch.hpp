@@ -7,7 +7,7 @@
 #include <cassert>
 #include <exception>
 #include <filesystem>
-#include <format>
+// #include <format>
 #include <iostream>
 #include <memory>
 #include <memory_resource>
@@ -17,6 +17,10 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
+
+#if defined(__GNUG__) && __has_include(<experimental/algorithm>)
+#include <experimental/algorithm>
+#endif
 
 namespace templater {
 using namespace std::literals;
