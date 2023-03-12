@@ -69,8 +69,8 @@ struct Expression : Root {
     using Root::Root;
 };
 
-struct StatementList final : Root {
-    explicit StatementList(SourceLoc loc, List<Statement> statements);
+struct Content final : Root {
+    explicit Content(SourceLoc loc, List<Statement> statements);
 
     [[nodiscard]] auto getStatements() const -> auto& { return m_statements; }
 

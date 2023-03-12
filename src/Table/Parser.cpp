@@ -18,7 +18,7 @@ Parser::Parser(Context* ctx, Lexer* lexer)
 }
 
 // { Statement }
-auto Parser::parse() -> ast::StatementList*
+auto Parser::parse() -> ast::Content*
 {
     auto start = m_token.getLoc();
 
@@ -32,7 +32,7 @@ auto Parser::parse() -> ast::StatementList*
 
     auto end = m_token.getLoc();
     expect(TokenKind::EndOfFile);
-    return m_ast.node<ast::StatementList>(makeLoc(start, end), std::move(stmtList));
+    return m_ast.node<ast::Content>(makeLoc(start, end), std::move(stmtList));
 }
 
 // ( Import | Table )

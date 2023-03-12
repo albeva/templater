@@ -7,7 +7,7 @@
 
 using namespace templater::table::ast;
 
-void Printer::visit(StatementList& node)
+void Printer::visit(Content& node)
 {
     for (const auto& stmt : node.getStatements()) {
         visit(*stmt);

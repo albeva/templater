@@ -6,7 +6,7 @@
 #include <utility>
 using namespace templater::table::ast;
 
-StatementList::StatementList(SourceLoc loc, List<Statement> statements)
+Content::Content(SourceLoc loc, List<Statement> statements)
     : Root { Kind::StatementList, loc }
     , m_statements { std::move(statements) }
 {

@@ -1,6 +1,7 @@
 (* grammar for lbc table files *)
-StatementList   = { Statement };
-Statement       = ( Import | Table ) "\n";
+Content         = [ Content ];
+Content   = Statement { "\n" Statement };
+Statement       = Import | Table;
 
 Import          = "import" STRING "as" IDENTIFIER;
 
@@ -35,12 +36,12 @@ TypeSpecifier   = "*" | "[]";
 Member          = IDENTIFIER { "." IDENTIFIER };
 Literal         = IDENTIFIER | NUMBER | STRING;
 
-(* basic *)
+(* Lex tokens *)
 IDENTIFIER      = ( "_" IDENTBODY { IDENTBODY } )
                 | ( LETTER { IDENTBODY } )
                 ;
 IDENTBODY       = DIGIT | LETTER | "_";
-NUMBER          = DIGIT, { DIGIT };
+NUMBER          = DIGIT { DIGIT };
 STRING          = '"' .*? '"';
 LETTER          = "A" | "B" | ... | "Z" | "a" | "b" | ... | "z";
 DIGIT           = "0" | "1" | ... | "9";

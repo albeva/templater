@@ -12,12 +12,12 @@ public:
 
     Printer() = default;
 
-    explicit Printer(StatementList& node)
+    explicit Printer(Content& node)
     {
         visit(node);
     }
 
-    void visit(StatementList& node);
+    void visit(Content& node);
     void visit(Import& node);
     void visit(Table& node);
     void visit(TableColumn& node);

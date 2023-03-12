@@ -21,7 +21,7 @@ public:
     ~Parser() = default;
     explicit Parser(Context* ctx, Lexer* lexer);
 
-    [[nodiscard]] auto parse() -> ast::StatementList*;
+    [[nodiscard]] auto parse() -> ast::Content*;
 
 private:
     auto statement() -> ast::Statement*;

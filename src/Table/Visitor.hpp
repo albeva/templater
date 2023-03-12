@@ -16,7 +16,6 @@ namespace templater::table::ast {
 
 template <typename Super>
 struct Visitor {
-
     void visit(Statement& node)
     {
         VISIT(Import)
@@ -40,5 +39,4 @@ struct Visitor {
 // NOLINTEND
 
 #undef VISIT
-
 } // namespace templater::table::ast
