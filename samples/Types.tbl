@@ -1,0 +1,26 @@
+#
+# Type tokens used by lbc compiler.
+#
+
+table Primitives(id string kind) = [
+    Bool    "BOOL"    Boolean
+    ZString "ZSTRING" ZString
+]
+
+table Integral(id string kind bits signed cpp) = [
+    Byte     "BYTE"     Integral 8   true   int8_t
+    UByte    "UBYTE"    Integral 8   false  uint8_t
+    Short    "SHORT"    Integral 16  true   int16_t
+    UShort   "USHORT"   Integral 16  false  uint16_t
+    Integer  "INTEGER"  Integral 32  true   int32_t
+    UInteger "UINTEGER" Integral 32  false  uint32_t
+    Long     "LONG"     Integral 64  true   int64_t
+    ULong    "ULONG"    Integral 64  false  uint64_t
+]
+
+table FloatingPoint(id string kind bits cpp) = [
+    Single "SINGLE" FloatingPoint 32 float
+    Double "DOUBLE" FloatingPoint 64 double
+]
+
+table All = Primitives + Integral + FloatingPoint

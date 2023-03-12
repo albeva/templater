@@ -1,0 +1,94 @@
+#
+# Tokens used by lbc compiler.
+#
+
+import "Types.tbl" as Types
+
+table General(id string) = [
+    Invalid    "Invalid"
+    EndOfFile  "End-Of-File"
+    EndOfStmt  "End-Of-Stmt"
+    Identifier "Identifier"
+]
+
+table Literals(id string) = [
+    StringLiteral        "String-Literal"
+    IntegerLiteral       "Integer-Literal"
+    FloatingPointLiteral "Floating-Point-Literal"
+    BooleanLiteral       "Boolean-Literal"
+    NullLiteral          "Null-Literal"
+]
+
+table Symbols(id string) = [
+    Comma      ","
+    ParenOpen  "("
+    ParenClose ")"
+    Ellipsis   "..."
+]
+
+# Some operators are treated as keywords
+table Operators(id string precedence type associativity class keyword = false) = [
+    # OOP
+    MemberAccess   "."   12 Binary Left Memory
+    # Pointers
+    AddressOf      "@"   11 Unary  Left Memory
+    Dereference    "*"   11 Unary  Left Memory
+    # Unary
+    Negate         "-"   10 Unary  Left Arithmetic
+    LogicalNot     "NOT" 10 Unary  Left Logical    true
+    # Binary
+    Multiply       "*"   9  Binary Left Arithmetic
+    Divide         "/"   9  Binary Left Arithmetic
+    Modulus        "MOD" 8  Binary Left Arithmetic true
+    Plus           "+"   7  Binary Left Arithmetic
+    Minus          "-"   7  Binary Left Arithmetic
+    # Comparison
+    Equal          "="   6  Binary Left Comparison
+    NotEqual       "<>"  6  Binary Left Comparison
+    LessThan       "<"   5  Binary Left Comparison
+    LessOrEqual    "<="  5  Binary Left Comparison
+    GreaterThan    ">"   5  Binary Left Comparison
+    GreaterOrEqual ">="  5  Binary Left Comparison
+    # Logical
+    LogicalAnd     "AND" 4  Binary Left Logical    true
+    LogicalOr      "OR"  3  Binary Left Logical    true
+    # Misc
+    Assign         "="   2  Binary Left Assignment
+    CommaAnd       ","   1  Binary Left Logical
+]
+
+# Include keyword operators in this set
+table Keywords(id string) = Operators(keyword == true) + Types.All + [
+    Any      "ANY"
+    As       "AS"
+    Continue "CONTINUE"
+    Declare  "DECLARE"
+    Dim      "DIM"
+    Do       "DO"
+    Else     "ELSE"
+    End      "END"
+    Exit     "EXIT"
+    Extern   "EXTERN"
+    False    "FALSE"
+    For      "FOR"
+    Function "FUNCTION"
+    If       "IF"
+    Import   "IMPORT"
+    Loop     "LOOP"
+    Next     "NEXT"
+    Null     "NULL"
+    Ptr      "PTR"
+    Return   "RETURN"
+    Step     "STEP"
+    Sub      "SUB"
+    Then     "THEN"
+    To       "TO"
+    True     "TRUE"
+    Type     "TYPE"
+    TypeOf   "TYPEOF"
+    Until    "UNTIL"
+    While    "WHILE"
+]
+
+# Combine all tokens avoid including keyword operators twice
+table All = General + Literals + Symbols + Operators + Keywords(keyword != true)

@@ -1,0 +1,9 @@
+#
+# Sample table
+#
+import "file" as A
+
+table Foo(id) = [
+    a
+    b
+]

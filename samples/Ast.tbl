@@ -1,0 +1,66 @@
+#
+# Ast nodes
+#
+
+table Root(id) = [
+    Root
+    Stmt
+    Expr
+    Decl
+]
+
+table Basic(id members = "") = [
+    Module struct {
+        unsigned      fileId
+        bool          hasImplicitMain
+        Stmt.Import[] imports
+        Stmt.StmtList stmtList
+        SymbolTable*  symbolTable = nullptr
+    }
+    ExprList
+    Attribute
+    AttributeList
+    FuncParamList
+    DeclList
+]
+
+table Stmt(id) = [
+    Import
+    StmtList
+    ExprStmt
+    FuncStmt
+    ReturnStmt
+    IfStmt
+    ForStmt
+    DoLoopStmt
+    ContinuationStmt
+]
+
+table Decl(id) = [
+    VarDecl
+    FuncDecl
+    FuncParamDecl
+    UdtDecl
+    TypeAlias
+]
+
+table Type(id) = [
+    TypeExpr
+    TypeOf
+]
+
+table Expr(id) = [
+    AssignExpr
+    IdentExpr
+    CallExpr
+    LiteralExpr
+    UnaryExpr
+    BinaryExpr
+    CastExpr
+    IfExpr
+    Dereference
+    AddressOf
+    MemberAccess
+]
+
+table Content = Basic + Stmt + Decl + Type + Expr
