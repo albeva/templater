@@ -6,16 +6,21 @@
 #include "Support/Source.hpp"
 #include "Support/SourceLoc.hpp"
 #include "gtest/gtest.h"
+
+// NOLINTBEGIN (cppcoreguidelines-avoid-non-const-global-variables,
+//              modernize-use-trailing-return-type,
+//              cppcoreguidelines-avoid-magic-numbers,
+//              cppcoreguidelines-owning-memory)
+
 namespace {
 using namespace templater;
 using namespace templater::table;
 
 class LexerTests : public testing::Test {
 protected:
-    Lexer& load(std::string_view source) {
+    void load(std::string_view source) {
         m_source = std::make_unique<Source>("unnamed", std::string(source));
         m_lexer = std::make_unique<Lexer>(*m_source);
-        return *m_lexer;
     }
 
     void expect(TokenKind kind, std::string_view lexeme = "", unsigned line = 0, unsigned col = 0, unsigned len = 0) {
@@ -151,5 +156,6 @@ TEST_F(LexerTests, Stream) { // NOLINT
 
     // clang-format on
 }
-
 }
+
+// NOLINTEND

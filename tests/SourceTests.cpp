@@ -1,14 +1,15 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cppcoreguidelines-avoid-non-const-global-variables"
-#pragma ide diagnostic ignored "modernize-use-trailing-return-type"
-#pragma ide diagnostic ignored "cppcoreguidelines-avoid-magic-numbers"
-#pragma ide diagnostic ignored "cppcoreguidelines-owning-memory"
 //
 // Created by Albert on 11/03/2023.
 //
 #include "Support/Source.hpp"
 #include "Support/SourceLoc.hpp"
 #include "gtest/gtest.h"
+
+// NOLINTBEGIN (cppcoreguidelines-avoid-non-const-global-variables,
+//              modernize-use-trailing-return-type,
+//              cppcoreguidelines-avoid-magic-numbers,
+//              cppcoreguidelines-owning-memory)
+
 namespace {
 using namespace templater;
 
@@ -74,4 +75,5 @@ TEST_F(SourceTests, GetLoc) {
     }
 }
 }
-#pragma clang diagnostic pop
+
+// NOLINTEND
