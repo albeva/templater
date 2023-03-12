@@ -19,7 +19,7 @@ add_library(
     Table/Token.hpp
     Table/Visitor.cpp
     Table/Visitor.hpp
-    Utils.hpp)
+    Utils.hpp Support/Context.cpp Support/Context.hpp Table/AstAllocator.hpp)
 
 target_link_libraries(templater_lib PRIVATE project_options project_warnings)
 target_precompile_headers(templater_lib PRIVATE pch.hpp)

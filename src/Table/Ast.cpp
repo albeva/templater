@@ -27,17 +27,17 @@ Table::Table(SourceLoc loc, std::string_view identifier, List<TableColumn> colum
 {
 }
 
-TableColumn::TableColumn(SourceLoc loc, std::string_view identifier, Node<TableValue> value)
+TableColumn::TableColumn(SourceLoc loc, std::string_view identifier, TableValue* value)
     : Root { Kind::TableColumn, loc }
     , identifier { identifier }
-    , value { std::move(value) }
+    , value { value }
 {
 }
 
-TableInherit::TableInherit(SourceLoc loc, Node<Member> member, Node<Expression> expression)
+TableInherit::TableInherit(SourceLoc loc, Member* member, Expression* expression)
     : TableContent { Kind::TableInherit, loc }
-    , member { std::move(member) }
-    , expression { std::move(expression) }
+    , member { member }
+    , expression { expression }
 {
 }
 
@@ -53,30 +53,30 @@ TableRow::TableRow(SourceLoc loc, List<TableValue> values)
 {
 }
 
-TableValue::TableValue(SourceLoc loc, Node<Literal> literal)
+TableValue::TableValue(SourceLoc loc, Literal* literal)
     : Expression { Kind::TableValue, loc }
-    , value { std::move(literal) }
+    , value { literal }
 {
 }
 
-TableValue::TableValue(SourceLoc loc, Node<StructBody> structBody)
+TableValue::TableValue(SourceLoc loc, StructBody* structBody)
     : Expression { Kind::TableValue, loc }
-    , value { std::move(structBody) }
+    , value { structBody }
 {
 }
 
-UnaryExpression::UnaryExpression(SourceLoc loc, TokenKind type, Node<Expression> rhs)
+UnaryExpression::UnaryExpression(SourceLoc loc, TokenKind type, Expression* rhs)
     : Expression { Kind::UnaryExpression, loc }
     , type { type }
-    , rhs { std::move(rhs) }
+    , rhs { rhs }
 {
 }
 
-BinaryExpression::BinaryExpression(SourceLoc loc, TokenKind type, Node<Expression> lhs, Node<Expression> rhs)
+BinaryExpression::BinaryExpression(SourceLoc loc, TokenKind type, Expression* lhs, Expression* rhs)
     : Expression { Kind::BinaryExpression, loc }
     , type { type }
-    , lhs { std::move(lhs) }
-    , rhs { std::move(rhs) }
+    , lhs { lhs }
+    , rhs { rhs }
 {
 }
 
@@ -87,7 +87,7 @@ Literal::Literal(SourceLoc loc, TokenKind type, std::string_view value)
 {
 }
 
-Member::Member(SourceLoc loc, std::vector<std::string_view> identifiers)
+Member::Member(SourceLoc loc, std::pmr::vector<std::string_view> identifiers)
     : Root { Kind::Member, loc }
     , identifiers { std::move(identifiers) }
 {

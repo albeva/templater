@@ -10,6 +10,7 @@
 #include <format>
 #include <iostream>
 #include <memory>
+#include <memory_resource>
 #include <ranges>
 #include <string>
 #include <string_view>

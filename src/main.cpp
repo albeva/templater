@@ -7,13 +7,15 @@
 #include "Table/Parser.hpp"
 #include "Table/Printer.hpp"
 using namespace templater;
+using namespace table;
 
 int main()
 {
     try {
         Source src { "../samples/tokens.tbl" };
-        table::Lexer lexer { src };
-        table::Parser parser { lexer };
+        Lexer lexer { src };
+        Context ctx {};
+        Parser parser { ctx, lexer };
         auto ast = parser.parse();
         table::ast::Printer().visit(*ast);
         return EXIT_SUCCESS;

@@ -4,21 +4,25 @@
 #include "Parser.hpp"
 #include "Ast.hpp"
 #include "Lexer.hpp"
+#include "Support/Context.hpp"
+
 using namespace templater;
 using namespace templater::table;
 
-Parser::Parser(Lexer& lexer)
-    : m_lexer { lexer }
+Parser::Parser(Context& ctx, Lexer& lexer)
+    : m_ctx { ctx }
+    , m_lexer { lexer }
+    , m_ast { m_ctx }
 {
     next();
 }
 
 // { Statement }
-ast::Node<ast::StatementList> Parser::parse()
+ast::StatementList* Parser::parse()
 {
     auto start = m_token.getLoc();
 
-    ast::List<ast::Statement> stmtList {};
+    auto stmtList = m_ast.list<ast::Statement>();
     while (m_token.isNot(TokenKind::EndOfFile)) {
         stmtList.push_back(statement());
         if (!accept(TokenKind::EndOfLine)) {
@@ -28,13 +32,13 @@ ast::Node<ast::StatementList> Parser::parse()
 
     auto end = m_token.getLoc();
     expect(TokenKind::EndOfFile);
-    return ast::make<ast::StatementList>(loc(start, end), std::move(stmtList));
+    return m_ast.node<ast::StatementList>(loc(start, end), std::move(stmtList));
 }
 
 // ( Import | Table )
-ast::Node<ast::Statement> Parser::statement()
+ast::Statement* Parser::statement()
 {
-    ast::Node<ast::Statement> stmt {};
+    ast::Statement* stmt {};
 
     switch (m_token.getKind()) {
     case TokenKind::KwImport:
@@ -51,7 +55,7 @@ ast::Node<ast::Statement> Parser::statement()
 }
 
 // "import" STRING "as" IDENTIFIER
-ast::Node<ast::Import> Parser::kwImport()
+ast::Import* Parser::kwImport()
 {
     auto start = m_token.getLoc();
     expect(TokenKind::KwImport);
@@ -61,7 +65,7 @@ ast::Node<ast::Import> Parser::kwImport()
     auto end = m_token.getLoc();
     auto ident = consume(TokenKind::Identifier);
 
-    return ast::make<ast::Import>(loc(start, end), import, ident);
+    return m_ast.node<ast::Import>(loc(start, end), import, ident);
 }
 
 //------------------------------------------------------------------------------
@@ -69,14 +73,14 @@ ast::Node<ast::Import> Parser::kwImport()
 //------------------------------------------------------------------------------
 
 // "table" IDENTIFIER [ "(" TableColumnList ")" ] [ "=" TableContentList ]
-ast::Node<ast::Table> Parser::kwTable()
+ast::Table* Parser::kwTable()
 {
     auto start = m_token.getLoc();
     expect(TokenKind::KwTable);
 
     auto ident = consume(TokenKind::Identifier);
 
-    ast::List<ast::TableColumn> columns {};
+    auto columns = m_ast.list<ast::TableColumn>();
     if (accept(TokenKind::ParenOpen)) {
         columns = tableColumnList();
         expect(TokenKind::ParenClose);
@@ -86,13 +90,13 @@ ast::Node<ast::Table> Parser::kwTable()
     auto content = tableContentList();
     auto end = content.back()->loc;
 
-    return ast::make<ast::Table>(loc(start, end), ident, std::move(columns), std::move(content));
+    return m_ast.node<ast::Table>(loc(start, end), ident, std::move(columns), std::move(content));
 }
 
 // TableColumn { "," TableColumn }
 ast::List<ast::TableColumn> Parser::tableColumnList()
 {
-    ast::List<ast::TableColumn> columns {};
+    auto columns = m_ast.list<ast::TableColumn>();
 
     do {
         columns.push_back(tableColumn());
@@ -102,22 +106,22 @@ ast::List<ast::TableColumn> Parser::tableColumnList()
 }
 
 // IDENTIFIER [ "=" TableValue ]
-ast::Node<ast::TableColumn> Parser::tableColumn()
+ast::TableColumn* Parser::tableColumn()
 {
     auto start = m_token.getLoc();
     auto ident = consume(TokenKind::Identifier);
-    ast::Node<ast::TableValue> value;
+    ast::TableValue* value {};
     if (accept(TokenKind::Assign)) {
         value = tableValue();
     }
-    auto end = value ? value->loc : start;
-    return ast::make<ast::TableColumn>(loc(start, end), ident, std::move(value));
+    auto end = value != nullptr ? value->loc : start;
+    return m_ast.node<ast::TableColumn>(loc(start, end), ident, value);
 }
 
 // TableContent { "+" TableContent }
 ast::List<ast::TableContent> Parser::tableContentList()
 {
-    ast::List<ast::TableContent> content;
+    auto content = m_ast.list<ast::TableContent>();
 
     do {
         content.push_back(tableContent());
@@ -127,7 +131,7 @@ ast::List<ast::TableContent> Parser::tableContentList()
 }
 
 // TableInherit | TableBody
-ast::Node<ast::TableContent> Parser::tableContent()
+ast::TableContent* Parser::tableContent()
 {
     if (m_token.is(TokenKind::Identifier)) {
         return tableInherit();
@@ -141,13 +145,13 @@ ast::Node<ast::TableContent> Parser::tableContent()
 }
 
 // Member [ "(" Expression ")" ]
-ast::Node<ast::TableInherit> Parser::tableInherit()
+ast::TableInherit* Parser::tableInherit()
 {
     auto start = m_token.getLoc();
     SourceLoc end {};
-    auto mber = member();
+    auto* mber = member();
 
-    ast::Node<ast::Expression> expr {};
+    ast::Expression* expr {};
     if (accept(TokenKind::ParenOpen)) {
         expr = expression();
         end = m_token.getLoc();
@@ -156,17 +160,17 @@ ast::Node<ast::TableInherit> Parser::tableInherit()
         end = mber->loc;
     }
 
-    return ast::make<ast::TableInherit>(loc(start, end), std::move(mber), std::move(expr));
+    return m_ast.node<ast::TableInherit>(loc(start, end), mber, expr);
 }
 
 // "[" [ TableRowList ] "]"
-ast::Node<ast::TableBody> Parser::tableBody()
+ast::TableBody* Parser::tableBody()
 {
     auto start = m_token.getLoc();
     expect(TokenKind::BracketOpen);
     accept(TokenKind::EndOfLine);
 
-    ast::List<ast::TableRow> rows {};
+    auto rows = m_ast.list<ast::TableRow>();
     if (m_token.isNot(TokenKind::BracketClose)) {
         rows = tableRowList();
     }
@@ -174,13 +178,13 @@ ast::Node<ast::TableBody> Parser::tableBody()
     auto end = m_token.getLoc();
     expect(TokenKind::BracketClose);
 
-    return ast::make<ast::TableBody>(loc(start, end), std::move(rows));
+    return m_ast.node<ast::TableBody>(loc(start, end), std::move(rows));
 }
 
 // TableRow { "\n" TableRow }
 ast::List<ast::TableRow> Parser::tableRowList()
 {
-    ast::List<ast::TableRow> rows;
+    auto rows = m_ast.list<ast::TableRow>();
 
     do {
         rows.push_back(tableRow());
@@ -193,10 +197,10 @@ ast::List<ast::TableRow> Parser::tableRowList()
 }
 
 // TableValue { "," TableValue }
-ast::Node<ast::TableRow> Parser::tableRow()
+ast::TableRow* Parser::tableRow()
 {
     auto start = m_token.getLoc();
-    ast::List<ast::TableValue> values {};
+    auto values = m_ast.list<ast::TableValue>();
 
     do {
         values.push_back(tableValue());
@@ -204,15 +208,15 @@ ast::Node<ast::TableRow> Parser::tableRow()
 
     auto end = values.back()->loc;
 
-    return ast::make<ast::TableRow>(loc(start, end), std::move(values));
+    return m_ast.node<ast::TableRow>(loc(start, end), std::move(values));
 }
 
 // Literal | StructBody
-ast::Node<ast::TableValue> Parser::tableValue()
+ast::TableValue* Parser::tableValue()
 {
     if (m_token.isValue()) {
-        auto val = literal();
-        return ast::make<ast::TableValue>(val->loc, std::move(val));
+        auto* val = literal();
+        return m_ast.node<ast::TableValue>(val->loc, val);
     } else if (m_token.is(TokenKind::BraceOpen)) {
         unexpected("structs not yet implemented");
     }
@@ -227,24 +231,24 @@ ast::Node<ast::TableValue> Parser::tableValue()
 //------------------------------------------------------------------------------
 
 // Primary { BinaryOperator Primary }
-ast::Node<ast::Expression> Parser::expression()
+ast::Expression* Parser::expression()
 {
     return expression(primary(), 1);
 }
 
 // ( UnaryOperator Primary ) | ( "(" expression ")" ) | TableValue
-ast::Node<ast::Expression> Parser::primary()
+ast::Expression* Parser::primary()
 {
     switch (m_token.getKind()) {
     case TokenKind::LogicalNot: {
         auto start = m_token.getLoc();
         next();
-        auto rhs = primary();
-        return ast::make<ast::UnaryExpression>(loc(start, rhs->loc), TokenKind::LogicalNot, std::move(rhs));
+        auto* rhs = primary();
+        return m_ast.node<ast::UnaryExpression>(loc(start, rhs->loc), TokenKind::LogicalNot, rhs);
     }
     case TokenKind::ParenOpen: {
         next();
-        auto expr = expression();
+        auto* expr = expression();
         expect(TokenKind::ParenClose);
         return expr;
     }
@@ -253,23 +257,19 @@ ast::Node<ast::Expression> Parser::primary()
     }
 }
 
-ast::Node<ast::Expression> Parser::expression(ast::Node<ast::Expression> lhs, int minPrec)
+ast::Expression* Parser::expression(ast::Expression* lhs, int minPrec)
 {
     while (m_token.getPrecedence() >= minPrec) {
         auto op = m_token.getKind();
         auto prec = m_token.getPrecedence();
         next();
-        auto rhs = primary();
+        auto* rhs = primary();
 
         while (m_token.getPrecedence() > prec) { // cppcheck-suppress knownConditionTrueFalse
-            rhs = expression(std::move(rhs), m_token.getPrecedence());
+            rhs = expression(rhs, m_token.getPrecedence());
         }
 
-        lhs = ast::make<ast::BinaryExpression>(
-            loc(lhs->loc, rhs->loc),
-            op,
-            std::move(lhs),
-            std::move(rhs));
+        lhs = m_ast.node<ast::BinaryExpression>(loc(lhs->loc, rhs->loc), op, lhs, rhs);
     }
     return lhs;
 }
@@ -279,22 +279,22 @@ ast::Node<ast::Expression> Parser::expression(ast::Node<ast::Expression> lhs, in
 //------------------------------------------------------------------------------
 
 // IDENTIFIER { "." IDENTIFIER };
-ast::Node<ast::Member> Parser::member()
+ast::Member* Parser::member()
 {
     auto start = m_token.getLoc();
     SourceLoc end {};
-    std::vector<std::string_view> members {};
+    auto members = m_ctx.vector<std::string_view>();
 
     do {
         end = m_token.getLoc();
         members.push_back(consume(TokenKind::Identifier));
     } while (accept(TokenKind::Period));
 
-    return ast::make<ast::Member>(loc(start, end), std::move(members));
+    return m_ast.node<ast::Member>(loc(start, end), std::move(members));
 }
 
 // IDENTIFIER | NUMBER | STRING;
-ast::Node<ast::Literal> Parser::literal()
+ast::Literal* Parser::literal()
 {
     if (!m_token.isValue()) {
         unexpected("Expected a value");
@@ -303,7 +303,7 @@ ast::Node<ast::Literal> Parser::literal()
     auto value = m_token.getValue();
     auto loc = m_token.getLoc();
     next();
-    return ast::make<ast::Literal>(loc, type, value);
+    return m_ast.node<ast::Literal>(loc, type, value);
 }
 
 //------------------------------------------------------------------------------

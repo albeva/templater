@@ -3,16 +3,17 @@
 //
 #pragma once
 #include "pch.hpp"
+#include "Support/Context.hpp"
 #include "Support/SourceLoc.hpp"
 
 namespace templater::table {
-enum class TokenKind;
+enum class TokenKind : uint8_t;
 }
 
 namespace templater::table::ast {
 
 // Ast kinds
-enum class Kind {
+enum class Kind : uint8_t {
     StatementList,
     Import,
     Table,
@@ -31,16 +32,7 @@ enum class Kind {
 // Helpers to avoid long type names
 
 template <typename T>
-using Node = std::unique_ptr<T>;
-
-template <typename T>
-using List = std::vector<Node<T>>;
-
-template <class T, class... Args>
-inline Node<T> make(Args&&... args)
-{
-    return std::make_unique<T>(std::forward<Args>(args)...);
-}
+using List = std::pmr::vector<T*>;
 
 // Forward
 
@@ -98,10 +90,10 @@ struct Table final : Statement {
 };
 
 struct TableColumn final : Root {
-    TableColumn(SourceLoc loc, std::string_view identifier, Node<TableValue> value);
+    TableColumn(SourceLoc loc, std::string_view identifier, TableValue* value);
 
     std::string_view identifier;
-    Node<TableValue> value;
+    TableValue* value;
 };
 
 struct TableContent : Root {
@@ -109,10 +101,10 @@ struct TableContent : Root {
 };
 
 struct TableInherit final : TableContent {
-    TableInherit(SourceLoc loc, Node<Member> member, Node<Expression> expression);
+    TableInherit(SourceLoc loc, Member* member, Expression* expression);
 
-    Node<Member> member;
-    Node<Expression> expression;
+    Member* member;
+    Expression* expression;
 };
 
 struct TableBody final : TableContent {
@@ -128,10 +120,10 @@ struct TableRow final : Root {
 };
 
 struct TableValue final : Expression {
-    explicit TableValue(SourceLoc loc, Node<Literal> literal);
-    explicit TableValue(SourceLoc loc, Node<StructBody> literal);
+    explicit TableValue(SourceLoc loc, Literal* literal);
+    explicit TableValue(SourceLoc loc, StructBody* literal);
 
-    using Value = std::variant<Node<Literal>, Node<StructBody>>;
+    using Value = std::variant<Literal*, StructBody*>;
     Value value;
 };
 
@@ -147,17 +139,17 @@ struct StructBody final : Root {
 // Expressions
 
 struct UnaryExpression final : Expression {
-    UnaryExpression(SourceLoc loc, TokenKind type, Node<Expression> rhs);
+    UnaryExpression(SourceLoc loc, TokenKind type, Expression* rhs);
 
     TokenKind type;
-    Node<Expression> rhs;
+    Expression* rhs;
 };
 
 struct BinaryExpression final : Expression {
-    BinaryExpression(SourceLoc loc, TokenKind type, Node<Expression> lhs, Node<Expression> rhs);
+    BinaryExpression(SourceLoc loc, TokenKind type, Expression* lhs, Expression* rhs);
 
     TokenKind type;
-    Node<Expression> lhs, rhs;
+    Expression *lhs, *rhs;
 };
 
 // Misc
@@ -170,9 +162,9 @@ struct Literal final : Root {
 };
 
 struct Member final : Root {
-    explicit Member(SourceLoc loc, std::vector<std::string_view> identifiers);
+    explicit Member(SourceLoc loc, std::pmr::vector<std::string_view> identifiers);
 
-    std::vector<std::string_view> identifiers;
+    std::pmr::vector<std::string_view> identifiers;
 };
 
 } // namespace templater::table::ast

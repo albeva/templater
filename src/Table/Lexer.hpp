@@ -11,7 +11,7 @@ struct SourceLoc;
 
 namespace templater::table {
 class Token;
-enum class TokenKind;
+enum class TokenKind : uint8_t;
 
 class LexerException final : public std::runtime_error {
     using std::runtime_error::runtime_error;

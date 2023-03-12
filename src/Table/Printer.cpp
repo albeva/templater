@@ -55,7 +55,7 @@ void Printer::visit(Table& node)
 void Printer::visit(TableColumn& node)
 {
     std::cout << node.identifier;
-    if (auto* value = node.value.get()) {
+    if (auto* value = node.value) {
         std::cout << " = ";
         visit(*value);
     }
@@ -64,7 +64,7 @@ void Printer::visit(TableColumn& node)
 void Printer::visit(TableInherit& node)
 {
     visit(*node.member);
-    if (auto* expr = node.expression.get()) {
+    if (auto* expr = node.expression) {
         std::cout << "(";
         visit(*expr);
         std::cout << ")";
@@ -102,14 +102,14 @@ void Printer::visit(TableValue& node)
 {
     std::visit(
         templater::Visitor {
-            [](const Node<Literal>& node) {
+            [](const Literal* node) {
                 if (node->type == TokenKind::String) {
                     std::cout << '"' << node->value << '"';
                 } else {
                     std::cout << node->value;
                 }
             },
-            [&](const Node<StructBody>& node) {
+            [&](StructBody* node) {
                 visit(*node);
             },
         },

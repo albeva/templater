@@ -4,6 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "Ast.hpp"
+#include "AstAllocator.hpp"
 #include "Support/Source.hpp"
 #include "Token.hpp"
 
@@ -18,31 +19,31 @@ class Parser final {
 public:
     NO_COPY_AND_MOVE(Parser)
     ~Parser() = default;
-    explicit Parser(Lexer& lexer);
+    explicit Parser(Context&, Lexer& lexer);
 
-    [[nodiscard]] ast::Node<ast::StatementList> parse();
+    [[nodiscard]] ast::StatementList* parse();
 
 private:
-    ast::Node<ast::Statement> statement();
-    ast::Node<ast::Import> kwImport();
+    ast::Statement* statement();
+    ast::Import* kwImport();
 
-    ast::Node<ast::Table> kwTable();
+    ast::Table* kwTable();
     ast::List<ast::TableColumn> tableColumnList();
-    ast::Node<ast::TableColumn> tableColumn();
+    ast::TableColumn* tableColumn();
     ast::List<ast::TableContent> tableContentList();
-    ast::Node<ast::TableContent> tableContent();
-    ast::Node<ast::TableInherit> tableInherit();
-    ast::Node<ast::TableBody> tableBody();
+    ast::TableContent* tableContent();
+    ast::TableInherit* tableInherit();
+    ast::TableBody* tableBody();
     ast::List<ast::TableRow> tableRowList();
-    ast::Node<ast::TableRow> tableRow();
-    ast::Node<ast::TableValue> tableValue();
+    ast::TableRow* tableRow();
+    ast::TableValue* tableValue();
 
-    ast::Node<ast::Expression> expression();
-    ast::Node<ast::Expression> primary();
-    ast::Node<ast::Expression> expression(ast::Node<ast::Expression> lhs, int prec);
+    ast::Expression* expression();
+    ast::Expression* primary();
+    ast::Expression* expression(ast::Expression* lhs, int prec);
 
-    ast::Node<ast::Member> member();
-    ast::Node<ast::Literal> literal();
+    ast::Member* member();
+    ast::Literal* literal();
 
     bool accept(TokenKind kind);
     void expect(TokenKind kind);
@@ -52,7 +53,9 @@ private:
 
     [[noreturn]] void unexpected(const std::string& message);
 
+    Context& m_ctx;
     Lexer& m_lexer;
+    ast::AstAllocator m_ast;
     Token m_token {};
 };
 

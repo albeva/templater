@@ -7,7 +7,7 @@
 
 namespace templater::table {
 
-enum class TokenKind {
+enum class TokenKind : uint8_t {
     Invalid,
     EndOfFile,
     EndOfLine,
