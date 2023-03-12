@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-# Cmake complains about policy if this is not set
+# Use new policy for downloads
 if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
     set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
@@ -38,7 +38,7 @@ project(
     LANGUAGES CXX C)
 
 # set the startup project for the "play" button in MSVC
-set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT lbc)
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT templater)
 
 # Initialize project_options variable related to this project
 # This overwrites `project_options` and sets `project_warnings`
@@ -61,6 +61,7 @@ project_options(
     ENABLE_PCH
     WARNINGS_AS_ERRORS)
 
+# Make sure VC includes __cplusplus define
 if(MSVC)
     target_compile_options(project_options INTERFACE "/Zc:__cplusplus")
 endif()
@@ -70,7 +71,7 @@ add_subdirectory(configured_files)
 add_subdirectory(src)
 
 # Tests
-if (ENABLE_DEVELOPER_MODE)
+if(ENABLE_DEVELOPER_MODE)
     add_subdirectory(tests)
 endif()
 
