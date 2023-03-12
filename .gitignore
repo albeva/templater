@@ -44,8 +44,5 @@ $RECYCLE.BIN/
 ehthumbs.db
 Thumbs.db
 
-# lbc
-/samples/[^\.]*
-/samples/*.dump.bas
-/bin/
-.run/
+# templater
+bin/
