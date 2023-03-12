@@ -4,24 +4,18 @@ Checks: "*,
     -altera-*,
     -android-*,
     -fuchsia-*,
-    -google-*,
     -llvm*,
     -zircon-*,
-    -readability-else-after-return,
-    -readability-static-accessed-through-instance,
-    -readability-avoid-const-params-in-decls,
-    -cppcoreguidelines-non-private-member-variables-in-classes,
-    -misc-non-private-member-variables-in-classes,
-    -misc-unused-alias-decls,
-    -cppcoreguidelines-pro-bounds-pointer-arithmetic,
-    -concurrency-mt-unsafe,
-    -readability-identifier-length,
-    -misc-no-recursion,
-    -cert-err58-cpp,
-    -readability-function-cognitive-complexity,
-    -cppcoreguidelines-avoid-const-or-ref-data-members,
+    -google-build-using-namespace,
     -bugprone-easily-swappable-parameters,
 "
 WarningsAsErrors:   ''
 HeaderFilterRegex:  ''
 FormatStyle:        webkit
+CheckOptions:
+  - key:    misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value:  1
+  - key:    readability-identifier-length.MinimumVariableNameLength
+    value:  2
+  - key:    readability-identifier-length.MinimumParameterNameLength
+    value:  2

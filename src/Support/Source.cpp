@@ -3,13 +3,12 @@
 //
 #include "Source.hpp"
 #include <fstream>
-#include <utility>
 using namespace templater;
 
 Source::Source(const std::filesystem::path& path)
     : m_name { path.string() }
 {
-    if (!fs::exists(path)) {
+    if (!std::filesystem::exists(path)) {
         throw SourceException("File '" + m_name + "' not found");
     }
 
@@ -47,7 +46,7 @@ void Source::verify(const SourceLoc& loc) const
     };
 
     if (invalid(loc.start) || invalid(loc.end)) {
-        throw SourceException("SourceLoc outside Source buffer range");
+        throw SourceException("SourceLoc outside Source range");
     }
 }
 
@@ -66,7 +65,7 @@ auto Source::getString(std::size_t line) const -> std::string_view
         if (from == end()) {
             throw SourceException(std::format("Line {} out of source range", line));
         }
-        from++;
+        std::advance(from, 1);
     }
 
     const char* to = std::find_if(from, end(), [](char ch) { return ch == '\r' || ch == '\n'; });

@@ -17,7 +17,7 @@ public:
         unsigned line, col;
     };
 
-    explicit Source(const fs::path& path);
+    explicit Source(const std::filesystem::path& path);
     Source(std::string name, std::string source);
 
     [[nodiscard]] auto getLineAndCol(SourceLoc loc) const -> LineAndCol;

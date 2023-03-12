@@ -19,7 +19,7 @@ class Parser final {
 public:
     NO_COPY_AND_MOVE(Parser)
     ~Parser() = default;
-    explicit Parser(Context&, Lexer& lexer);
+    explicit Parser(Context* ctx, Lexer* lexer);
 
     [[nodiscard]] auto parse() -> ast::StatementList*;
 
@@ -53,8 +53,8 @@ private:
 
     [[noreturn]] void unexpected(const std::string& message);
 
-    Context& m_ctx;
-    Lexer& m_lexer;
+    Context* m_ctx;
+    Lexer* m_lexer;
     ast::AstAllocator m_ast;
     Token m_token {};
 };

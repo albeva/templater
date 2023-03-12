@@ -9,7 +9,7 @@
 using namespace templater;
 using namespace templater::table;
 
-Parser::Parser(Context& ctx, Lexer& lexer)
+Parser::Parser(Context* ctx, Lexer* lexer)
     : m_ctx { ctx }
     , m_lexer { lexer }
     , m_ast { m_ctx }
@@ -217,7 +217,9 @@ auto Parser::tableValue() -> ast::TableValue*
     if (m_token.isValue()) {
         auto* val = literal();
         return m_ast.node<ast::TableValue>(val->loc, val);
-    } else if (m_token.is(TokenKind::BraceOpen)) {
+    }
+
+    if (m_token.is(TokenKind::BraceOpen)) {
         unexpected("structs not yet implemented");
     }
 
@@ -231,12 +233,14 @@ auto Parser::tableValue() -> ast::TableValue*
 //------------------------------------------------------------------------------
 
 // Primary { BinaryOperator Primary }
+// NOLINTNEXTLINE misc-no-recursion
 auto Parser::expression() -> ast::Expression*
 {
     return expression(primary(), 1);
 }
 
 // ( UnaryOperator Primary ) | ( "(" expression ")" ) | TableValue
+// NOLINTNEXTLINE misc-no-recursion
 auto Parser::primary() -> ast::Expression*
 {
     switch (m_token.getKind()) {
@@ -257,6 +261,7 @@ auto Parser::primary() -> ast::Expression*
     }
 }
 
+// NOLINTNEXTLINE misc-no-recursion
 auto Parser::expression(ast::Expression* lhs, int minPrec) -> ast::Expression*
 {
     while (m_token.getPrecedence() >= minPrec) {
@@ -283,7 +288,7 @@ auto Parser::member() -> ast::Member*
 {
     auto start = m_token.getLoc();
     SourceLoc end {};
-    auto members = m_ctx.vector<std::string_view>();
+    auto members = m_ctx->vector<std::string_view>();
 
     do {
         end = m_token.getLoc();
@@ -339,7 +344,7 @@ auto Parser::consume(TokenKind kind) -> std::string_view
 
 void Parser::next()
 {
-    m_lexer.next(m_token);
+    m_lexer->next(m_token);
 }
 
 void Parser::unexpected(const std::string& message)

@@ -9,7 +9,7 @@
 namespace templater::table::ast {
 class AstAllocator final {
 public:
-    explicit AstAllocator(Context& context)
+    explicit AstAllocator(Context* context)
         : m_context(context)
     {
     }
@@ -17,16 +17,16 @@ public:
     template <class T, class... Args>
     [[nodiscard]] inline auto node(Args&&... args) -> T*
     {
-        return m_context.create<T>(std::forward<Args>(args)...);
+        return m_context->create<T>(std::forward<Args>(args)...);
     }
 
     template <class T>
     [[nodiscard]] inline auto list() -> List<T>
     {
-        return m_context.vector<T*>();
+        return m_context->vector<T*>();
     }
 
 private:
-    Context& m_context;
+    Context* m_context;
 };
-}
+} // namespace templater::table::ast

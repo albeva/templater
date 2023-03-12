@@ -6,6 +6,10 @@
 #include "Token.hpp"
 using namespace templater::table;
 
+// Lexer iterates over null terminated const char* using pointer
+// arithmetic
+// NOLINTBEGIN cppcoreguidelines-pro-bounds-pointer-arithmetic
+
 namespace {
 [[nodiscard]] inline auto isDigit(char ch) -> bool
 {
@@ -43,7 +47,7 @@ Lexer::Lexer(Source& source)
 {
 }
 
-void Lexer::next(Token& token)
+void Lexer::next(Token& token) // NOLINT readability-function-cognitive-complexity
 {
     std::size_t size = 1;
 
@@ -209,7 +213,7 @@ void Lexer::identifier(Token& token)
 
     m_hasStmt = true;
     auto lexeme = std::string_view { start, m_input };
-    if (const auto& iter = ranges::find(kKeywords, lexeme, &Keyword::first); iter != kKeywords.end()) {
+    if (const auto& iter = std::ranges::find(kKeywords, lexeme, &Keyword::first); iter != kKeywords.end()) {
         token.set(iter->second, loc(start));
     } else {
         token.set(TokenKind::Identifier, loc(start), lexeme);
@@ -220,3 +224,5 @@ auto Lexer::loc(const char* start) -> templater::SourceLoc
 {
     return { start, m_input };
 }
+
+// NOLINTEND cppcoreguidelines-pro-bounds-pointer-arithmetic

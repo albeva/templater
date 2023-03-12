@@ -16,12 +16,15 @@ auto main() -> int
         Source src { "../samples/tokens.tbl" };
         Lexer lexer { src };
         Context ctx {};
-        Parser parser { ctx, lexer };
+        Parser parser { &ctx, &lexer };
         auto* ast = parser.parse();
         std::cout << Printer(*ast) << '\n';
         return EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << "templater error: " << exc.what() << '\n';
+        return EXIT_FAILURE;
+    } catch (...) {
+        std::cerr << "Unknown error\n";
         return EXIT_FAILURE;
     }
 }

@@ -19,7 +19,5 @@
 #include <vector>
 
 namespace templater {
-namespace fs = std::filesystem;
-namespace ranges = std::ranges;
 using namespace std::literals;
 } // namespace templater
