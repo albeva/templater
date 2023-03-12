@@ -8,16 +8,17 @@
 #include "Table/Printer.hpp"
 using namespace templater;
 using namespace table;
+using namespace ast;
 
-int main()
+auto main() -> int
 {
     try {
         Source src { "../samples/tokens.tbl" };
         Lexer lexer { src };
         Context ctx {};
         Parser parser { ctx, lexer };
-        auto ast = parser.parse();
-        table::ast::Printer().visit(*ast);
+        auto* ast = parser.parse();
+        std::cout << Printer(*ast) << '\n';
         return EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << "templater error: " << exc.what() << '\n';

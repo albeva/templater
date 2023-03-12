@@ -7,23 +7,23 @@
 using namespace templater::table;
 
 namespace {
-[[nodiscard]] inline bool isDigit(char ch)
+[[nodiscard]] inline auto isDigit(char ch) -> bool
 {
     return ch >= '0' && ch <= '9';
 }
 
-[[nodiscard]] inline bool isAlpha(char ch)
+[[nodiscard]] inline auto isAlpha(char ch) -> bool
 {
     return (ch >= 'a' && ch <= 'z')
         || (ch >= 'A' && ch <= 'Z');
 }
 
-[[nodiscard]] inline bool isIdentChar(char ch)
+[[nodiscard]] inline auto isIdentChar(char ch) -> bool
 {
     return isAlpha(ch) || isDigit(ch) || ch == '_';
 }
 
-[[nodiscard]] inline bool isLineOrFileEnd(char ch)
+[[nodiscard]] inline auto isLineOrFileEnd(char ch) -> bool
 {
     return ch == '\n' || ch == '\r' || ch == '\0';
 }
@@ -216,7 +216,7 @@ void Lexer::identifier(Token& token)
     }
 }
 
-templater::SourceLoc Lexer::loc(const char* start)
+auto Lexer::loc(const char* start) -> templater::SourceLoc
 {
     return { start, m_input };
 }

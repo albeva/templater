@@ -27,7 +27,7 @@ Source::Source(std::string name, std::string source)
 {
 }
 
-Source::LineAndCol Source::getLineAndCol(SourceLoc loc) const
+auto Source::getLineAndCol(SourceLoc loc) const -> Source::LineAndCol
 {
     verify(loc);
     auto line = std::count(data(), loc.start, '\n');
@@ -51,7 +51,7 @@ void Source::verify(const SourceLoc& loc) const
     }
 }
 
-std::string_view Source::getString(std::size_t line) const
+auto Source::getString(std::size_t line) const -> std::string_view
 {
     const char* from {};
     if (line == 1) {
@@ -73,7 +73,7 @@ std::string_view Source::getString(std::size_t line) const
     return { from, to };
 }
 
-std::string_view Source::getString(SourceLoc loc) const
+auto Source::getString(SourceLoc loc) const -> std::string_view
 {
     verify(loc);
     return { loc.start, loc.end };

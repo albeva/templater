@@ -11,41 +11,41 @@ void Printer::visit(StatementList& node)
 {
     for (const auto& stmt : node.statements) {
         visit(*stmt);
-        std::cout << "\n";
+        m_output << "\n";
     }
 }
 
 void Printer::visit(Import& node)
 {
-    std::cout << spaces() << "import \"" << node.file << "\" as " << node.identifier;
+    m_output << spaces() << "import \"" << node.file << "\" as " << node.identifier;
 }
 
 void Printer::visit(Table& node)
 {
-    std::cout << '\n'
-              << spaces() << "table " << node.identifier;
+    m_output << '\n'
+             << spaces() << "table " << node.identifier;
     if (!node.columns.empty()) {
-        std::cout << "(";
+        m_output << "(";
         bool isFirst = true;
         for (const auto& col : node.columns) {
             if (isFirst) {
                 isFirst = false;
             } else {
-                std::cout << ' ';
+                m_output << ' ';
             }
             visit(*col);
         }
-        std::cout << ")";
+        m_output << ")";
     }
 
     if (!node.content.empty()) {
-        std::cout << " = ";
+        m_output << " = ";
         bool isFirst = true;
         for (const auto& content : node.content) {
             if (isFirst) {
                 isFirst = false;
             } else {
-                std::cout << " + ";
+                m_output << " + ";
             }
             visit(*content);
         }
@@ -54,9 +54,9 @@ void Printer::visit(Table& node)
 
 void Printer::visit(TableColumn& node)
 {
-    std::cout << node.identifier;
+    m_output << node.identifier;
     if (auto* value = node.value) {
-        std::cout << " = ";
+        m_output << " = ";
         visit(*value);
     }
 }
@@ -65,24 +65,24 @@ void Printer::visit(TableInherit& node)
 {
     visit(*node.member);
     if (auto* expr = node.expression) {
-        std::cout << "(";
+        m_output << "(";
         visit(*expr);
-        std::cout << ")";
+        m_output << ")";
     }
 }
 
 void Printer::visit(TableBody& node)
 {
-    std::cout << "[";
+    m_output << "[";
     m_indent++;
     for (const auto& row : node.rows) {
-        std::cout << '\n'
-                  << spaces();
+        m_output << '\n'
+                 << spaces();
         visit(*row);
     }
     m_indent--;
-    std::cout << "\n"
-              << spaces() << "]";
+    m_output << "\n"
+             << spaces() << "]";
 }
 
 void Printer::visit(TableRow& node)
@@ -92,7 +92,7 @@ void Printer::visit(TableRow& node)
         if (isFirst) {
             isFirst = false;
         } else {
-            std::cout << ' ';
+            m_output << ' ';
         }
         visit(*value);
     }
@@ -102,11 +102,11 @@ void Printer::visit(TableValue& node)
 {
     std::visit(
         templater::Visitor {
-            [](const Literal* node) {
+            [&](const Literal* node) {
                 if (node->type == TokenKind::String) {
-                    std::cout << '"' << node->value << '"';
+                    m_output << '"' << node->value << '"';
                 } else {
-                    std::cout << node->value;
+                    m_output << node->value;
                 }
             },
             [&](StructBody* node) {
@@ -119,31 +119,31 @@ void Printer::visit(TableValue& node)
 void Printer::visit(StructBody& node)
 {
     (void)node;
-    std::cout << "{}";
+    m_output << "{}";
 }
 
 void Printer::visit(UnaryExpression& node)
 {
-    std::cout << Token::describe(node.type) << '(';
+    m_output << Token::describe(node.type) << '(';
     visit(*node.rhs);
-    std::cout << ')';
+    m_output << ')';
 }
 
 void Printer::visit(BinaryExpression& node)
 {
-    std::cout << '(';
+    m_output << '(';
     visit(*node.lhs);
-    std::cout << ' ' << Token::describe(node.type) << ' ';
+    m_output << ' ' << Token::describe(node.type) << ' ';
     visit(*node.rhs);
-    std::cout << ')';
+    m_output << ')';
 }
 
 void Printer::visit(Literal& node)
 {
     if (node.type == TokenKind::String) {
-        std::cout << '"' << node.value << '"';
+        m_output << '"' << node.value << '"';
     } else {
-        std::cout << node.value;
+        m_output << node.value;
     }
 }
 
@@ -154,8 +154,13 @@ void Printer::visit(Member& node)
         if (isFirst) {
             isFirst = false;
         } else {
-            std::cout << '.';
+            m_output << '.';
         }
-        std::cout << id;
+        m_output << id;
     }
+}
+
+auto Printer::output() const -> std::string
+{
+    return m_output.str();
 }

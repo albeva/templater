@@ -20,18 +20,18 @@ public:
     explicit Source(const fs::path& path);
     Source(std::string name, std::string source);
 
-    [[nodiscard]] LineAndCol getLineAndCol(SourceLoc loc) const;
-    [[nodiscard]] std::string_view getString(std::size_t line) const;
-    [[nodiscard]] std::string_view getString(SourceLoc loc) const;
+    [[nodiscard]] auto getLineAndCol(SourceLoc loc) const -> LineAndCol;
+    [[nodiscard]] auto getString(std::size_t line) const -> std::string_view;
+    [[nodiscard]] auto getString(SourceLoc loc) const -> std::string_view;
 
-    [[nodiscard]] const char* data() const { return m_source.data(); }
-    [[nodiscard]] const char* end() const
+    [[nodiscard]] auto data() const -> const char* { return m_source.data(); }
+    [[nodiscard]] auto end() const -> const char*
     {
         const auto* end = data();
         std::advance(end, m_source.length());
         return end;
     }
-    [[nodiscard]] std::size_t length() const { return m_source.length(); }
+    [[nodiscard]] auto length() const -> std::size_t { return m_source.length(); }
 
 private:
     void verify(const SourceLoc& loc) const;

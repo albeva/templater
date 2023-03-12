@@ -18,7 +18,7 @@ Parser::Parser(Context& ctx, Lexer& lexer)
 }
 
 // { Statement }
-ast::StatementList* Parser::parse()
+auto Parser::parse() -> ast::StatementList*
 {
     auto start = m_token.getLoc();
 
@@ -36,7 +36,7 @@ ast::StatementList* Parser::parse()
 }
 
 // ( Import | Table )
-ast::Statement* Parser::statement()
+auto Parser::statement() -> ast::Statement*
 {
     ast::Statement* stmt {};
 
@@ -55,7 +55,7 @@ ast::Statement* Parser::statement()
 }
 
 // "import" STRING "as" IDENTIFIER
-ast::Import* Parser::kwImport()
+auto Parser::kwImport() -> ast::Import*
 {
     auto start = m_token.getLoc();
     expect(TokenKind::KwImport);
@@ -73,7 +73,7 @@ ast::Import* Parser::kwImport()
 //------------------------------------------------------------------------------
 
 // "table" IDENTIFIER [ "(" TableColumnList ")" ] [ "=" TableContentList ]
-ast::Table* Parser::kwTable()
+auto Parser::kwTable() -> ast::Table*
 {
     auto start = m_token.getLoc();
     expect(TokenKind::KwTable);
@@ -94,7 +94,7 @@ ast::Table* Parser::kwTable()
 }
 
 // TableColumn { "," TableColumn }
-ast::List<ast::TableColumn> Parser::tableColumnList()
+auto Parser::tableColumnList() -> ast::List<ast::TableColumn>
 {
     auto columns = m_ast.list<ast::TableColumn>();
 
@@ -106,7 +106,7 @@ ast::List<ast::TableColumn> Parser::tableColumnList()
 }
 
 // IDENTIFIER [ "=" TableValue ]
-ast::TableColumn* Parser::tableColumn()
+auto Parser::tableColumn() -> ast::TableColumn*
 {
     auto start = m_token.getLoc();
     auto ident = consume(TokenKind::Identifier);
@@ -119,7 +119,7 @@ ast::TableColumn* Parser::tableColumn()
 }
 
 // TableContent { "+" TableContent }
-ast::List<ast::TableContent> Parser::tableContentList()
+auto Parser::tableContentList() -> ast::List<ast::TableContent>
 {
     auto content = m_ast.list<ast::TableContent>();
 
@@ -131,7 +131,7 @@ ast::List<ast::TableContent> Parser::tableContentList()
 }
 
 // TableInherit | TableBody
-ast::TableContent* Parser::tableContent()
+auto Parser::tableContent() -> ast::TableContent*
 {
     if (m_token.is(TokenKind::Identifier)) {
         return tableInherit();
@@ -145,7 +145,7 @@ ast::TableContent* Parser::tableContent()
 }
 
 // Member [ "(" Expression ")" ]
-ast::TableInherit* Parser::tableInherit()
+auto Parser::tableInherit() -> ast::TableInherit*
 {
     auto start = m_token.getLoc();
     SourceLoc end {};
@@ -164,7 +164,7 @@ ast::TableInherit* Parser::tableInherit()
 }
 
 // "[" [ TableRowList ] "]"
-ast::TableBody* Parser::tableBody()
+auto Parser::tableBody() -> ast::TableBody*
 {
     auto start = m_token.getLoc();
     expect(TokenKind::BracketOpen);
@@ -182,7 +182,7 @@ ast::TableBody* Parser::tableBody()
 }
 
 // TableRow { "\n" TableRow }
-ast::List<ast::TableRow> Parser::tableRowList()
+auto Parser::tableRowList() -> ast::List<ast::TableRow>
 {
     auto rows = m_ast.list<ast::TableRow>();
 
@@ -197,7 +197,7 @@ ast::List<ast::TableRow> Parser::tableRowList()
 }
 
 // TableValue { "," TableValue }
-ast::TableRow* Parser::tableRow()
+auto Parser::tableRow() -> ast::TableRow*
 {
     auto start = m_token.getLoc();
     auto values = m_ast.list<ast::TableValue>();
@@ -212,7 +212,7 @@ ast::TableRow* Parser::tableRow()
 }
 
 // Literal | StructBody
-ast::TableValue* Parser::tableValue()
+auto Parser::tableValue() -> ast::TableValue*
 {
     if (m_token.isValue()) {
         auto* val = literal();
@@ -231,13 +231,13 @@ ast::TableValue* Parser::tableValue()
 //------------------------------------------------------------------------------
 
 // Primary { BinaryOperator Primary }
-ast::Expression* Parser::expression()
+auto Parser::expression() -> ast::Expression*
 {
     return expression(primary(), 1);
 }
 
 // ( UnaryOperator Primary ) | ( "(" expression ")" ) | TableValue
-ast::Expression* Parser::primary()
+auto Parser::primary() -> ast::Expression*
 {
     switch (m_token.getKind()) {
     case TokenKind::LogicalNot: {
@@ -257,7 +257,7 @@ ast::Expression* Parser::primary()
     }
 }
 
-ast::Expression* Parser::expression(ast::Expression* lhs, int minPrec)
+auto Parser::expression(ast::Expression* lhs, int minPrec) -> ast::Expression*
 {
     while (m_token.getPrecedence() >= minPrec) {
         auto op = m_token.getKind();
@@ -279,7 +279,7 @@ ast::Expression* Parser::expression(ast::Expression* lhs, int minPrec)
 //------------------------------------------------------------------------------
 
 // IDENTIFIER { "." IDENTIFIER };
-ast::Member* Parser::member()
+auto Parser::member() -> ast::Member*
 {
     auto start = m_token.getLoc();
     SourceLoc end {};
@@ -294,7 +294,7 @@ ast::Member* Parser::member()
 }
 
 // IDENTIFIER | NUMBER | STRING;
-ast::Literal* Parser::literal()
+auto Parser::literal() -> ast::Literal*
 {
     if (!m_token.isValue()) {
         unexpected("Expected a value");
@@ -310,7 +310,7 @@ ast::Literal* Parser::literal()
 // Helpers
 //------------------------------------------------------------------------------
 
-bool Parser::accept(TokenKind kind)
+auto Parser::accept(TokenKind kind) -> bool
 {
     if (m_token.isNot(kind)) {
         return false;
@@ -330,7 +330,7 @@ void Parser::expect(TokenKind kind)
     next();
 }
 
-std::string_view Parser::consume(TokenKind kind)
+auto Parser::consume(TokenKind kind) -> std::string_view
 {
     auto value = m_token.getValue();
     expect(kind);
@@ -348,7 +348,7 @@ void Parser::unexpected(const std::string& message)
     throw ParserException(message);
 }
 
-SourceLoc Parser::loc(SourceLoc start, SourceLoc end)
+auto Parser::loc(SourceLoc start, SourceLoc end) -> SourceLoc
 {
     return { start, end };
 }

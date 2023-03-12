@@ -27,7 +27,7 @@ struct SourceLoc final {
 
     const char *start, *end;
 
-    [[nodiscard]] unsigned length() const
+    [[nodiscard]] auto length() const -> unsigned
     {
         return static_cast<unsigned>(std::distance(start, end));
     }

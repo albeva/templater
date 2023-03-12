@@ -15,13 +15,13 @@ public:
     }
 
     template <class T, class... Args>
-    [[nodiscard]] inline T* node(Args&&... args)
+    [[nodiscard]] inline auto node(Args&&... args) -> T*
     {
         return m_context.create<T>(std::forward<Args>(args)...);
     }
 
     template <class T>
-    [[nodiscard]] inline List<T> list()
+    [[nodiscard]] inline auto list() -> List<T>
     {
         return m_context.vector<T*>();
     }

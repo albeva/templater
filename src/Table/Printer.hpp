@@ -6,27 +6,43 @@
 
 namespace templater::table::ast {
 
-class Printer final : public Visitor {
+class Printer final : public Visitor<Printer> {
 public:
     using Visitor::visit;
 
-    void visit(StatementList& node) override;
-    void visit(Import& node) override;
-    void visit(Table& node) override;
-    void visit(TableColumn& node) override;
-    void visit(TableInherit& node) override;
-    void visit(TableBody& node) override;
-    void visit(TableRow& node) override;
-    void visit(TableValue& node) override;
-    void visit(StructBody& node) override;
-    void visit(UnaryExpression& node) override;
-    void visit(BinaryExpression& node) override;
-    void visit(Literal& node) override;
-    void visit(Member& node) override;
+    Printer() = default;
+
+    explicit Printer(StatementList& node)
+    {
+        visit(node);
+    }
+
+    void visit(StatementList& node);
+    void visit(Import& node);
+    void visit(Table& node);
+    void visit(TableColumn& node);
+    void visit(TableInherit& node);
+    void visit(TableBody& node);
+    void visit(TableRow& node);
+    void visit(TableValue& node);
+    void visit(StructBody& node);
+    void visit(UnaryExpression& node);
+    void visit(BinaryExpression& node);
+    void visit(Literal& node);
+    void visit(Member& node);
+
+    [[nodiscard]] auto output() const -> std::string;
 
 private:
     std::size_t m_indent = 0;
+    std::stringstream m_output {};
     [[nodiscard]] auto spaces() const { return std::string(m_indent * 4, ' '); }
 };
+
+auto inline operator<<(std::ostream& os, const Printer& printer) -> std::ostream&
+{
+    os << printer.output();
+    return os;
+}
 
 } // namespace templater::table::ast

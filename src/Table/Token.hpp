@@ -44,18 +44,18 @@ public:
         m_value = value;
     }
 
-    [[nodiscard]] TokenKind getKind() const { return m_kind; }
-    [[nodiscard]] const SourceLoc& getLoc() const { return m_loc; }
-    [[nodiscard]] const std::string_view& getValue() const { return m_value; }
+    [[nodiscard]] auto getKind() const -> TokenKind { return m_kind; }
+    [[nodiscard]] auto getLoc() const -> const SourceLoc& { return m_loc; }
+    [[nodiscard]] auto getValue() const -> const std::string_view& { return m_value; }
 
-    [[nodiscard]] inline bool isValue() const
+    [[nodiscard]] inline auto isValue() const -> bool
     {
         return m_kind == TokenKind::Number
             || m_kind == TokenKind::Identifier
             || m_kind == TokenKind::String;
     }
 
-    [[nodiscard]] int getPrecedence() const
+    [[nodiscard]] auto getPrecedence() const -> int
     {
         switch (m_kind) {
         case TokenKind::LogicalNot:
@@ -72,16 +72,16 @@ public:
         }
     }
 
-    [[nodiscard]] std::string_view description() const { return describe(m_kind); }
-    [[nodiscard]] static std::string_view describe(TokenKind kind);
+    [[nodiscard]] auto description() const -> std::string_view { return describe(m_kind); }
+    [[nodiscard]] static auto describe(TokenKind kind) -> std::string_view;
 
-    [[nodiscard]] bool is(TokenKind kind) const { return m_kind == kind; }
+    [[nodiscard]] auto is(TokenKind kind) const -> bool { return m_kind == kind; }
     template <typename... Ty>
-    [[nodiscard]] bool is(TokenKind kind, Ty... ty) const { return is(kind) || is(ty...); }
+    [[nodiscard]] auto is(TokenKind kind, Ty... ty) const -> bool { return is(kind) || is(ty...); }
 
-    [[nodiscard]] bool isNot(TokenKind kind) const { return m_kind != kind; }
+    [[nodiscard]] auto isNot(TokenKind kind) const -> bool { return m_kind != kind; }
     template <typename... Ty>
-    [[nodiscard]] bool isNot(TokenKind kind, Ty... ty) const { return isNot(kind) && isNot(ty...); }
+    [[nodiscard]] auto isNot(TokenKind kind, Ty... ty) const -> bool { return isNot(kind) && isNot(ty...); }
 
 private:
     TokenKind m_kind;

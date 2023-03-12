@@ -21,35 +21,35 @@ public:
     ~Parser() = default;
     explicit Parser(Context&, Lexer& lexer);
 
-    [[nodiscard]] ast::StatementList* parse();
+    [[nodiscard]] auto parse() -> ast::StatementList*;
 
 private:
-    ast::Statement* statement();
-    ast::Import* kwImport();
+    auto statement() -> ast::Statement*;
+    auto kwImport() -> ast::Import*;
 
-    ast::Table* kwTable();
-    ast::List<ast::TableColumn> tableColumnList();
-    ast::TableColumn* tableColumn();
-    ast::List<ast::TableContent> tableContentList();
-    ast::TableContent* tableContent();
-    ast::TableInherit* tableInherit();
-    ast::TableBody* tableBody();
-    ast::List<ast::TableRow> tableRowList();
-    ast::TableRow* tableRow();
-    ast::TableValue* tableValue();
+    auto kwTable() -> ast::Table*;
+    auto tableColumnList() -> ast::List<ast::TableColumn>;
+    auto tableColumn() -> ast::TableColumn*;
+    auto tableContentList() -> ast::List<ast::TableContent>;
+    auto tableContent() -> ast::TableContent*;
+    auto tableInherit() -> ast::TableInherit*;
+    auto tableBody() -> ast::TableBody*;
+    auto tableRowList() -> ast::List<ast::TableRow>;
+    auto tableRow() -> ast::TableRow*;
+    auto tableValue() -> ast::TableValue*;
 
-    ast::Expression* expression();
-    ast::Expression* primary();
-    ast::Expression* expression(ast::Expression* lhs, int prec);
+    auto expression() -> ast::Expression*;
+    auto primary() -> ast::Expression*;
+    auto expression(ast::Expression* lhs, int prec) -> ast::Expression*;
 
-    ast::Member* member();
-    ast::Literal* literal();
+    auto member() -> ast::Member*;
+    auto literal() -> ast::Literal*;
 
-    bool accept(TokenKind kind);
+    auto accept(TokenKind kind) -> bool;
     void expect(TokenKind kind);
-    [[nodiscard]] std::string_view consume(TokenKind kind);
+    [[nodiscard]] auto consume(TokenKind kind) -> std::string_view;
     void next();
-    [[nodiscard]] static SourceLoc loc(SourceLoc start, SourceLoc end);
+    [[nodiscard]] static auto loc(SourceLoc start, SourceLoc end) -> SourceLoc;
 
     [[noreturn]] void unexpected(const std::string& message);
 

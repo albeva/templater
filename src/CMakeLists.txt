@@ -2,11 +2,15 @@
 add_library(
     templater_lib
     pch.hpp
+    Support/Context.cpp
+    Support/Context.hpp
     Support/Source.cpp
     Support/Source.hpp
     Support/SourceLoc.hpp
+    Support/Utils.hpp
     Table/Ast.cpp
     Table/Ast.hpp
+    Table/AstAllocator.hpp
     Table/Lexer.cpp
     Table/Lexer.hpp
     Table/Parser.cpp
@@ -17,9 +21,7 @@ add_library(
     Table/Table.hpp
     Table/Token.cpp
     Table/Token.hpp
-    Table/Visitor.cpp
-    Table/Visitor.hpp
-    Utils.hpp Support/Context.cpp Support/Context.hpp Table/AstAllocator.hpp)
+    Table/Visitor.hpp)
 
 target_link_libraries(templater_lib PRIVATE project_options project_warnings)
 target_precompile_headers(templater_lib PRIVATE pch.hpp)

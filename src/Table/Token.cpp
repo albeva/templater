@@ -5,7 +5,7 @@
 using namespace templater;
 using namespace templater::table;
 
-std::string_view Token::describe(TokenKind kind)
+auto Token::describe(TokenKind kind) -> std::string_view
 {
     switch (kind) {
     case TokenKind::Invalid:

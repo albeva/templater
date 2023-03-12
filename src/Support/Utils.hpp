@@ -3,11 +3,11 @@
 //
 #pragma once
 
-#define NO_COPY_AND_MOVE(Class)         \
-    Class(Class&&) = delete;            \
-    Class(const Class&) = delete;       \
-    Class& operator=(Class&&) = delete; \
-    Class& operator=(const Class&) = delete;
+#define NO_COPY_AND_MOVE(Class)               \
+    Class(Class&&) = delete;                  \
+    Class(const Class&) = delete;             \
+    auto operator=(Class&&)->Class& = delete; \
+    auto operator=(const Class&)->Class& = delete;
 
 namespace templater {
 // helper type for std::variant visitors

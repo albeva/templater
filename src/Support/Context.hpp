@@ -7,20 +7,20 @@ namespace templater {
 
 class Context final {
 public:
-    [[nodiscard]] void* allocate(size_t bytes, unsigned alignment)
+    [[nodiscard]] auto allocate(size_t bytes, unsigned alignment) -> void*
     {
         return m_mbr.allocate(bytes, alignment);
     }
 
     template <typename T, typename... Args>
-    [[nodiscard]] T* create(Args&&... args)
+    [[nodiscard]] auto create(Args&&... args) -> T*
     {
         T* res = static_cast<T*>(allocate(sizeof(T), alignof(T)));
         return std::construct_at(res, std::forward<Args>(args)...);
     }
 
     template <typename T>
-    [[nodiscard]] std::pmr::vector<T> vector()
+    [[nodiscard]] auto vector() -> std::pmr::vector<T>
     {
         return std::pmr::vector<T>(m_pa);
     }

@@ -36,7 +36,7 @@ private:
 
     const char* m_input;
     bool m_hasStmt = false;
-    SourceLoc loc(const char* start);
+    auto loc(const char* start) -> SourceLoc;
     void skipToNextLine();
 };
 
