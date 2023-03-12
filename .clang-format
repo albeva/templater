@@ -1,0 +1,7 @@
+---
+BasedOnStyle: WebKit
+IncludeCategories:
+  - Priority: 1
+    Regex: ^"pch\.hpp"
+  - Priority: 2
+    Regex: .*

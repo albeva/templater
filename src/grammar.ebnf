@@ -1,0 +1,43 @@
+(* grammar for lbc table files *)
+StatementList   = { Statement };
+Statement       = ( Import | Table ) "\n";
+
+Import          = "import" STRING "as" IDENTIFIER;
+
+(* table *)
+Table            = "table" IDENTIFIER [ "(" TableColumnList ")" ] "=" TableContentList;
+TableColumnList  = TableColumn { TableColumn };
+TableColumn      = IDENTIFIER [ "=" TableValue ];
+TableContentList = TableContent { "+" TableContent };
+TableContent     = TableInherit | TableBody;
+TableInherit     = Member [ "(" Expression ")" ];
+TableBody        = "[" [ TableRowList ] "]";
+TableRowList     = TableRow { "\n" TableRow };
+TableRow         = TableValue { TableValue };
+TableValue       = Literal | StructBody;
+
+(* expressions. Incomplete; lacks precedence information *)
+Expression       = Primary { BinaryOperator Primary };
+Primary          = ( UnaryOperator Primary )
+                 | ( "(" Expression ")" )
+                 | TableValue
+                 ;
+BinaryOperator   = "==" | "!=" | "&&" | "||";
+UnaryOperator    = "!";
+
+(* struct *)
+StructBody      = "{" [ StructRowList ] "}";
+StructRowList   = StructRow { "\n" StructRow };
+StructRow       = Member [ TypeSpecifier ] IDENTIFIER [ "=" Literal ];
+TypeSpecifier   = "*" | "[]";
+
+(* Misc *)
+Member          = IDENTIFIER { "." IDENTIFIER };
+Literal         = IDENTIFIER | NUMBER | STRING;
+
+(* basic *)
+IDENTIFIER      = LETTER , { LETTER | "_" };
+NUMBER          = DIGIT, { DIGIT };
+STRING          = '"' .*? '"';
+LETTER          = "A" | "B" | ... | "Z" | "a" | "b" | ... | "z";
+DIGIT           = "0" | "1" | ... | "9";
