@@ -1,6 +1,6 @@
 (* grammar for lbc table files *)
 Content         = [ Content ];
-Content   = Statement { "\n" Statement };
+Content         = Statement { "\n" Statement };
 Statement       = Import | Table;
 
 Import          = "import" STRING "as" IDENTIFIER;
