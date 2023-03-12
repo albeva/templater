@@ -32,7 +32,7 @@ auto Parser::parse() -> ast::StatementList*
 
     auto end = m_token.getLoc();
     expect(TokenKind::EndOfFile);
-    return m_ast.node<ast::StatementList>(loc(start, end), std::move(stmtList));
+    return m_ast.node<ast::StatementList>(makeLoc(start, end), std::move(stmtList));
 }
 
 // ( Import | Table )
@@ -65,7 +65,7 @@ auto Parser::kwImport() -> ast::Import*
     auto end = m_token.getLoc();
     auto ident = consume(TokenKind::Identifier);
 
-    return m_ast.node<ast::Import>(loc(start, end), import, ident);
+    return m_ast.node<ast::Import>(makeLoc(start, end), import, ident);
 }
 
 //------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ auto Parser::kwTable() -> ast::Table*
     auto content = tableContentList();
     auto end = content.back()->getLoc();
 
-    return m_ast.node<ast::Table>(loc(start, end), ident, std::move(columns), std::move(content));
+    return m_ast.node<ast::Table>(makeLoc(start, end), ident, std::move(columns), std::move(content));
 }
 
 // TableColumn { "," TableColumn }
@@ -115,7 +115,7 @@ auto Parser::tableColumn() -> ast::TableColumn*
         value = tableValue();
     }
     auto end = value != nullptr ? value->getLoc() : start;
-    return m_ast.node<ast::TableColumn>(loc(start, end), ident, value);
+    return m_ast.node<ast::TableColumn>(makeLoc(start, end), ident, value);
 }
 
 // TableContent { "+" TableContent }
@@ -160,7 +160,7 @@ auto Parser::tableInherit() -> ast::TableInherit*
         end = mber->getLoc();
     }
 
-    return m_ast.node<ast::TableInherit>(loc(start, end), mber, expr);
+    return m_ast.node<ast::TableInherit>(makeLoc(start, end), mber, expr);
 }
 
 // "[" [ TableRowList ] "]"
@@ -178,7 +178,7 @@ auto Parser::tableBody() -> ast::TableBody*
     auto end = m_token.getLoc();
     expect(TokenKind::BracketClose);
 
-    return m_ast.node<ast::TableBody>(loc(start, end), std::move(rows));
+    return m_ast.node<ast::TableBody>(makeLoc(start, end), std::move(rows));
 }
 
 // TableRow { "\n" TableRow }
@@ -208,7 +208,7 @@ auto Parser::tableRow() -> ast::TableRow*
 
     auto end = values.back()->getLoc();
 
-    return m_ast.node<ast::TableRow>(loc(start, end), std::move(values));
+    return m_ast.node<ast::TableRow>(makeLoc(start, end), std::move(values));
 }
 
 // Literal | StructBody
@@ -248,7 +248,7 @@ auto Parser::primary() -> ast::Expression*
         auto start = m_token.getLoc();
         next();
         auto* rhs = primary();
-        return m_ast.node<ast::UnaryExpression>(loc(start, rhs->getLoc()), TokenKind::LogicalNot, rhs);
+        return m_ast.node<ast::UnaryExpression>(makeLoc(start, rhs->getLoc()), TokenKind::LogicalNot, rhs);
     }
     case TokenKind::ParenOpen: {
         next();
@@ -262,9 +262,9 @@ auto Parser::primary() -> ast::Expression*
 }
 
 // NOLINTNEXTLINE misc-no-recursion
-auto Parser::expression(ast::Expression* lhs, int minPrec) -> ast::Expression*
+auto Parser::expression(ast::Expression* lhs, int min) -> ast::Expression*
 {
-    while (m_token.getPrecedence() >= minPrec) {
+    while (m_token.getPrecedence() >= min) {
         auto op = m_token.getKind();
         auto prec = m_token.getPrecedence();
         next();
@@ -274,7 +274,7 @@ auto Parser::expression(ast::Expression* lhs, int minPrec) -> ast::Expression*
             rhs = expression(rhs, m_token.getPrecedence());
         }
 
-        lhs = m_ast.node<ast::BinaryExpression>(loc(lhs->getLoc(), rhs->getLoc()), op, lhs, rhs);
+        lhs = m_ast.node<ast::BinaryExpression>(makeLoc(lhs->getLoc(), rhs->getLoc()), op, lhs, rhs);
     }
     return lhs;
 }
@@ -295,7 +295,7 @@ auto Parser::member() -> ast::Member*
         members.push_back(consume(TokenKind::Identifier));
     } while (accept(TokenKind::Period));
 
-    return m_ast.node<ast::Member>(loc(start, end), std::move(members));
+    return m_ast.node<ast::Member>(makeLoc(start, end), std::move(members));
 }
 
 // IDENTIFIER | NUMBER | STRING;
@@ -353,7 +353,7 @@ void Parser::unexpected(const std::string& message)
     throw ParserException(message);
 }
 
-auto Parser::loc(SourceLoc start, SourceLoc end) -> SourceLoc
+auto Parser::makeLoc(SourceLoc start, SourceLoc end) -> SourceLoc
 {
     return { start, end };
 }

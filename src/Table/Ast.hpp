@@ -152,7 +152,7 @@ private:
 
 struct TableValue final : Expression {
     explicit TableValue(SourceLoc loc, Literal* literal);
-    explicit TableValue(SourceLoc loc, StructBody* literal);
+    explicit TableValue(SourceLoc loc, StructBody* body);
 
     using Value = std::variant<Literal*, StructBody*>;
 

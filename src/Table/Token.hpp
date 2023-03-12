@@ -84,9 +84,9 @@ public:
     [[nodiscard]] auto isNot(TokenKind kind, Ty... ty) const -> bool { return isNot(kind) && isNot(ty...); }
 
 private:
-    TokenKind m_kind;
-    SourceLoc m_loc;
-    std::string_view m_value;
+    TokenKind m_kind {};
+    SourceLoc m_loc {};
+    std::string_view m_value {};
 };
 
 } // namespace templater::table

@@ -21,3 +21,8 @@ target_link_libraries(tests PRIVATE
 
 include(GoogleTest)
 gtest_discover_tests(tests)
+
+# disable
+target_disable_static_analysis (tests)
+target_disable_static_analysis (gtest)
+target_disable_static_analysis (gtest_main)

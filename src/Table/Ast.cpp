@@ -59,9 +59,9 @@ TableValue::TableValue(SourceLoc loc, Literal* literal)
 {
 }
 
-TableValue::TableValue(SourceLoc loc, StructBody* structBody)
+TableValue::TableValue(SourceLoc loc, StructBody* body)
     : Expression { Kind::TableValue, loc }
-    , m_value { structBody }
+    , m_value { body }
 {
 }
 

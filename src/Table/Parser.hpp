@@ -40,7 +40,7 @@ private:
 
     auto expression() -> ast::Expression*;
     auto primary() -> ast::Expression*;
-    auto expression(ast::Expression* lhs, int prec) -> ast::Expression*;
+    auto expression(ast::Expression* lhs, int min) -> ast::Expression*;
 
     auto member() -> ast::Member*;
     auto literal() -> ast::Literal*;
@@ -49,7 +49,7 @@ private:
     void expect(TokenKind kind);
     [[nodiscard]] auto consume(TokenKind kind) -> std::string_view;
     void next();
-    [[nodiscard]] static auto loc(SourceLoc start, SourceLoc end) -> SourceLoc;
+    [[nodiscard]] static auto makeLoc(SourceLoc start, SourceLoc end) -> SourceLoc;
 
     [[noreturn]] void unexpected(const std::string& message);
 
