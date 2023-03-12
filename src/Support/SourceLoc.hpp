@@ -9,7 +9,8 @@ namespace templater {
 struct SourceLoc final {
     const char *start, *end;
 
-    [[nodiscard]] unsigned length() const {
+    [[nodiscard]] unsigned length() const
+    {
         return static_cast<unsigned>(std::distance(start, end));
     }
 };

@@ -33,10 +33,10 @@ protected:
 
         auto loc = m_source->getLineAndCol(token.getLoc());
         if (line > 0) {
-            EXPECT_EQ(loc.first, line);
+            EXPECT_EQ(loc.line, line);
         }
         if (col > 0) {
-            EXPECT_EQ(loc.second, col);
+            EXPECT_EQ(loc.col, col);
         }
         if (len > 0) {
             auto length = token.getLoc().length();
@@ -85,6 +85,7 @@ TEST_F(LexerTests, Invalid) { // NOLINT
     EXPECT_TOKEN(TokenKind::Invalid,   "@",                        1, 3,  1)
     EXPECT_TOKEN(TokenKind::Invalid,   "end of line",              2, 13, 1)
     EXPECT_TOKEN(TokenKind::Invalid,   "end of line",              3, 13, 0)
+
     EXPECT_TOKEN(TokenKind::EndOfFile, "",                         3, 13, 0)
 }
 
@@ -95,6 +96,8 @@ TEST_F(LexerTests, Stream) { // NOLINT
         ".+== != &&|| !\n"
         "table import as order by\n"
         "Table iMport AS orderby\n"
+        "foo _ bar \n"
+        "__foo _bar"
         ;
     load(source);
 
@@ -137,8 +140,14 @@ TEST_F(LexerTests, Stream) { // NOLINT
     EXPECT_TOKEN(TokenKind::Identifier,   "orderby", 5, 17, 7)
     EXPECT_TOKEN(TokenKind::EndOfLine,    "",        5, 24, 0)
 
-    // the end
-    EXPECT_TOKEN(TokenKind::EndOfFile,    "",        6, 1, 0)
+    // line 6 & 7
+    EXPECT_TOKEN(TokenKind::Identifier,   "foo",     6, 1,  3)
+    EXPECT_TOKEN(TokenKind::Identifier,   "__foo",   7, 1,  5)
+    EXPECT_TOKEN(TokenKind::Identifier,   "_bar",    7, 7,  4)
+    EXPECT_TOKEN(TokenKind::EndOfLine,    "",        7, 11, 0)
+
+    // end
+    EXPECT_TOKEN(TokenKind::EndOfFile,    "",        7, 11, 0)
 
     // clang-format on
 }

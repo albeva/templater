@@ -27,23 +27,54 @@ Source::Source(std::string name, std::string source)
 {
 }
 
-std::pair<std::size_t, std::size_t> Source::getLineAndCol(SourceLoc loc) const
+Source::LineAndCol Source::getLineAndCol(SourceLoc loc) const
 {
+    verify(loc);
     auto line = std::count(data(), loc.start, '\n');
-    auto lineStart = std::find(
-        std::make_reverse_iterator(loc.start),
-        std::make_reverse_iterator(data()),
-        '\n');
+    auto start = std::find(std::make_reverse_iterator(loc.start), std::make_reverse_iterator(data()), '\n');
     return {
-        line + 1,
-        std::distance(lineStart.base(), loc.start) + 1
+        .line = static_cast<unsigned>(line + 1),
+        .col = static_cast<unsigned>(std::distance(start.base(), loc.start) + 1)
     };
 }
 
-std::string_view Source::getLine(std::size_t line, SourceLoc highlight) const
+void Source::verify(const SourceLoc& loc) const
 {
-    (void)line;
-    (void)highlight;
-    (void)this;
-    return "";
+    const char* start = data();
+
+    auto invalid = [&](const char* ptr) {
+        return ptr < start || ptr > end();
+    };
+
+    if (invalid(loc.start) || invalid(loc.end)) {
+        throw SourceException("SourceLoc outside Source buffer range");
+    }
+}
+
+std::string_view Source::getString(std::size_t line) const
+{
+    const char* from {};
+    if (line == 1) {
+        from = data();
+    } else {
+        from = std::find_if(data(), end(), [&](char ch) {
+            if (ch != '\n') {
+                return false;
+            }
+            return --line == 1;
+        });
+        if (from == end()) {
+            throw SourceException(std::format("Line {} out of source range", line));
+        }
+        from++;
+    }
+
+    const char* to = std::find_if(from, end(), [](char ch) { return ch == '\r' || ch == '\n'; });
+    return { from, to };
+}
+
+std::string_view Source::getString(SourceLoc loc) const
+{
+    verify(loc);
+    return { loc.start, loc.end };
 }

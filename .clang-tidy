@@ -22,6 +22,7 @@ Checks: "*,
     -readability-function-cognitive-complexity,
     -cppcoreguidelines-avoid-const-or-ref-data-members,
     -bugprone-easily-swappable-parameters,
+    -cppcoreguidelines-avoid-magic-numbers,
 "
 WarningsAsErrors:   ''
 HeaderFilterRegex:  ''

@@ -51,6 +51,9 @@ void Lexer::next(Token& token)
         auto ch = *m_input;
         switch (ch) {
         case '\0':
+            if (m_hasStmt) {
+                return make(token, TokenKind::EndOfLine, 0);
+            }
             return make(token, TokenKind::EndOfFile, 0);
         case ' ':
         case '\t':
@@ -162,15 +165,13 @@ void Lexer::unexpected(Token& token, std::string_view message)
         m_input++;
     }
     if (message.empty()) {
-        message = {start, m_input};
+        message = { start, m_input };
     }
     token.set(TokenKind::Invalid, loc(start), message);
 }
 
 void Lexer::string(Token& token)
 {
-    m_hasStmt = true;
-
     const auto* start = m_input++;
     while (true) {
         auto ch = *m_input;
@@ -184,30 +185,29 @@ void Lexer::string(Token& token)
         }
     }
 
+    m_hasStmt = true;
     token.set(TokenKind::String, loc(start), { start + 1, m_input - 1 });
 }
 
 void Lexer::number(Token& token)
 {
-    m_hasStmt = true;
-
     const auto* start = m_input++;
     while (isDigit(*m_input)) {
         m_input++;
     }
 
+    m_hasStmt = true;
     token.set(TokenKind::Number, loc(start), { start, m_input });
 }
 
 void Lexer::identifier(Token& token)
 {
-    m_hasStmt = true;
-
     const auto* start = m_input++;
     while (isIdentChar(*m_input)) {
         m_input++;
     }
 
+    m_hasStmt = true;
     auto lexeme = std::string_view { start, m_input };
     if (const auto& iter = ranges::find(kKeywords, lexeme, &Keyword::first); iter != kKeywords.end()) {
         token.set(iter->second, loc(start));

@@ -7,6 +7,7 @@
 #include <cassert>
 #include <exception>
 #include <filesystem>
+#include <format>
 #include <iostream>
 #include <memory>
 #include <ranges>
