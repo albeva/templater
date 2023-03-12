@@ -3,6 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
+#include "Support/SourceLoc.hpp"
 
 namespace templater::table {
 enum class TokenKind;
@@ -54,11 +55,13 @@ struct Member;
 // Basic
 
 struct Root {
-    explicit Root(Kind kind)
+    Root(Kind kind, SourceLoc loc)
         : kind { kind }
+        , loc { loc }
     {
     }
     Kind kind;
+    SourceLoc loc;
 };
 
 struct Statement : Root {
@@ -70,7 +73,7 @@ struct Expression : Root {
 };
 
 struct StatementList final : Root {
-    explicit StatementList(List<Statement> statements);
+    explicit StatementList(SourceLoc loc, List<Statement> statements);
 
     List<Statement> statements;
 };
@@ -78,7 +81,7 @@ struct StatementList final : Root {
 // Import
 
 struct Import final : Statement {
-    Import(std::string_view file, std::string_view identifier);
+    Import(SourceLoc loc, std::string_view file, std::string_view identifier);
 
     std::string_view file;
     std::string_view identifier;
@@ -87,7 +90,7 @@ struct Import final : Statement {
 // Table
 
 struct Table final : Statement {
-    Table(std::string_view identifier, List<TableColumn> columns, List<TableContent> content);
+    Table(SourceLoc loc, std::string_view identifier, List<TableColumn> columns, List<TableContent> content);
 
     std::string_view identifier;
     List<TableColumn> columns;
@@ -95,7 +98,7 @@ struct Table final : Statement {
 };
 
 struct TableColumn final : Root {
-    TableColumn(std::string_view identifier, Node<TableValue> value);
+    TableColumn(SourceLoc loc, std::string_view identifier, Node<TableValue> value);
 
     std::string_view identifier;
     Node<TableValue> value;
@@ -106,27 +109,27 @@ struct TableContent : Root {
 };
 
 struct TableInherit final : TableContent {
-    TableInherit(Node<Member> member, Node<Expression> expression);
+    TableInherit(SourceLoc loc, Node<Member> member, Node<Expression> expression);
 
     Node<Member> member;
     Node<Expression> expression;
 };
 
 struct TableBody final : TableContent {
-    explicit TableBody(List<TableRow> rows);
+    explicit TableBody(SourceLoc loc, List<TableRow> rows);
 
     List<TableRow> rows;
 };
 
 struct TableRow final : Root {
-    explicit TableRow(List<TableValue> values);
+    explicit TableRow(SourceLoc loc, List<TableValue> values);
 
     List<TableValue> values;
 };
 
 struct TableValue final : Expression {
-    explicit TableValue(Node<Literal> literal);
-    explicit TableValue(Node<StructBody> literal);
+    explicit TableValue(SourceLoc loc, Node<Literal> literal);
+    explicit TableValue(SourceLoc loc, Node<StructBody> literal);
 
     using Value = std::variant<Node<Literal>, Node<StructBody>>;
     Value value;
@@ -135,8 +138,8 @@ struct TableValue final : Expression {
 // Structs
 
 struct StructBody final : Root {
-    StructBody()
-        : Root { Kind::StructBody }
+    explicit StructBody(SourceLoc loc)
+        : Root { Kind::StructBody, loc }
     {
     }
 };
@@ -144,14 +147,14 @@ struct StructBody final : Root {
 // Expressions
 
 struct UnaryExpression final : Expression {
-    UnaryExpression(TokenKind type, Node<Expression> rhs);
+    UnaryExpression(SourceLoc loc, TokenKind type, Node<Expression> rhs);
 
     TokenKind type;
     Node<Expression> rhs;
 };
 
 struct BinaryExpression final : Expression {
-    BinaryExpression(TokenKind type, Node<Expression> lhs, Node<Expression> rhs);
+    BinaryExpression(SourceLoc loc, TokenKind type, Node<Expression> lhs, Node<Expression> rhs);
 
     TokenKind type;
     Node<Expression> lhs, rhs;
@@ -160,14 +163,14 @@ struct BinaryExpression final : Expression {
 // Misc
 
 struct Literal final : Root {
-    Literal(TokenKind type, std::string_view value);
+    Literal(SourceLoc loc, TokenKind type, std::string_view value);
 
     TokenKind type;
     std::string_view value;
 };
 
 struct Member final : Root {
-    explicit Member(std::vector<std::string_view> identifiers);
+    explicit Member(SourceLoc loc, std::vector<std::string_view> identifiers);
 
     std::vector<std::string_view> identifiers;
 };

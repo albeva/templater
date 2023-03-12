@@ -19,7 +19,7 @@ public:
 
     explicit Source(const fs::path& path);
     Source(std::string name, std::string source);
-    
+
     [[nodiscard]] LineAndCol getLineAndCol(SourceLoc loc) const;
     [[nodiscard]] std::string_view getString(std::size_t line) const;
     [[nodiscard]] std::string_view getString(SourceLoc loc) const;

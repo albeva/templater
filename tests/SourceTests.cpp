@@ -46,7 +46,7 @@ TEST_F(SourceTests, GetLoc) { // NOLINT
         const auto* to = source->data();
         std::advance(to, 5); // NOLINT
 
-        auto loc = SourceLoc { .start = source->data(), .end = to };
+        auto loc = SourceLoc(source->data(), to);
         auto [line, col] = source->getLineAndCol(loc);
         EXPECT_EQ(line, 1);
         EXPECT_EQ(col, 1);
@@ -60,7 +60,7 @@ TEST_F(SourceTests, GetLoc) { // NOLINT
         const auto* to = from;
         std::advance(to, 5);   // NOLINT
 
-        auto loc = SourceLoc { .start = from, .end = to };
+        auto loc = SourceLoc(from, to);
         auto [line, col] = source->getLineAndCol(loc);
         EXPECT_EQ(line, 2);
         EXPECT_EQ(col, 2);

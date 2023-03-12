@@ -218,5 +218,5 @@ void Lexer::identifier(Token& token)
 
 templater::SourceLoc Lexer::loc(const char* start)
 {
-    return { .start = start, .end = m_input };
+    return { start, m_input };
 }

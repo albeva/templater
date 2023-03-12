@@ -4,6 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "Ast.hpp"
+#include "Support/Source.hpp"
 #include "Token.hpp"
 
 namespace templater::table {
@@ -47,6 +48,7 @@ private:
     void expect(TokenKind kind);
     [[nodiscard]] std::string_view consume(TokenKind kind);
     void next();
+    [[nodiscard]] static SourceLoc loc(SourceLoc start, SourceLoc end);
 
     [[noreturn]] void unexpected(const std::string& message);
 

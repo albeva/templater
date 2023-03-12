@@ -4,6 +4,7 @@
 #include "Parser.hpp"
 #include "Ast.hpp"
 #include "Lexer.hpp"
+using namespace templater;
 using namespace templater::table;
 
 Parser::Parser(Lexer& lexer)
@@ -15,6 +16,8 @@ Parser::Parser(Lexer& lexer)
 // { Statement }
 ast::Node<ast::StatementList> Parser::parse()
 {
+    auto start = m_token.getLoc();
+
     ast::List<ast::Statement> stmtList {};
     while (m_token.isNot(TokenKind::EndOfFile)) {
         stmtList.push_back(statement());
@@ -22,8 +25,10 @@ ast::Node<ast::StatementList> Parser::parse()
             break;
         }
     }
+
+    auto end = m_token.getLoc();
     expect(TokenKind::EndOfFile);
-    return ast::make<ast::StatementList>(std::move(stmtList));
+    return ast::make<ast::StatementList>(loc(start, end), std::move(stmtList));
 }
 
 // ( Import | Table )
@@ -48,13 +53,15 @@ ast::Node<ast::Statement> Parser::statement()
 // "import" STRING "as" IDENTIFIER
 ast::Node<ast::Import> Parser::kwImport()
 {
+    auto start = m_token.getLoc();
     expect(TokenKind::KwImport);
 
     auto import = consume(TokenKind::String);
     expect(TokenKind::KwAs);
+    auto end = m_token.getLoc();
     auto ident = consume(TokenKind::Identifier);
 
-    return ast::make<ast::Import>(import, ident);
+    return ast::make<ast::Import>(loc(start, end), import, ident);
 }
 
 //------------------------------------------------------------------------------
@@ -64,6 +71,7 @@ ast::Node<ast::Import> Parser::kwImport()
 // "table" IDENTIFIER [ "(" TableColumnList ")" ] [ "=" TableContentList ]
 ast::Node<ast::Table> Parser::kwTable()
 {
+    auto start = m_token.getLoc();
     expect(TokenKind::KwTable);
 
     auto ident = consume(TokenKind::Identifier);
@@ -76,8 +84,9 @@ ast::Node<ast::Table> Parser::kwTable()
 
     expect(TokenKind::Assign);
     auto content = tableContentList();
+    auto end = content.back()->loc;
 
-    return ast::make<ast::Table>(ident, std::move(columns), std::move(content));
+    return ast::make<ast::Table>(loc(start, end), ident, std::move(columns), std::move(content));
 }
 
 // TableColumn { "," TableColumn }
@@ -95,12 +104,14 @@ ast::List<ast::TableColumn> Parser::tableColumnList()
 // IDENTIFIER [ "=" TableValue ]
 ast::Node<ast::TableColumn> Parser::tableColumn()
 {
+    auto start = m_token.getLoc();
     auto ident = consume(TokenKind::Identifier);
     ast::Node<ast::TableValue> value;
     if (accept(TokenKind::Assign)) {
         value = tableValue();
     }
-    return ast::make<ast::TableColumn>(ident, std::move(value));
+    auto end = value ? value->loc : start;
+    return ast::make<ast::TableColumn>(loc(start, end), ident, std::move(value));
 }
 
 // TableContent { "+" TableContent }
@@ -132,20 +143,26 @@ ast::Node<ast::TableContent> Parser::tableContent()
 // Member [ "(" Expression ")" ]
 ast::Node<ast::TableInherit> Parser::tableInherit()
 {
+    auto start = m_token.getLoc();
+    SourceLoc end {};
     auto mber = member();
 
     ast::Node<ast::Expression> expr {};
     if (accept(TokenKind::ParenOpen)) {
         expr = expression();
+        end = m_token.getLoc();
         expect(TokenKind::ParenClose);
+    } else {
+        end = mber->loc;
     }
 
-    return ast::make<ast::TableInherit>(std::move(mber), std::move(expr));
+    return ast::make<ast::TableInherit>(loc(start, end), std::move(mber), std::move(expr));
 }
 
 // "[" [ TableRowList ] "]"
 ast::Node<ast::TableBody> Parser::tableBody()
 {
+    auto start = m_token.getLoc();
     expect(TokenKind::BracketOpen);
     accept(TokenKind::EndOfLine);
 
@@ -153,9 +170,11 @@ ast::Node<ast::TableBody> Parser::tableBody()
     if (m_token.isNot(TokenKind::BracketClose)) {
         rows = tableRowList();
     }
+
+    auto end = m_token.getLoc();
     expect(TokenKind::BracketClose);
 
-    return ast::make<ast::TableBody>(std::move(rows));
+    return ast::make<ast::TableBody>(loc(start, end), std::move(rows));
 }
 
 // TableRow { "\n" TableRow }
@@ -176,20 +195,24 @@ ast::List<ast::TableRow> Parser::tableRowList()
 // TableValue { "," TableValue }
 ast::Node<ast::TableRow> Parser::tableRow()
 {
+    auto start = m_token.getLoc();
     ast::List<ast::TableValue> values {};
 
     do {
         values.push_back(tableValue());
     } while (m_token.isNot(TokenKind::EndOfLine, TokenKind::BracketClose));
 
-    return ast::make<ast::TableRow>(std::move(values));
+    auto end = values.back()->loc;
+
+    return ast::make<ast::TableRow>(loc(start, end), std::move(values));
 }
 
 // Literal | StructBody
 ast::Node<ast::TableValue> Parser::tableValue()
 {
     if (m_token.isValue()) {
-        return ast::make<ast::TableValue>(literal());
+        auto val = literal();
+        return ast::make<ast::TableValue>(val->loc, std::move(val));
     } else if (m_token.is(TokenKind::BraceOpen)) {
         unexpected("structs not yet implemented");
     }
@@ -213,9 +236,12 @@ ast::Node<ast::Expression> Parser::expression()
 ast::Node<ast::Expression> Parser::primary()
 {
     switch (m_token.getKind()) {
-    case TokenKind::LogicalNot:
+    case TokenKind::LogicalNot: {
+        auto start = m_token.getLoc();
         next();
-        return ast::make<ast::UnaryExpression>(TokenKind::LogicalNot, primary());
+        auto rhs = primary();
+        return ast::make<ast::UnaryExpression>(loc(start, rhs->loc), TokenKind::LogicalNot, std::move(rhs));
+    }
     case TokenKind::ParenOpen: {
         next();
         auto expr = expression();
@@ -239,7 +265,11 @@ ast::Node<ast::Expression> Parser::expression(ast::Node<ast::Expression> lhs, in
             rhs = expression(std::move(rhs), m_token.getPrecedence());
         }
 
-        lhs = ast::make<ast::BinaryExpression>(op, std::move(lhs), std::move(rhs));
+        lhs = ast::make<ast::BinaryExpression>(
+            loc(lhs->loc, rhs->loc),
+            op,
+            std::move(lhs),
+            std::move(rhs));
     }
     return lhs;
 }
@@ -251,13 +281,16 @@ ast::Node<ast::Expression> Parser::expression(ast::Node<ast::Expression> lhs, in
 // IDENTIFIER { "." IDENTIFIER };
 ast::Node<ast::Member> Parser::member()
 {
+    auto start = m_token.getLoc();
+    SourceLoc end {};
     std::vector<std::string_view> members {};
 
     do {
+        end = m_token.getLoc();
         members.push_back(consume(TokenKind::Identifier));
     } while (accept(TokenKind::Period));
 
-    return ast::make<ast::Member>(std::move(members));
+    return ast::make<ast::Member>(loc(start, end), std::move(members));
 }
 
 // IDENTIFIER | NUMBER | STRING;
@@ -268,8 +301,9 @@ ast::Node<ast::Literal> Parser::literal()
     }
     auto type = m_token.getKind();
     auto value = m_token.getValue();
+    auto loc = m_token.getLoc();
     next();
-    return ast::make<ast::Literal>(type, value);
+    return ast::make<ast::Literal>(loc, type, value);
 }
 
 //------------------------------------------------------------------------------
@@ -312,4 +346,9 @@ void Parser::unexpected(const std::string& message)
 {
     (void)this;
     throw ParserException(message);
+}
+
+SourceLoc Parser::loc(SourceLoc start, SourceLoc end)
+{
+    return { start, end };
 }
