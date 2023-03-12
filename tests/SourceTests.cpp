@@ -1,3 +1,8 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cppcoreguidelines-avoid-non-const-global-variables"
+#pragma ide diagnostic ignored "modernize-use-trailing-return-type"
+#pragma ide diagnostic ignored "cppcoreguidelines-avoid-magic-numbers"
+#pragma ide diagnostic ignored "cppcoreguidelines-owning-memory"
 //
 // Created by Albert on 11/03/2023.
 //
@@ -15,14 +20,14 @@ protected:
     std::unique_ptr<Source> source;
 };
 
-TEST_F(SourceTests, Empty) { // NOLINT
+TEST_F(SourceTests, Empty) {
     load("");
     EXPECT_EQ(source->length(), 0);
     EXPECT_NE(source->data(), nullptr);
     EXPECT_EQ(std::string(source->data()), ""s);
 }
 
-TEST_F(SourceTests, GetLine) { // NOLINT
+TEST_F(SourceTests, GetLine) {
     static constexpr auto src =
         "hello\n"
         "world\n"
@@ -35,7 +40,7 @@ TEST_F(SourceTests, GetLine) { // NOLINT
     EXPECT_EQ(source->getString(3), "!"s);
 }
 
-TEST_F(SourceTests, GetLoc) { // NOLINT
+TEST_F(SourceTests, GetLoc) {
     static constexpr auto src =
         "hello\n"
         " world \n"
@@ -44,7 +49,7 @@ TEST_F(SourceTests, GetLoc) { // NOLINT
 
     {
         const auto* to = source->data();
-        std::advance(to, 5); // NOLINT
+        std::advance(to, 5);
 
         auto loc = SourceLoc(source->data(), to);
         auto [line, col] = source->getLineAndCol(loc);
@@ -56,9 +61,9 @@ TEST_F(SourceTests, GetLoc) { // NOLINT
 
     {
         const auto *from = source->data();
-        std::advance(from, 7); // NOLINT
+        std::advance(from, 7);
         const auto* to = from;
-        std::advance(to, 5);   // NOLINT
+        std::advance(to, 5);
 
         auto loc = SourceLoc(from, to);
         auto [line, col] = source->getLineAndCol(loc);
@@ -69,3 +74,4 @@ TEST_F(SourceTests, GetLoc) { // NOLINT
     }
 }
 }
+#pragma clang diagnostic pop
