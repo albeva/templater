@@ -23,6 +23,10 @@ enum class TokenKind : uint8_t {
     Assign,
     Period,
     Plus,
+    Less,
+    LessOrEqual,
+    GreaterOrEqual,
+    Greater,
     Equal,
     NotEqual,
     LogicalAnd,
@@ -59,8 +63,14 @@ public:
     {
         switch (m_kind) {
         case TokenKind::LogicalNot:
-            return 4;
+            return 6; // NOLINT
+        case TokenKind::Less:
+        case TokenKind::LessOrEqual:
+        case TokenKind::GreaterOrEqual:
+        case TokenKind::Greater:
+            return 5; // NOLINT
         case TokenKind::Equal:
+            return 4;
         case TokenKind::NotEqual:
             return 3;
         case TokenKind::LogicalAnd:

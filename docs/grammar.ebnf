@@ -22,7 +22,7 @@ Primary          = ( UnaryOperator Primary )
                  | ( "(" Expression ")" )
                  | TableValue
                  ;
-BinaryOperator   = "==" | "!=" | "&&" | "||";
+BinaryOperator   = "<" | "<=" | ">" | ">=" | "==" | "!=" | "&&" | "||";
 UnaryOperator    = "!";
 
 (* struct *)
@@ -36,7 +36,10 @@ Member          = IDENTIFIER { "." IDENTIFIER };
 Literal         = IDENTIFIER | NUMBER | STRING;
 
 (* basic *)
-IDENTIFIER      = LETTER , { LETTER | "_" };
+IDENTIFIER      = ( "_" IDENTBODY { IDENTBODY } )
+                | ( LETTER { IDENTBODY } )
+                ;
+IDENTBODY       = DIGIT | LETTER | "_";
 NUMBER          = DIGIT, { DIGIT };
 STRING          = '"' .*? '"';
 LETTER          = "A" | "B" | ... | "Z" | "a" | "b" | ... | "z";

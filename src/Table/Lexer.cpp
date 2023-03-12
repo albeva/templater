@@ -8,7 +8,7 @@ using namespace templater::table;
 
 // Lexer iterates over null terminated const char* using pointer
 // arithmetic
-// NOLINTBEGIN cppcoreguidelines-pro-bounds-pointer-arithmetic
+// !NOLINTBEGIN cppcoreguidelines-pro-bounds-pointer-arithmetic
 
 namespace {
 [[nodiscard]] inline auto isDigit(char ch) -> bool
@@ -100,6 +100,16 @@ void Lexer::next(Token& token) // NOLINT readability-function-cognitive-complexi
             return make(token, TokenKind::BraceOpen);
         case '}':
             return make(token, TokenKind::BraceClose);
+        case '<':
+            if (m_input[1] == '=') {
+                return make(token, TokenKind::LessOrEqual, 2);
+            }
+            return make(token, TokenKind::Less, 2);
+        case '>':
+            if (m_input[1] == '=') {
+                return make(token, TokenKind::GreaterOrEqual, 2);
+            }
+            return make(token, TokenKind::Greater, 2);
         case '=':
             if (m_input[1] == '=') {
                 return make(token, TokenKind::Equal, 2);

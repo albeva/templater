@@ -38,6 +38,14 @@ auto Token::describe(TokenKind kind) -> std::string_view
         return "."sv;
     case TokenKind::Plus:
         return "+"sv;
+    case TokenKind::Less:
+        return "<"sv;
+    case TokenKind::LessOrEqual:
+        return "<="sv;
+    case TokenKind::GreaterOrEqual:
+        return ">="sv;
+    case TokenKind::Greater:
+        return ">"sv;
     case TokenKind::Equal:
         return "=="sv;
     case TokenKind::NotEqual:
