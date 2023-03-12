@@ -34,7 +34,6 @@ private:
     void identifier(Token& token);
     void number(Token& token);
 
-    Source& m_source;
     const char* m_input;
     bool m_hasStmt = false;
     SourceLoc loc(const char* start);

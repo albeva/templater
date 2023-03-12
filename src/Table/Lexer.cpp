@@ -14,8 +14,8 @@ namespace {
 
 [[nodiscard]] inline bool isAlpha(char ch)
 {
-    return ch >= 'a' && ch <= 'z'
-        || ch >= 'A' && ch <= 'Z';
+    return (ch >= 'a' && ch <= 'z')
+        || (ch >= 'A' && ch <= 'Z');
 }
 
 [[nodiscard]] inline bool isIdentChar(char ch)
@@ -39,8 +39,7 @@ constexpr std::array kKeywords {
 } // namespace
 
 Lexer::Lexer(Source& source)
-    : m_source { source }
-    , m_input { source.data() }
+    : m_input { source.data() }
 {
 }
 

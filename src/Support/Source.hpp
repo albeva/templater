@@ -22,8 +22,6 @@ public:
     [[nodiscard]] std::size_t length() const { return m_source.length(); }
 
 private:
-    Source* m_parent = nullptr;
-    SourceLoc m_includeLoc = {};
     std::string m_name;
     std::string m_source;
 };
