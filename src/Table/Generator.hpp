@@ -33,7 +33,7 @@ public:
     void operator()(const ast::Member* node);
 
     template <typename T>
-    void visit(const T* node) { operator()(node); }
+    void visit(const T* node) { operator()(node); } // cppcheck-suppress functionStatic
 
     template <typename... Ts>
     void visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
