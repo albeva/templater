@@ -288,7 +288,7 @@ auto Parser::member() -> ast::Member*
 {
     auto start = m_token.getLoc();
     SourceLoc end {};
-    auto members = m_ctx->vector<std::string_view>();
+    auto members = std::pmr::vector<std::string_view>(m_ctx->getAllocator()); // m_ctx->vector<std::string_view>();
 
     do {
         end = m_token.getLoc();

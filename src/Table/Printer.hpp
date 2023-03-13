@@ -2,34 +2,35 @@
 // Created by Albert on 05/03/2023.
 //
 #pragma once
+#include "pch.hpp"
 #include "Visitor.hpp"
 
 namespace templater::table::ast {
 
 class Printer final : public Visitor<Printer> {
 public:
+    NO_COPY_AND_MOVE(Printer)
     using Visitor::visit;
-
     Printer() = default;
-
     explicit Printer(Content& node)
     {
         visit(node);
     }
+    ~Printer() = default;
 
-    void visit(Content& node);
-    void visit(Import& node);
-    void visit(Table& node);
-    void visit(TableColumn& node);
-    void visit(TableInherit& node);
-    void visit(TableBody& node);
-    void visit(TableRow& node);
-    void visit(TableValue& node);
-    void visit(StructBody& node);
-    void visit(UnaryExpression& node);
-    void visit(BinaryExpression& node);
-    void visit(Literal& node);
-    void visit(Member& node);
+    void visit(const Content& node);
+    void visit(const Import& node);
+    void visit(const Table& node);
+    void visit(const TableColumn& node);
+    void visit(const TableInherit& node);
+    void visit(const TableBody& node);
+    void visit(const TableRow& node);
+    void visit(const TableValue& node);
+    void visit(const StructBody& node);
+    void visit(const UnaryExpression& node);
+    void visit(const BinaryExpression& node);
+    void visit(const Literal& node);
+    void visit(const Member& node);
 
     [[nodiscard]] auto output() const -> std::string;
 

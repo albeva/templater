@@ -6,9 +6,9 @@
 #include "Ast.hpp"
 namespace templater::table::ast {
 
-#define VISIT(KIND)                                                        \
-    if (node.getKind() == Kind::KIND) {                                    \
-        return static_cast<Super*>(this)->visit(static_cast<KIND&>(node)); \
+#define VISIT(KIND)                                                              \
+    if (node.getKind() == Kind::KIND) {                                          \
+        return static_cast<Super*>(this)->visit(static_cast<const KIND&>(node)); \
     }
 
 // We know static casts here are safe.
@@ -16,20 +16,20 @@ namespace templater::table::ast {
 
 template <typename Super>
 struct Visitor {
-    void visit(Statement& node)
+    void visit(const Statement& node)
     {
         VISIT(Import)
         VISIT(Table)
     }
 
-    void visit(Expression& node)
+    void visit(const Expression& node)
     {
         VISIT(UnaryExpression)
         VISIT(BinaryExpression)
         VISIT(TableValue)
     }
 
-    void visit(TableContent& node)
+    void visit(const TableContent& node)
     {
         VISIT(TableInherit)
         VISIT(TableBody)

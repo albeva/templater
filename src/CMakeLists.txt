@@ -11,12 +11,20 @@ add_library(
     Table/Ast.cpp
     Table/Ast.hpp
     Table/AstAllocator.hpp
+    Table/Column.cpp
+    Table/Column.hpp
+    Table/Generator.cpp
+    Table/Generator.hpp
     Table/Lexer.cpp
     Table/Lexer.hpp
     Table/Parser.cpp
     Table/Parser.hpp
     Table/Printer.cpp
     Table/Printer.hpp
+    Table/Symbol.cpp
+    Table/Symbol.hpp
+    Table/SymbolTable.cpp
+    Table/SymbolTable.hpp
     Table/Table.cpp
     Table/Table.hpp
     Table/Token.cpp

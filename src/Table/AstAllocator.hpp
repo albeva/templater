@@ -23,7 +23,7 @@ public:
     template <class T>
     [[nodiscard]] inline auto list() -> List<T>
     {
-        return m_context->vector<T*>();
+        return List<T>(m_context->getAllocator());
     }
 
 private:

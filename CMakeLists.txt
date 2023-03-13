@@ -56,6 +56,7 @@ project_options(
     --suppress=passedByValue
     --suppress=syntaxError
     --suppress=constParameter
+    --suppress=preprocessorErrorDirective
     --inconclusive
     ENABLE_VS_ANALYSIS
     ENABLE_PCH
