@@ -25,7 +25,6 @@ public:
     void operator()(const ast::TableInherit* node);
     void operator()(const ast::TableBody* node);
     void operator()(const ast::TableRow* node);
-    void operator()(const ast::TableValue& node);
     void operator()(const ast::StructBody* node);
     void operator()(const ast::UnaryExpression* node);
     void operator()(const ast::BinaryExpression* node);

@@ -21,7 +21,6 @@ public:
     void operator()(const TableInherit* node);
     void operator()(const TableBody* node);
     void operator()(const TableRow* node);
-    void operator()(const TableValue& node);
     void operator()(const StructBody* node);
     void operator()(const UnaryExpression* node);
     void operator()(const BinaryExpression* node);

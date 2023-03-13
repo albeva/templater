@@ -96,11 +96,6 @@ void Printer::operator()(const TableRow* node)
     }
 }
 
-void Printer::operator()(const TableValue& node)
-{
-    visit(node);
-}
-
 void Printer::operator()(const StructBody* node)
 {
     (void)node;

@@ -59,12 +59,6 @@ void Generator::operator()(const ast::TableRow* node)
     (void)node;
 }
 
-void Generator::operator()(const TableValue& node)
-{
-    (void)this;
-    (void)node;
-}
-
 void Generator::operator()(const ast::StructBody* node)
 {
     (void)this;
