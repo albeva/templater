@@ -1,0 +1,5 @@
+# error: unexpected_tokens.tbl(2,11), Expected '=', got: @
+# table foo @ = []
+#           ^
+table foo @ = []
+

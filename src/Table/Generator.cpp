@@ -7,10 +7,11 @@
 #include "SymbolTable.hpp"
 using namespace templater::table;
 
-Generator::Generator(templater::Context* ctx, ast::Content& node)
+Generator::Generator(templater::Context* ctx, const ast::Content& node)
     : m_ctx(ctx)
     , m_symbolTable(ctx->create<SymbolTable>(ctx))
 {
+    (void)m_ctx;
     visit(node);
 }
 

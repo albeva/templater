@@ -44,7 +44,7 @@ set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT templater)
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
-    ENABLE_CPPCHECK
+    #ENABLE_CPPCHECK
     CPPCHECK_OPTIONS
     --enable=style,performance,warning,portability
     --inline-suppr
@@ -57,6 +57,8 @@ project_options(
     --suppress=syntaxError
     --suppress=constParameter
     --suppress=preprocessorErrorDirective
+    # ignore all external dependencies
+    --suppress=*:*/_deps/*
     --inconclusive
     ENABLE_VS_ANALYSIS
     ENABLE_PCH

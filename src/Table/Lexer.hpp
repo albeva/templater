@@ -20,10 +20,11 @@ class LexerException final : public std::runtime_error {
 class Lexer final {
 public:
     NO_COPY_AND_MOVE(Lexer)
-    explicit Lexer(Source& source);
+    explicit Lexer(Source* source);
     ~Lexer() = default;
 
     void next(Token&);
+    [[nodiscard]] auto getSource() const { return m_source; }
 
 private:
     void skipToLineEnd();
@@ -34,6 +35,7 @@ private:
     void identifier(Token& token);
     void number(Token& token);
 
+    Source* m_source;
     const char* m_input;
     bool m_hasStmt = false;
     auto loc(const char* start) -> SourceLoc;

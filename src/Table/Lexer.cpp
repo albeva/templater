@@ -42,8 +42,9 @@ constexpr std::array kKeywords {
 };
 } // namespace
 
-Lexer::Lexer(Source& source)
-    : m_input { source.data() }
+Lexer::Lexer(Source* source)
+    : m_source(source)
+    , m_input(source->data())
 {
 }
 

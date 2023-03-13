@@ -53,7 +53,7 @@ TEST_F(SourceTests, GetLoc) {
         std::advance(to, 5);
 
         auto loc = SourceLoc(source->data(), to);
-        auto [line, col] = source->getLineAndCol(loc);
+        auto [line, col] = source->getPosition(loc);
         EXPECT_EQ(line, 1);
         EXPECT_EQ(col, 1);
         EXPECT_EQ(loc.length(), 5);
@@ -67,7 +67,7 @@ TEST_F(SourceTests, GetLoc) {
         std::advance(to, 5);
 
         auto loc = SourceLoc(from, to);
-        auto [line, col] = source->getLineAndCol(loc);
+        auto [line, col] = source->getPosition(loc);
         EXPECT_EQ(line, 2);
         EXPECT_EQ(col, 2);
         EXPECT_EQ(loc.length(), 5);

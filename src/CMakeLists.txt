@@ -31,6 +31,16 @@ add_library(
     Table/Token.hpp
     Table/Visitor.hpp)
 
+# fmt
+include(FetchContent)
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt
+    GIT_TAG 9.1.0)
+FetchContent_MakeAvailable(fmt)
+
+# lib options
+target_link_libraries(templater_lib PUBLIC fmt::fmt)
 target_link_libraries(templater_lib PRIVATE project_options project_warnings)
 target_precompile_headers(templater_lib PRIVATE pch.hpp)
 target_include_directories(templater_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -40,3 +50,6 @@ target_include_directories(templater_lib PRIVATE "${CMAKE_BINARY_DIR}/configured
 add_executable(templater main.cpp)
 target_link_libraries(templater PRIVATE templater_lib project_options project_warnings)
 set_target_properties(templater PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+
+# avoid cppcheck errors from 3rd party
+target_disable_static_analysis(fmt)

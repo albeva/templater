@@ -52,6 +52,8 @@ public:
     [[nodiscard]] auto getLoc() const -> const SourceLoc& { return m_loc; }
     [[nodiscard]] auto getValue() const -> const std::string_view& { return m_value; }
 
+    [[nodiscard]] auto getString() const -> std::string_view;
+
     [[nodiscard]] inline auto isValue() const -> bool
     {
         return m_kind == TokenKind::Number

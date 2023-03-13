@@ -16,7 +16,7 @@ class Generator final : public ast::Visitor<Generator> {
 public:
     NO_COPY_AND_MOVE(Generator)
     using Visitor::visit;
-    Generator(Context* ctx, ast::Content& node);
+    Generator(Context* ctx, const ast::Content& node);
     ~Generator() = default;
 
     void visit(const ast::Content& node);
@@ -34,8 +34,8 @@ public:
     void visit(const ast::Member& node);
 
 private:
-    SymbolTable* m_symbolTable;
     Context* m_ctx;
+    SymbolTable* m_symbolTable;
 };
 
 } // namespace templater::table

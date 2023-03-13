@@ -51,7 +51,7 @@ private:
     void next();
     [[nodiscard]] static auto makeLoc(SourceLoc start, SourceLoc end) -> SourceLoc;
 
-    [[noreturn]] void unexpected(const std::string& message);
+    [[noreturn]] void expected(std::string_view message);
 
     Context* m_ctx;
     Lexer* m_lexer;

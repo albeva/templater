@@ -38,7 +38,7 @@ protected:
             }
         }
 
-        auto loc = m_source->getLineAndCol(token.getLoc());
+        auto loc = m_source->getPosition(token.getLoc());
         if (line > 0) {
             EXPECT_EQ(loc.line, line);
         }

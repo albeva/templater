@@ -48,7 +48,7 @@ auto Parser::statement() -> ast::Statement*
         stmt = kwTable();
         break;
     default:
-        unexpected("Expected 'import' or 'table'");
+        expected("import or table"sv);
     }
 
     return stmt;
@@ -141,7 +141,7 @@ auto Parser::tableContent() -> ast::TableContent*
         return tableBody();
     }
 
-    unexpected("Expected table body");
+    expected("table inherit or body"sv);
 }
 
 // Member [ "(" Expression ")" ]
@@ -214,18 +214,8 @@ auto Parser::tableRow() -> ast::TableRow*
 // Literal | StructBody
 auto Parser::tableValue() -> ast::TableValue*
 {
-    if (m_token.isValue()) {
-        auto* val = literal();
-        return m_ast.node<ast::TableValue>(val->getLoc(), val);
-    }
-
-    if (m_token.is(TokenKind::BraceOpen)) {
-        unexpected("structs not yet implemented");
-    }
-
-    unexpected(
-        "Expected a literal or a struct, got '"s
-        + std::string(m_token.description()) + "'");
+    auto* val = literal();
+    return m_ast.node<ast::TableValue>(val->getLoc(), val);
 }
 
 //------------------------------------------------------------------------------
@@ -302,7 +292,7 @@ auto Parser::member() -> ast::Member*
 auto Parser::literal() -> ast::Literal*
 {
     if (!m_token.isValue()) {
-        unexpected("Expected a value");
+        expected("identifier, number or a string"sv);
     }
     auto type = m_token.getKind();
     auto value = m_token.getValue();
@@ -327,10 +317,7 @@ auto Parser::accept(TokenKind kind) -> bool
 void Parser::expect(TokenKind kind)
 {
     if (m_token.isNot(kind)) {
-        std::stringstream msg;
-        msg << "Expected '" << Token::describe(kind) << "' "
-            << "got '" << m_token.description() << "' ";
-        unexpected(msg.str());
+        expected(Token::describe(kind));
     }
     next();
 }
@@ -347,10 +334,17 @@ void Parser::next()
     m_lexer->next(m_token);
 }
 
-void Parser::unexpected(const std::string& message)
+void Parser::expected(std::string_view message)
 {
-    (void)this;
-    throw ParserException(message);
+    const auto* source = m_lexer->getSource();
+    auto pos = source->getPosition(m_token.getLoc());
+    auto str = fmt::format(
+        "{}({},{}): Expected {}, got {}\n"
+        "{}",
+        source->getName(), pos.line, pos.col,
+        message, m_token.getString(),
+        source->highlight(pos));
+    throw ParserException(str);
 }
 
 auto Parser::makeLoc(SourceLoc start, SourceLoc end) -> SourceLoc

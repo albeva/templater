@@ -1,0 +1,4 @@
+# error: unexpected_tokens2.tbl(4,11): Expected '=', got table
+# table foo table = []
+#           ^~~~~
+table foo table = []

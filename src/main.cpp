@@ -13,15 +13,15 @@ using namespace ast;
 auto main() -> int
 {
     try {
-        Source src { "../samples/tokens.tbl" };
-        Lexer lexer { src };
+        Source src { "../tests/tables/fails/unexpected_tokens4.tbl" };
+        Lexer lexer { &src };
         Context ctx {};
         Parser parser { &ctx, &lexer };
         auto* ast = parser.parse();
         Generator { &ctx, *ast };
         return EXIT_SUCCESS;
     } catch (std::exception& exc) {
-        std::cerr << "templater error: " << exc.what() << '\n';
+        std::cerr << "error: " << exc.what() << '\n';
         return EXIT_FAILURE;
     } catch (...) {
         std::cerr << "Unknown error\n";

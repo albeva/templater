@@ -1,0 +1,4 @@
+# error: unexpected_tokens5.tbl(4,23): Expected ), got '|'. Did you mean '||'?
+# table foo = inherit(a | b)
+#                       ^
+table foo = inherit(a | b)

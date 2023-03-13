@@ -21,6 +21,9 @@
 #include <experimental/algorithm>
 #endif
 
+// 3rd party libs
+#include <fmt/core.h>
+
 namespace templater {
 using namespace std::literals;
 } // namespace templater

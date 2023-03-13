@@ -70,3 +70,11 @@ auto Token::describe(TokenKind kind) -> std::string_view
         std::unreachable();
     }
 }
+
+auto Token::getString() const -> std::string_view
+{
+    if (isValue() || is(TokenKind::Invalid)) {
+        return m_value;
+    }
+    return description();
+}

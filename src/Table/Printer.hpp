@@ -12,7 +12,7 @@ public:
     NO_COPY_AND_MOVE(Printer)
     using Visitor::visit;
     Printer() = default;
-    explicit Printer(Content& node)
+    explicit Printer(const Content& node)
     {
         visit(node);
     }
