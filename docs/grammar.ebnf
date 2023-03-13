@@ -1,8 +1,7 @@
-(* grammar for lbc table files *)
-Content         = [ Content ];
-Content         = Statement { "\n" Statement };
+(* grammar for template table files *)
+Content         = [ StatementList ];
+StatementList   = Statement { "\n" Statement };
 Statement       = Import | Table;
-
 Import          = "import" STRING "as" IDENTIFIER;
 
 (* table *)
