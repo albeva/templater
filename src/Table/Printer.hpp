@@ -11,7 +11,7 @@ class Printer final {
 public:
     NO_COPY_AND_MOVE(Printer)
     Printer() = default;
-    explicit Printer(const Content* node) { (*this)(node); }
+    explicit Printer(const Content* node) { visit(node); }
     ~Printer() = default;
 
     void operator()(const Content* node);

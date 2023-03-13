@@ -11,6 +11,7 @@ enum class TokenKind : uint8_t;
 }
 
 namespace templater::table::ast {
+
 struct Content;
 struct Import;
 struct Table;
@@ -29,12 +30,8 @@ using Expression = std::variant<Literal*, UnaryExpression*, BinaryExpression*>;
 using TableValue = std::variant<Literal*, StructBody*>;
 using TableContent = std::variant<TableInherit*, TableBody*>;
 
-// Helpers to avoid long type names
-
 template <typename T>
 using List = std::pmr::vector<T>;
-
-// Basic
 
 struct Root {
     explicit Root(SourceLoc loc)
@@ -48,7 +45,10 @@ private:
     SourceLoc m_loc;
 };
 
+//--------------------------------------
 // Content
+//--------------------------------------
+
 struct Content final : Root {
     explicit Content(SourceLoc loc, List<Statement> statements);
 
@@ -58,7 +58,6 @@ private:
     List<Statement> m_statements;
 };
 
-// Import
 struct Import final : Root {
     Import(SourceLoc loc, std::string_view file, std::string_view identifier);
 
@@ -70,7 +69,10 @@ private:
     std::string_view m_identifier;
 };
 
+//--------------------------------------
 // Table
+//--------------------------------------
+
 struct Table final : Root {
     Table(SourceLoc loc, std::string_view identifier, List<TableColumn*> columns, List<TableContent> content);
 
@@ -124,7 +126,9 @@ private:
     List<TableValue> m_values;
 };
 
+//--------------------------------------
 // Structs
+//--------------------------------------
 
 struct StructBody final : Root {
     explicit StructBody(SourceLoc loc)
@@ -133,7 +137,9 @@ struct StructBody final : Root {
     }
 };
 
+//--------------------------------------
 // Expressions
+//--------------------------------------
 
 struct UnaryExpression final : Root {
     UnaryExpression(SourceLoc loc, TokenKind type, Expression rhs);
@@ -158,7 +164,9 @@ private:
     Expression m_lhs, m_rhs;
 };
 
+//--------------------------------------
 // Misc
+//--------------------------------------
 
 struct Literal final : Root {
     Literal(SourceLoc loc, TokenKind type, std::string_view value);
