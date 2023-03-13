@@ -27,7 +27,7 @@ struct SourceLoc final {
     [[nodiscard]] auto length() const { return m_end - m_start; }
 
 private:
-    unsigned m_start, m_end;
+    unsigned m_start = 0, m_end = 0;
 };
 
 // defines source position in terms of human friendly line, col and length
@@ -45,7 +45,7 @@ struct SourcePos final {
     [[nodiscard]] auto getLength() const { return m_len; }
 
 private:
-    unsigned m_line, m_col, m_len;
+    unsigned m_line = 0, m_col = 0, m_len = 0;
 };
 
 } // namespace templater

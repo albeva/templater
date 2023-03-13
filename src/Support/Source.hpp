@@ -23,8 +23,8 @@ public:
     [[nodiscard]] auto getLine(std::size_t line) const -> std::string_view;
     [[nodiscard]] auto getString(SourceLoc loc) const -> std::string_view;
 
-    [[nodiscard]] auto getPosition(SourceLoc range) const -> SourcePos;
-    [[nodiscard]] auto highlight(SourcePos loc) const -> std::string;
+    [[nodiscard]] auto getPosition(SourceLoc loc) const -> SourcePos;
+    [[nodiscard]] auto highlight(SourcePos pos) const -> std::string;
 
     [[nodiscard]] auto data() const -> const char* { return m_source.data(); }
     [[nodiscard]] auto end() const -> const char*
