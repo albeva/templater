@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Visitor.hpp"
+#include "Ast.hpp"
 
 namespace templater {
 class Context;
@@ -12,26 +12,31 @@ class Context;
 namespace templater::table {
 class SymbolTable;
 
-class Generator final : public ast::Visitor<Generator> {
+class Generator final {
 public:
     NO_COPY_AND_MOVE(Generator)
-    using Visitor::visit;
-    Generator(Context* ctx, const ast::Content& node);
+    Generator(Context* ctx, const ast::Content* node);
     ~Generator() = default;
 
-    void visit(const ast::Content& node);
-    void visit(const ast::Import& node);
-    void visit(const ast::Table& node);
-    void visit(const ast::TableColumn& node);
-    void visit(const ast::TableInherit& node);
-    void visit(const ast::TableBody& node);
-    void visit(const ast::TableRow& node);
-    void visit(const ast::TableValue& node);
-    void visit(const ast::StructBody& node);
-    void visit(const ast::UnaryExpression& node);
-    void visit(const ast::BinaryExpression& node);
-    void visit(const ast::Literal& node);
-    void visit(const ast::Member& node);
+    void operator()(const ast::Content* node);
+    void operator()(const ast::Import* node);
+    void operator()(const ast::Table* node);
+    void operator()(const ast::TableColumn* node);
+    void operator()(const ast::TableInherit* node);
+    void operator()(const ast::TableBody* node);
+    void operator()(const ast::TableRow* node);
+    void operator()(const ast::TableValue& node);
+    void operator()(const ast::StructBody* node);
+    void operator()(const ast::UnaryExpression* node);
+    void operator()(const ast::BinaryExpression* node);
+    void operator()(const ast::Literal* node);
+    void operator()(const ast::Member* node);
+
+    template <typename T>
+    void visit(const T* node) { operator()(node); }
+
+    template <typename... Ts>
+    void visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
 
 private:
     Context* m_ctx;

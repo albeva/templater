@@ -11,64 +11,44 @@ enum class TokenKind : uint8_t;
 }
 
 namespace templater::table::ast {
+struct Content;
+struct Import;
+struct Table;
+struct TableColumn;
+struct TableInherit;
+struct TableBody;
+struct TableRow;
+struct StructBody;
+struct UnaryExpression;
+struct BinaryExpression;
+struct Literal;
+struct Member;
 
-// Ast kinds
-enum class Kind : uint8_t {
-    StatementList,
-    Import,
-    Table,
-    TableColumn,
-    TableInherit,
-    TableBody,
-    TableRow,
-    TableValue,
-    StructBody,
-    UnaryExpression,
-    BinaryExpression,
-    Literal,
-    Member
-};
+using Statement = std::variant<Import*, Table*>;
+using Expression = std::variant<Literal*, UnaryExpression*, BinaryExpression*>;
+using TableValue = std::variant<Literal*, StructBody*>;
+using TableContent = std::variant<TableInherit*, TableBody*>;
 
 // Helpers to avoid long type names
 
 template <typename T>
-using List = std::pmr::vector<T*>;
-
-// Forward
-
-struct TableColumn;
-struct TableContent;
-struct TableRow;
-struct TableValue;
-struct StructBody;
-struct Literal;
-struct Member;
+using List = std::pmr::vector<T>;
 
 // Basic
 
 struct Root {
-    Root(Kind kind, SourceLoc loc)
-        : m_kind { kind }
-        , m_loc { loc }
+    explicit Root(SourceLoc loc)
+        : m_loc(loc)
     {
     }
 
-    [[nodiscard]] auto getKind() const { return m_kind; }
     [[nodiscard]] auto getLoc() const { return m_loc; }
 
 private:
-    Kind m_kind;
     SourceLoc m_loc;
 };
 
-struct Statement : Root {
-    using Root::Root;
-};
-
-struct Expression : Root {
-    using Root::Root;
-};
-
+// Content
 struct Content final : Root {
     explicit Content(SourceLoc loc, List<Statement> statements);
 
@@ -79,8 +59,7 @@ private:
 };
 
 // Import
-
-struct Import final : Statement {
+struct Import final : Root {
     Import(SourceLoc loc, std::string_view file, std::string_view identifier);
 
     [[nodiscard]] auto getFile() const { return m_file; }
@@ -92,9 +71,8 @@ private:
 };
 
 // Table
-
-struct Table final : Statement {
-    Table(SourceLoc loc, std::string_view identifier, List<TableColumn> columns, List<TableContent> content);
+struct Table final : Root {
+    Table(SourceLoc loc, std::string_view identifier, List<TableColumn*> columns, List<TableContent> content);
 
     [[nodiscard]] auto getIdentifier() const { return m_identifier; }
     [[nodiscard]] auto getColumns() const -> auto& { return m_columns; }
@@ -102,43 +80,39 @@ struct Table final : Statement {
 
 private:
     std::string_view m_identifier;
-    List<TableColumn> m_columns;
+    List<TableColumn*> m_columns;
     List<TableContent> m_content;
 };
 
 struct TableColumn final : Root {
-    TableColumn(SourceLoc loc, std::string_view identifier, TableValue* value);
+    TableColumn(SourceLoc loc, std::string_view identifier, std::optional<TableValue> value);
 
     [[nodiscard]] auto getIdentifier() const { return m_identifier; }
     [[nodiscard]] auto getValue() const { return m_value; }
 
 private:
     std::string_view m_identifier;
-    TableValue* m_value;
+    std::optional<TableValue> m_value;
 };
 
-struct TableContent : Root {
-    using Root::Root;
-};
-
-struct TableInherit final : TableContent {
-    TableInherit(SourceLoc loc, Member* member, Expression* expression);
+struct TableInherit final : Root {
+    TableInherit(SourceLoc loc, Member* member, std::optional<Expression> expression);
 
     [[nodiscard]] auto getMember() const { return m_member; }
     [[nodiscard]] auto getExpression() const { return m_expression; }
 
 private:
     Member* m_member;
-    Expression* m_expression;
+    std::optional<Expression> m_expression;
 };
 
-struct TableBody final : TableContent {
-    explicit TableBody(SourceLoc loc, List<TableRow> rows);
+struct TableBody final : Root {
+    explicit TableBody(SourceLoc loc, List<TableRow*> rows);
 
     [[nodiscard]] auto getRows() const -> auto& { return m_rows; }
 
 private:
-    List<TableRow> m_rows;
+    List<TableRow*> m_rows;
 };
 
 struct TableRow final : Root {
@@ -150,42 +124,30 @@ private:
     List<TableValue> m_values;
 };
 
-struct TableValue final : Expression {
-    explicit TableValue(SourceLoc loc, Literal* literal);
-    explicit TableValue(SourceLoc loc, StructBody* body);
-
-    using Value = std::variant<Literal*, StructBody*>;
-
-    [[nodiscard]] auto getValue() const { return m_value; }
-
-private:
-    Value m_value;
-};
-
 // Structs
 
 struct StructBody final : Root {
     explicit StructBody(SourceLoc loc)
-        : Root { Kind::StructBody, loc }
+        : Root { loc }
     {
     }
 };
 
 // Expressions
 
-struct UnaryExpression final : Expression {
-    UnaryExpression(SourceLoc loc, TokenKind type, Expression* rhs);
+struct UnaryExpression final : Root {
+    UnaryExpression(SourceLoc loc, TokenKind type, Expression rhs);
 
     [[nodiscard]] auto getType() const { return m_type; }
     [[nodiscard]] auto getRhs() const { return m_rhs; }
 
 private:
     TokenKind m_type;
-    Expression* m_rhs;
+    Expression m_rhs;
 };
 
-struct BinaryExpression final : Expression {
-    BinaryExpression(SourceLoc loc, TokenKind type, Expression* lhs, Expression* rhs);
+struct BinaryExpression final : Root {
+    BinaryExpression(SourceLoc loc, TokenKind type, Expression lhs, Expression rhs);
 
     [[nodiscard]] auto getType() const { return m_type; }
     [[nodiscard]] auto getLhs() const { return m_lhs; }
@@ -193,7 +155,7 @@ struct BinaryExpression final : Expression {
 
 private:
     TokenKind m_type;
-    Expression *m_lhs, *m_rhs;
+    Expression m_lhs, m_rhs;
 };
 
 // Misc

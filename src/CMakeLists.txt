@@ -2,6 +2,7 @@
 add_library(
     templater_lib
     pch.hpp
+    Support/Containers.hpp
     Support/Context.cpp
     Support/Context.hpp
     Support/Source.cpp
@@ -29,7 +30,7 @@ add_library(
     Table/Table.hpp
     Table/Token.cpp
     Table/Token.hpp
-    Table/Visitor.hpp Support/Containers.hpp)
+)
 
 # fmt
 include(FetchContent)

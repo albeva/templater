@@ -6,8 +6,9 @@
 #include "Symbol.hpp"
 #include "SymbolTable.hpp"
 using namespace templater::table;
+using namespace templater::table::ast;
 
-Generator::Generator(templater::Context* ctx, const ast::Content& node)
+Generator::Generator(templater::Context* ctx, const ast::Content* node)
     : m_ctx(ctx)
     , m_symbolTable(ctx->create<SymbolTable>(ctx))
 {
@@ -15,80 +16,80 @@ Generator::Generator(templater::Context* ctx, const ast::Content& node)
     visit(node);
 }
 
-void Generator::visit(const ast::Content& node)
+void Generator::operator()(const ast::Content* node)
 {
-    for (const auto* stmt : node.getStatements()) {
-        visit(*stmt);
+    for (const auto& stmt : node->getStatements()) {
+        visit(stmt);
     }
 }
 
-void Generator::visit(const ast::Import& node)
+void Generator::operator()(const ast::Import* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::Table& node)
+void Generator::operator()(const ast::Table* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::TableColumn& node)
+void Generator::operator()(const ast::TableColumn* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::TableInherit& node)
+void Generator::operator()(const ast::TableInherit* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::TableBody& node)
+void Generator::operator()(const ast::TableBody* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::TableRow& node)
+void Generator::operator()(const ast::TableRow* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::TableValue& node)
+void Generator::operator()(const TableValue& node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::StructBody& node)
+void Generator::operator()(const ast::StructBody* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::UnaryExpression& node)
+void Generator::operator()(const ast::UnaryExpression* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::BinaryExpression& node)
+void Generator::operator()(const ast::BinaryExpression* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::Literal& node)
+void Generator::operator()(const ast::Literal* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::Member& node)
+void Generator::operator()(const ast::Member* node)
 {
     (void)this;
     (void)node;

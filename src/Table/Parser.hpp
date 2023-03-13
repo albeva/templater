@@ -24,23 +24,23 @@ public:
     [[nodiscard]] auto parse() -> ast::Content*;
 
 private:
-    auto statement() -> ast::Statement*;
+    auto statement() -> ast::Statement;
     auto kwImport() -> ast::Import*;
 
     auto kwTable() -> ast::Table*;
-    auto tableColumnList() -> ast::List<ast::TableColumn>;
+    auto tableColumnList() -> ast::List<ast::TableColumn*>;
     auto tableColumn() -> ast::TableColumn*;
     auto tableContentList() -> ast::List<ast::TableContent>;
-    auto tableContent() -> ast::TableContent*;
+    auto tableContent() -> ast::TableContent;
     auto tableInherit() -> ast::TableInherit*;
     auto tableBody() -> ast::TableBody*;
-    auto tableRowList() -> ast::List<ast::TableRow>;
+    auto tableRowList() -> ast::List<ast::TableRow*>;
     auto tableRow() -> ast::TableRow*;
-    auto tableValue() -> ast::TableValue*;
+    auto tableValue() -> ast::TableValue;
 
-    auto expression() -> ast::Expression*;
-    auto primary() -> ast::Expression*;
-    auto expression(ast::Expression* lhs, int min) -> ast::Expression*;
+    auto expression() -> ast::Expression;
+    auto primary() -> ast::Expression;
+    auto expression(ast::Expression lhs, int min) -> ast::Expression;
 
     auto member() -> ast::Member*;
     auto literal() -> ast::Literal*;
@@ -57,6 +57,7 @@ private:
     Lexer* m_lexer;
     ast::AstAllocator m_ast;
     Token m_token {};
+    SourceLoc m_lastLoc {};
 };
 
 } // namespace templater::table

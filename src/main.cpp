@@ -6,6 +6,7 @@
 #include "Table/Generator.hpp"
 #include "Table/Lexer.hpp"
 #include "Table/Parser.hpp"
+#include "Table/Printer.hpp"
 using namespace templater;
 using namespace table;
 using namespace ast;
@@ -18,7 +19,8 @@ auto main() -> int
         Lexer lexer { &ctx, &src };
         Parser parser { &ctx, &lexer };
         auto* ast = parser.parse();
-        Generator { &ctx, *ast };
+        std::cout << Printer(ast) << '\n';
+        // Generator { &ctx, *ast };
         return EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << "error: " << exc.what() << '\n';
