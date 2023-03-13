@@ -31,7 +31,7 @@ public:
     [[nodiscard]] auto output() const -> std::string;
 
     template <typename T>
-    void visit(const T* node) { this->operator()(node); } // cppcheck-suppress functionStatic
+    void visit(const T* node) { operator()(node); } // cppcheck-suppress functionStatic
 
     template <typename... Ts>
     void visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
