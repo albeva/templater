@@ -13,9 +13,9 @@ using namespace ast;
 auto main() -> int
 {
     try {
-        Source src { "../tests/tables/fails/unexpected_tokens4.tbl" };
-        Lexer lexer { &src };
         Context ctx {};
+        Source src { "../samples/Tokens.tbl" };
+        Lexer lexer { &ctx, &src };
         Parser parser { &ctx, &lexer };
         auto* ast = parser.parse();
         Generator { &ctx, *ast };

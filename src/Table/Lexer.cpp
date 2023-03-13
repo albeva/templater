@@ -2,6 +2,7 @@
 // Created by Albert on 05/03/2023.
 //
 #include "Lexer.hpp"
+#include "Support/Context.hpp"
 #include "Support/Source.hpp"
 #include "Token.hpp"
 using namespace templater::table;
@@ -42,8 +43,9 @@ constexpr std::array kKeywords {
 };
 } // namespace
 
-Lexer::Lexer(Source* source)
-    : m_source(source)
+Lexer::Lexer(Context* ctx, Source* source)
+    : m_ctx(ctx)
+    , m_source(source)
     , m_input(source->data())
 {
 }
@@ -68,7 +70,7 @@ void Lexer::next(Token& token) // NOLINT readability-function-cognitive-complexi
             if (m_input[1] == '\n') {
                 size++;
             }
-            // fall through
+            [[fallthrough]];
         case '\n':
             if (m_hasStmt) {
                 return make(token, TokenKind::EndOfLine, size);
@@ -188,20 +190,81 @@ void Lexer::unexpected(Token& token, std::string_view message)
 void Lexer::string(Token& token)
 {
     const auto* start = m_input++;
+    const auto* begin = m_input;
+
+    std::string literal {};
     while (true) {
         auto ch = *m_input;
-        if (isLineOrFileEnd(ch)) {
-            return unexpected(token, "end of line");
+        switch (ch) {
+        case '\0':
+        case '\n':
+        case '\r':
+            return unexpected(token, "open string");
+        case '\\': {
+            if (begin < m_input) {
+                literal.append(begin, m_input);
+            }
+            auto esc = escape();
+            if (esc.has_value()) {
+                literal += esc.value();
+            } else {
+                return unexpected(token, esc.error());
+            }
+            m_input++;
+            begin = m_input;
+            continue;
         }
-        m_input++;
-
-        if (ch == '\"') {
+        case '"':
             break;
+        default:
+            m_input++;
+            continue;
         }
+        break;
     }
 
+    auto lit = [&]() {
+        if (literal.empty()) {
+            return m_ctx->retain(std::string_view { begin, m_input });
+        }
+        if (begin < m_input) {
+            literal.append(begin, m_input);
+        }
+        return m_ctx->retain(std::move(literal));
+    }();
+
+    m_input++;
     m_hasStmt = true;
-    token.set(TokenKind::String, loc(start), { start + 1, m_input - 1 });
+    token.set(TokenKind::String, loc(start), lit);
+}
+
+auto Lexer::escape() -> std::expected<char, std::string_view>
+{
+    // assume m_input[0] == '\\'
+    switch (*++m_input) {
+    case 'a':
+        return '\a';
+    case 'b':
+        return '\b';
+    case 'f':
+        return '\f';
+    case 'n':
+        return '\n';
+    case 'r':
+        return '\r';
+    case 't':
+        return '\t';
+    case 'v':
+        return '\v';
+    case '\\':
+        return '\\';
+    case '\'':
+        return '\'';
+    case '"':
+        return '"';
+    default:
+        return std::unexpected("invalid escape sequence"sv);
+    }
 }
 
 void Lexer::number(Token& token)
@@ -212,7 +275,7 @@ void Lexer::number(Token& token)
     }
 
     m_hasStmt = true;
-    token.set(TokenKind::Number, loc(start), { start, m_input });
+    token.set(TokenKind::Number, loc(start), m_ctx->retain(std::string_view { start, m_input }));
 }
 
 void Lexer::identifier(Token& token)
@@ -227,13 +290,16 @@ void Lexer::identifier(Token& token)
     if (const auto& iter = std::ranges::find(kKeywords, lexeme, &Keyword::first); iter != kKeywords.end()) {
         token.set(iter->second, loc(start));
     } else {
-        token.set(TokenKind::Identifier, loc(start), lexeme);
+        token.set(TokenKind::Identifier, loc(start), m_ctx->retain(lexeme));
     }
 }
 
 auto Lexer::loc(const char* start) -> templater::SourceLoc
 {
-    return { start, m_input };
+    return {
+        static_cast<unsigned>(std::distance(m_source->data(), start)),
+        static_cast<unsigned>(std::distance(m_source->data(), m_input))
+    };
 }
 
 // NOLINTEND cppcoreguidelines-pro-bounds-pointer-arithmetic

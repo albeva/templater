@@ -3,6 +3,7 @@
 //
 #include "Support/Source.hpp"
 #include "Support/SourceLoc.hpp"
+#include "Support/Context.hpp"
 #include "Table/Lexer.hpp"
 #include "Table/Token.hpp"
 #include "gtest/gtest.h"
@@ -20,8 +21,9 @@ class LexerTests : public testing::Test {
 protected:
     void load(std::string_view source)
     {
+        m_ctx = std::make_unique<Context>();
         m_source = std::make_unique<Source>("unnamed", std::string(source));
-        m_lexer = std::make_unique<Lexer>(*m_source);
+        m_lexer = std::make_unique<Lexer>(m_ctx.get(), m_source.get());
     }
 
     void expect(TokenKind kind, std::string_view lexeme = "", unsigned line = 0, unsigned col = 0, unsigned len = 0)
@@ -38,20 +40,20 @@ protected:
             }
         }
 
-        auto loc = m_source->getPosition(token.getLoc());
+        auto pos = m_source->getPosition(token.getLoc());
         if (line > 0) {
-            EXPECT_EQ(loc.line, line);
+            EXPECT_EQ(pos.getLine(), line);
         }
         if (col > 0) {
-            EXPECT_EQ(loc.col, col);
+            EXPECT_EQ(pos.getCol(), col);
         }
         if (len > 0) {
-            auto length = token.getLoc().length();
-            EXPECT_EQ(length, len);
+            EXPECT_EQ(len, pos.getLength());
         }
     }
 
 private:
+    std::unique_ptr<Context> m_ctx;
     std::unique_ptr<table::Lexer> m_lexer;
     std::unique_ptr<Source> m_source;
 };
@@ -90,10 +92,23 @@ TEST_F(LexerTests, Invalid)
     EXPECT_TOKEN(TokenKind::Invalid, "'&'. Did you mean '&&'?", 1, 1, 1)
     EXPECT_TOKEN(TokenKind::Invalid, "'|'. Did you mean '||'?", 1, 2, 1)
     EXPECT_TOKEN(TokenKind::Invalid, "@", 1, 3, 1)
-    EXPECT_TOKEN(TokenKind::Invalid, "end of line", 2, 13, 1)
-    EXPECT_TOKEN(TokenKind::Invalid, "end of line", 3, 13, 0)
+    EXPECT_TOKEN(TokenKind::Invalid, "open string", 2, 13, 1)
+    EXPECT_TOKEN(TokenKind::Invalid, "open string", 3, 13, 0)
 
     EXPECT_TOKEN(TokenKind::EndOfFile, "", 3, 13, 0)
+}
+
+TEST_F(LexerTests, StringEscape)
+{
+    static constexpr auto source = R"TPL(
+"foo \"bar\""
+"world \\"
+)TPL";
+    load(source);
+
+    EXPECT_TOKEN(TokenKind::String, "foo \"bar\"",   2, 1, 13)
+    EXPECT_TOKEN(TokenKind::EndOfLine)
+    EXPECT_TOKEN(TokenKind::String, "world \\",      3, 1, 10)
 }
 
 TEST_F(LexerTests, Stream)

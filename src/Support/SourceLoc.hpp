@@ -6,14 +6,11 @@
 
 namespace templater {
 
+// defines a location range based on start and end index
 struct SourceLoc final {
-    SourceLoc()
-        : m_start { nullptr }
-        , m_end { nullptr }
-    {
-    }
+    SourceLoc() = default;
 
-    SourceLoc(const char* start, const char* end)
+    SourceLoc(unsigned start, unsigned end)
         : m_start { start }
         , m_end { end }
     {
@@ -27,14 +24,28 @@ struct SourceLoc final {
 
     [[nodiscard]] auto getStart() const { return m_start; }
     [[nodiscard]] auto getEnd() const { return m_end; }
-
-    [[nodiscard]] auto length() const -> unsigned
-    {
-        return static_cast<unsigned>(std::distance(m_start, m_end));
-    }
+    [[nodiscard]] auto length() const { return m_end - m_start; }
 
 private:
-    const char *m_start, *m_end;
+    unsigned m_start, m_end;
+};
+
+// defines source position in terms of human friendly line, col and length
+struct SourcePos final {
+    SourcePos() = default;
+    SourcePos(unsigned line, unsigned col, unsigned len)
+        : m_line(line)
+        , m_col(col)
+        , m_len(len)
+    {
+    }
+
+    [[nodiscard]] auto getLine() const { return m_line; }
+    [[nodiscard]] auto getCol() const { return m_col; }
+    [[nodiscard]] auto getLength() const { return m_len; }
+
+private:
+    unsigned m_line, m_col, m_len;
 };
 
 } // namespace templater

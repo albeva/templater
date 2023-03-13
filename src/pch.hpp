@@ -5,6 +5,7 @@
 #include <array>
 #include <cassert>
 #include <exception>
+#include <expected>
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -29,4 +30,5 @@ using namespace std::literals;
 } // namespace templater
 
 // templater headers
+#include "Support/Containers.hpp"
 #include "Support/Utils.hpp"

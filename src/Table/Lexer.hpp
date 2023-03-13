@@ -7,6 +7,7 @@
 namespace templater {
 class Source;
 struct SourceLoc;
+class Context;
 }
 
 namespace templater::table {
@@ -20,7 +21,7 @@ class LexerException final : public std::runtime_error {
 class Lexer final {
 public:
     NO_COPY_AND_MOVE(Lexer)
-    explicit Lexer(Source* source);
+    explicit Lexer(Context* ctx, Source* source);
     ~Lexer() = default;
 
     void next(Token&);
@@ -32,9 +33,11 @@ private:
     void unexpected(Token& token, std::string_view message = ""sv);
 
     void string(Token& token);
+    [[nodiscard]] auto escape() -> std::expected<char, std::string_view>;
     void identifier(Token& token);
     void number(Token& token);
 
+    Context* m_ctx;
     Source* m_source;
     const char* m_input;
     bool m_hasStmt = false;

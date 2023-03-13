@@ -29,7 +29,7 @@ add_library(
     Table/Table.hpp
     Table/Token.cpp
     Table/Token.hpp
-    Table/Visitor.hpp)
+    Table/Visitor.hpp Support/Containers.hpp)
 
 # fmt
 include(FetchContent)

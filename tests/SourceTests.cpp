@@ -49,28 +49,20 @@ TEST_F(SourceTests, GetLoc) {
     load(src);
 
     {
-        const auto* to = source->data();
-        std::advance(to, 5);
-
-        auto loc = SourceLoc(source->data(), to);
-        auto [line, col] = source->getPosition(loc);
-        EXPECT_EQ(line, 1);
-        EXPECT_EQ(col, 1);
-        EXPECT_EQ(loc.length(), 5);
+        auto loc = SourceLoc(0, 5);
+        auto pos = source->getPosition(loc);
+        EXPECT_EQ(pos.getLine(), 1);
+        EXPECT_EQ(pos.getCol(), 1);
+        EXPECT_EQ(pos.getLength(), 5);
         EXPECT_EQ(source->getString(loc), "hello"s);
     }
 
     {
-        const auto *from = source->data();
-        std::advance(from, 7);
-        const auto* to = from;
-        std::advance(to, 5);
-
-        auto loc = SourceLoc(from, to);
-        auto [line, col] = source->getPosition(loc);
-        EXPECT_EQ(line, 2);
-        EXPECT_EQ(col, 2);
-        EXPECT_EQ(loc.length(), 5);
+        auto loc = SourceLoc(7, 12);
+        auto pos = source->getPosition(loc);
+        EXPECT_EQ(pos.getLine(), 2);
+        EXPECT_EQ(pos.getCol(), 2);
+        EXPECT_EQ(pos.getLength(), 5);
         EXPECT_EQ(source->getString(loc), "world"s);
     }
 }

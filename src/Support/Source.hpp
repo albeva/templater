@@ -13,12 +13,7 @@ class SourceException final : public std::runtime_error {
 
 class Source final {
 public:
-    // Difference from SourceLoc is that it contains
-    // human friendly line, col and length info, rather
-    // than pointer pair range
-    struct Position final {
-        unsigned line, col, len;
-    };
+    using Range = std::pair<const char*, const char*>;
 
     explicit Source(const std::filesystem::path& path);
     Source(std::string name, std::string source);
@@ -28,8 +23,8 @@ public:
     [[nodiscard]] auto getString(std::size_t line) const -> std::string_view;
     [[nodiscard]] auto getString(SourceLoc loc) const -> std::string_view;
 
-    [[nodiscard]] auto getPosition(SourceLoc loc) const -> Position;
-    [[nodiscard]] auto highlight(Position pos) const -> std::string;
+    [[nodiscard]] auto getPosition(SourceLoc range) const -> SourcePos;
+    [[nodiscard]] auto highlight(SourcePos loc) const -> std::string;
 
     [[nodiscard]] auto data() const -> const char* { return m_source.data(); }
     [[nodiscard]] auto end() const -> const char*
@@ -42,7 +37,7 @@ public:
     [[nodiscard]] auto length() const -> std::size_t { return m_source.length(); }
 
 private:
-    void verify(const SourceLoc& loc) const;
+    [[nodiscard]] auto normalize(const SourceLoc& loc) const -> Range;
     [[nodiscard]] auto getLineStart(size_t line) const -> const char*;
 
     std::string m_name;

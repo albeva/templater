@@ -16,9 +16,20 @@ public:
 
     [[nodiscard]] auto getAllocator() -> auto& { return m_pa; }
 
+    [[nodiscard]] auto retain(std::string&& str) -> std::string_view
+    {
+        return *m_uniquedStrings.emplace(std::move(str)).first;
+    }
+
+    [[nodiscard]] auto retain(std::string_view str) -> std::string_view
+    {
+        return *m_uniquedStrings.emplace(str).first;
+    }
+
 private:
     std::pmr::monotonic_buffer_resource m_mbr {};
     std::pmr::polymorphic_allocator<std::byte> m_pa { &m_mbr };
+    pmr::StringSet m_uniquedStrings { m_pa };
 };
 
 } // namespace templater

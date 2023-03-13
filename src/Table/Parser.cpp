@@ -341,7 +341,7 @@ void Parser::expected(std::string_view message)
     auto str = fmt::format(
         "{}({},{}): Expected {}, got {}\n"
         "{}",
-        source->getName(), pos.line, pos.col,
+        source->getName(), pos.getLine(), pos.getCol(),
         message, m_token.getString(),
         source->highlight(pos));
     throw ParserException(str);

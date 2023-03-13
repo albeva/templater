@@ -26,16 +26,17 @@ Source::Source(std::string name, std::string source)
 {
 }
 
-auto Source::getPosition(SourceLoc loc) const -> Source::Position
+auto Source::getPosition(SourceLoc loc) const -> SourcePos
 {
-    verify(loc);
+    auto range = normalize(loc);
 
-    auto line = std::count(data(), loc.getStart(), '\n');
-    auto start = std::find(std::make_reverse_iterator(loc.getStart()), std::make_reverse_iterator(data()), '\n');
+    auto line = std::count(data(), range.first, '\n');
+    auto start = std::find(std::make_reverse_iterator(range.first), std::make_reverse_iterator(data()), '\n');
+
     return {
-        .line = static_cast<unsigned>(line + 1),
-        .col = static_cast<unsigned>(std::distance(start.base(), loc.getStart()) + 1),
-        .len = loc.length()
+        static_cast<unsigned>(line + 1),
+        static_cast<unsigned>(std::distance(start.base(), range.first) + 1),
+        loc.length()
     };
 }
 
@@ -48,32 +49,34 @@ auto Source::getString(std::size_t line) const -> std::string_view
 
 auto Source::getString(SourceLoc loc) const -> std::string_view
 {
-    verify(loc);
-    return { loc.getStart(), loc.getEnd() };
+    auto range = normalize(loc);
+    return { range.first, range.second };
 }
 
-auto Source::highlight(Position pos) const -> std::string
+auto Source::highlight(SourcePos pos) const -> std::string
 {
     return fmt::format(
         "{0}\n{1:>{3}}{2:~>{4}}",
-        getString(pos.line), // 0
+        getString(pos.getLine()), // 0
         '^', // 1
         "", // 2
-        pos.col,
-        pos.len > 1 ? pos.len - 1 : 0);
+        pos.getCol(),
+        pos.getLength() > 1 ? pos.getLength() - 1 : 0);
 }
 
-void Source::verify(const SourceLoc& loc) const
+auto Source::normalize(const SourceLoc& loc) const -> Range
 {
-    const char* start = data();
+    const char* from = data();
+    std::advance(from, loc.getStart());
 
-    auto invalid = [&](const char* ptr) {
-        return ptr < start || ptr > end();
-    };
+    const char* to = data();
+    std::advance(to, loc.getEnd());
 
-    if (invalid(loc.getStart()) || invalid(loc.getEnd())) {
+    if (from > end() || to > end()) {
         throw SourceException("SourceLoc outside Source range");
     }
+
+    return { from, to };
 }
 
 auto Source::getLineStart(size_t line) const -> const char*
