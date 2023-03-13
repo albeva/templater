@@ -36,9 +36,9 @@ TEST_F(SourceTests, GetLine) {
     load(src);
 
     EXPECT_EQ(source->length(), 13);
-    EXPECT_EQ(source->getString(1), "hello"s);
-    EXPECT_EQ(source->getString(2), "world"s);
-    EXPECT_EQ(source->getString(3), "!"s);
+    EXPECT_EQ(source->getLine(1), "hello"s);
+    EXPECT_EQ(source->getLine(2), "world"s);
+    EXPECT_EQ(source->getLine(3), "!"s);
 }
 
 TEST_F(SourceTests, GetLoc) {

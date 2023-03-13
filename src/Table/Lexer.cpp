@@ -9,7 +9,7 @@ using namespace templater::table;
 
 // Lexer iterates over null terminated const char* using pointer
 // arithmetic
-// !NOLINTBEGIN cppcoreguidelines-pro-bounds-pointer-arithmetic
+// NOLINTBEGIN cppcoreguidelines-pro-bounds-pointer-arithmetic
 
 namespace {
 [[nodiscard]] inline auto isDigit(char ch) -> bool
@@ -46,7 +46,8 @@ constexpr std::array kKeywords {
 Lexer::Lexer(Context* ctx, Source* source)
     : m_ctx(ctx)
     , m_source(source)
-    , m_input(source->data())
+    , m_buffer(source->data())
+    , m_input(m_buffer)
 {
 }
 
@@ -297,8 +298,8 @@ void Lexer::identifier(Token& token)
 auto Lexer::loc(const char* start) -> templater::SourceLoc
 {
     return {
-        static_cast<unsigned>(std::distance(m_source->data(), start)),
-        static_cast<unsigned>(std::distance(m_source->data(), m_input))
+        static_cast<unsigned>(std::distance(m_buffer, start)),
+        static_cast<unsigned>(std::distance(m_buffer, m_input))
     };
 }
 

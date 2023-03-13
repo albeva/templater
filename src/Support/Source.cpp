@@ -40,7 +40,7 @@ auto Source::getPosition(SourceLoc loc) const -> SourcePos
     };
 }
 
-auto Source::getString(std::size_t line) const -> std::string_view
+auto Source::getLine(std::size_t line) const -> std::string_view
 {
     const char* from = getLineStart(line);
     const char* to = std::find_if(from, end(), [](char ch) { return ch == '\r' || ch == '\n'; });
@@ -57,7 +57,7 @@ auto Source::highlight(SourcePos pos) const -> std::string
 {
     return fmt::format(
         "{0}\n{1:>{3}}{2:~>{4}}",
-        getString(pos.getLine()), // 0
+        getLine(pos.getLine()), // 0
         '^', // 1
         "", // 2
         pos.getCol(),

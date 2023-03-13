@@ -20,7 +20,7 @@ public:
 
     [[nodiscard]] auto getName() const -> const auto& { return m_name; }
 
-    [[nodiscard]] auto getString(std::size_t line) const -> std::string_view;
+    [[nodiscard]] auto getLine(std::size_t line) const -> std::string_view;
     [[nodiscard]] auto getString(SourceLoc loc) const -> std::string_view;
 
     [[nodiscard]] auto getPosition(SourceLoc range) const -> SourcePos;
