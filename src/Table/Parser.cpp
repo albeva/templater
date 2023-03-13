@@ -244,6 +244,7 @@ auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
         return node->getLoc();
     };
 
+    auto start = std::visit(getLoc, lhs);
     while (m_token.getPrecedence() >= min) {
         auto op = m_token.getKind();
         auto prec = m_token.getPrecedence();
@@ -254,7 +255,6 @@ auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
             rhs = expression(rhs, m_token.getPrecedence());
         }
 
-        auto start = std::visit(getLoc, lhs);
         auto end = std::visit(getLoc, rhs);
         lhs = m_ast.node<ast::BinaryExpression>(makeLoc(start, end), op, lhs, rhs);
     }
