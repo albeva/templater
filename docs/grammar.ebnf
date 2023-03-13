@@ -21,7 +21,7 @@ TableValue       = Literal | StructBody;
 Expression       = Primary { BinaryOperator Primary };
 Primary          = ( UnaryOperator Primary )
                  | ( "(" Expression ")" )
-                 | TableValue
+                 | Literal
                  ;
 BinaryOperator   = "<" | "<=" | ">" | ">=" | "==" | "!=" | "&&" | "||";
 UnaryOperator    = "!";
