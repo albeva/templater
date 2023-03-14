@@ -30,7 +30,7 @@ add_library(
     Table/Table.hpp
     Table/Token.cpp
     Table/Token.hpp
-)
+    Support/Diagnostics.cpp Support/Diagnostics.hpp)
 
 # fmt
 include(FetchContent)

@@ -5,14 +5,16 @@
 #include "Ast.hpp"
 #include "Lexer.hpp"
 #include "Support/Context.hpp"
+#include "Support/Diagnostics.hpp"
 
 using namespace templater;
 using namespace templater::table;
 
-Parser::Parser(Context* ctx, Lexer* lexer)
-    : m_ctx { ctx }
-    , m_lexer { lexer }
-    , m_ast { m_ctx }
+Parser::Parser(Context* ctx, Diagnostics* diag, Lexer* lexer)
+    : m_ctx(ctx)
+    , m_diag(diag)
+    , m_lexer(lexer)
+    , m_ast(m_ctx)
 {
     next();
 }
@@ -327,15 +329,10 @@ void Parser::next()
 
 void Parser::expected(std::string_view message)
 {
-    const auto* source = m_lexer->getSource();
-    auto pos = source->getPosition(m_token.getLoc());
-    auto str = fmt::format(
-        "{}({},{}): Expected {}, got {}\n"
-        "{}",
-        source->getName(), pos.getLine(), pos.getCol(),
-        message, m_token.getString(),
-        source->highlight(pos));
-    throw ParserException(str);
+    m_diag->error(
+        m_lexer->getSource(), m_token.getLoc(),
+        std::format("Expected {}, got {}", message, m_token.getString()));
+    throw ParserException("");
 }
 
 auto Parser::makeLoc(SourceLoc start, SourceLoc end) -> SourceLoc

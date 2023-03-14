@@ -8,6 +8,10 @@
 #include "Support/Source.hpp"
 #include "Token.hpp"
 
+namespace templater {
+class Diagnostics;
+}
+
 namespace templater::table {
 class Lexer;
 
@@ -19,7 +23,7 @@ class Parser final {
 public:
     NO_COPY_AND_MOVE(Parser)
     ~Parser() = default;
-    explicit Parser(Context* ctx, Lexer* lexer);
+    explicit Parser(Context* ctx, Diagnostics* diag, Lexer* lexer);
 
     [[nodiscard]] auto parse() -> ast::Content*;
 
@@ -54,6 +58,7 @@ private:
     [[noreturn]] void expected(std::string_view message);
 
     Context* m_ctx;
+    Diagnostics* m_diag;
     Lexer* m_lexer;
     ast::AstAllocator m_ast;
     Token m_token {};
