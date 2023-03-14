@@ -25,27 +25,29 @@ public:
     Generator(Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node);
     ~Generator() = default;
 
-    void operator()(const ast::Content* node);
-    void operator()(const ast::Import* node);
-    void operator()(const ast::Table* node);
-    void operator()(const ast::TableColumn* node);
-    void operator()(const ast::TableInherit* node);
-    void operator()(const ast::TableBody* node);
-    void operator()(const ast::TableRow* node);
-    void operator()(const ast::StructBody* node);
-    void operator()(const ast::UnaryExpression* node);
-    void operator()(const ast::BinaryExpression* node);
-    void operator()(const ast::Literal* node);
-    void operator()(const ast::Member* node);
+    void visit(const ast::Content* node);
+    void visit(const ast::Import* node);
+    void visit(const ast::Table* node);
+    void visit(const ast::TableColumn* node);
+    void visit(const ast::TableInherit* node);
+    void visit(const ast::TableBody* node);
+    void visit(const ast::TableRow* node);
+    void visit(const ast::StructBody* node);
+    void visit(const ast::UnaryExpression* node);
+    void visit(const ast::BinaryExpression* node);
+    void visit(const ast::Literal* node);
+    void visit(const ast::Member* node);
 
     [[nodiscard]] auto getSymbolTable() const { return m_symbolTable; }
 
-private:
-    void inline visit(const auto* node) { operator()(node); } // cppcheck-suppress functionStatic
+    // for visiting with std::visit
+    void inline operator()(const auto* node) { visit(node); }
 
+    // visit with std::visit
     template <typename... Ts>
     void inline visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
 
+private:
     void inline visitEach(const std::ranges::range auto& list)
     {
         for (const auto& node : list) {

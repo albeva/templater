@@ -22,18 +22,18 @@ Generator::Generator(templater::Context* ctx, Diagnostics* diag, Source* source,
     visit(node);
 }
 
-void Generator::operator()(const ast::Content* node)
+void Generator::visit(const ast::Content* node)
 {
     visitEach(node->getStatements());
 }
 
-void Generator::operator()(const ast::Import* node)
+void Generator::visit(const ast::Import* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::Table* node)
+void Generator::visit(const ast::Table* node)
 {
     const auto& id = node->getIdentifier();
     const auto* existing = m_symbolTable->find(id.getValue());
@@ -51,55 +51,55 @@ void Generator::operator()(const ast::Table* node)
     m_table = nullptr;
 }
 
-void Generator::operator()(const ast::TableColumn* node)
+void Generator::visit(const ast::TableColumn* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::TableInherit* node)
+void Generator::visit(const ast::TableInherit* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::TableBody* node)
+void Generator::visit(const ast::TableBody* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::TableRow* node)
+void Generator::visit(const ast::TableRow* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::StructBody* node)
+void Generator::visit(const ast::StructBody* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::UnaryExpression* node)
+void Generator::visit(const ast::UnaryExpression* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::BinaryExpression* node)
+void Generator::visit(const ast::BinaryExpression* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::Literal* node)
+void Generator::visit(const ast::Literal* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::operator()(const ast::Member* node)
+void Generator::visit(const ast::Member* node)
 {
     (void)this;
     (void)node;

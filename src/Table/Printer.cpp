@@ -7,7 +7,7 @@
 
 using namespace templater::table::ast;
 
-void Printer::operator()(const Content* node)
+void Printer::visit(const Content* node)
 {
     for (const auto& stmt : node->getStatements()) {
         visit(stmt);
@@ -15,12 +15,12 @@ void Printer::operator()(const Content* node)
     }
 }
 
-void Printer::operator()(const Import* node)
+void Printer::visit(const Import* node)
 {
     m_output << spaces() << "import \"" << node->getFile() << "\" as " << node->getIdentifier();
 }
 
-void Printer::operator()(const Table* node)
+void Printer::visit(const Table* node)
 {
     m_output << '\n'
              << spaces() << "table " << node->getIdentifier().getValue();
@@ -52,7 +52,7 @@ void Printer::operator()(const Table* node)
     }
 }
 
-void Printer::operator()(const TableColumn* node)
+void Printer::visit(const TableColumn* node)
 {
     m_output << node->getIdentifier();
     if (auto value = node->getValue()) {
@@ -61,7 +61,7 @@ void Printer::operator()(const TableColumn* node)
     }
 }
 
-void Printer::operator()(const TableInherit* node)
+void Printer::visit(const TableInherit* node)
 {
     visit(node->getMember());
     if (auto expr = node->getExpression()) {
@@ -69,7 +69,7 @@ void Printer::operator()(const TableInherit* node)
     }
 }
 
-void Printer::operator()(const TableBody* node)
+void Printer::visit(const TableBody* node)
 {
     m_output << "[";
     m_indent++;
@@ -83,7 +83,7 @@ void Printer::operator()(const TableBody* node)
              << spaces() << "]";
 }
 
-void Printer::operator()(const TableRow* node)
+void Printer::visit(const TableRow* node)
 {
     bool isFirst = true;
     for (const auto value : node->getValues()) {
@@ -96,14 +96,14 @@ void Printer::operator()(const TableRow* node)
     }
 }
 
-void Printer::operator()(const StructBody* node)
+void Printer::visit(const StructBody* node)
 {
     (void)node;
     m_output << "{}";
 }
 
 // NOLINTNEXTLINE misc-no-recursion
-void Printer::operator()(const UnaryExpression* node)
+void Printer::visit(const UnaryExpression* node)
 {
     m_output << Token::describe(node->getType()) << '(';
     visit(node->getRhs());
@@ -111,7 +111,7 @@ void Printer::operator()(const UnaryExpression* node)
 }
 
 // NOLINTNEXTLINE misc-no-recursion
-void Printer::operator()(const BinaryExpression* node)
+void Printer::visit(const BinaryExpression* node)
 {
     m_output << '(';
     visit(node->getLhs());
@@ -120,7 +120,7 @@ void Printer::operator()(const BinaryExpression* node)
     m_output << ')';
 }
 
-void Printer::operator()(const Literal* node)
+void Printer::visit(const Literal* node)
 {
     if (node->getType() == TokenKind::String) {
         m_output << '"' << node->getValue() << '"';
@@ -129,7 +129,7 @@ void Printer::operator()(const Literal* node)
     }
 }
 
-void Printer::operator()(const Member* node)
+void Printer::visit(const Member* node)
 {
     bool isFirst = true;
     for (const auto& id : node->getIdentifiers()) {

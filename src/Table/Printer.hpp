@@ -14,24 +14,25 @@ public:
     explicit Printer(const Content* node) { visit(node); }
     ~Printer() = default;
 
-    void operator()(const Content* node);
-    void operator()(const Import* node);
-    void operator()(const Table* node);
-    void operator()(const TableColumn* node);
-    void operator()(const TableInherit* node);
-    void operator()(const TableBody* node);
-    void operator()(const TableRow* node);
-    void operator()(const StructBody* node);
-    void operator()(const UnaryExpression* node);
-    void operator()(const BinaryExpression* node);
-    void operator()(const Literal* node);
-    void operator()(const Member* node);
+    void visit(const Content* node);
+    void visit(const Import* node);
+    void visit(const Table* node);
+    void visit(const TableColumn* node);
+    void visit(const TableInherit* node);
+    void visit(const TableBody* node);
+    void visit(const TableRow* node);
+    void visit(const StructBody* node);
+    void visit(const UnaryExpression* node);
+    void visit(const BinaryExpression* node);
+    void visit(const Literal* node);
+    void visit(const Member* node);
 
     [[nodiscard]] auto output() const -> std::string;
 
-    template <typename T>
-    void visit(const T* node) { operator()(node); } // cppcheck-suppress functionStatic
+    // for visiting with std::visit
+    void inline operator()(const auto* node) { visit(node); }
 
+    // visit with std::visit
     template <typename... Ts>
     void visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
 
