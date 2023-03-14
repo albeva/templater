@@ -6,5 +6,5 @@
 #include "Token.hpp"
 
 namespace templater::table {
-using Value = std::variant<std::monostate, Token>;
+using Value = std::variant<Token>;
 }

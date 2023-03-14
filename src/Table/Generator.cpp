@@ -57,13 +57,10 @@ void Generator::visit(const ast::TableColumn* node)
         redefinition(id, existing->getLoc());
     }
 
-    Value value {};
+    std::optional<Value> value {};
     const auto& nodeVal = node->getValue();
     if (nodeVal.has_value()) {
         value = std::visit(gen::TableValue(), nodeVal.value());
-        if (std::holds_alternative<std::monostate>(value)) {
-            throw GeneratorException("failed to generate column value");
-        }
     }
 
     auto* column = m_ctx->create<Column>(id.getValue(), id.getLoc(), value);
@@ -86,9 +83,6 @@ void Generator::visit(const ast::TableRow* node)
     m_rowIndex = m_table->addRow();
     for (const auto& val : node->getValues()) {
         auto value = std::visit(gen::TableValue(), val);
-        if (std::holds_alternative<std::monostate>(value)) {
-            throw GeneratorException("Failed to generate value");
-        }
         m_colIndex = m_table->addValue(m_rowIndex, value);
     }
 }

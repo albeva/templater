@@ -9,7 +9,7 @@
 namespace templater::table {
 
 struct Column final {
-    Column(std::string_view name, SourceLoc loc, Value value)
+    Column(std::string_view name, SourceLoc loc, std::optional<Value> value)
         : m_name(name)
         , m_loc(loc)
         , m_value(value)
@@ -18,12 +18,12 @@ struct Column final {
 
     [[nodiscard]] inline auto getName() const -> const std::string_view& { return m_name; }
     [[nodiscard]] inline auto getLoc() const -> const SourceLoc& { return m_loc; }
-    [[nodiscard]] inline auto getValue() const -> const Value& { return m_value; }
+    [[nodiscard]] inline auto getValue() const -> const std::optional<Value>& { return m_value; }
 
 private:
     std::string_view m_name;
     SourceLoc m_loc;
-    Value m_value;
+    std::optional<Value> m_value;
 };
 
 } // namespace templater::table
