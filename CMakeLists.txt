@@ -75,6 +75,8 @@ add_subdirectory(src)
 
 # Tests
 if(ENABLE_DEVELOPER_MODE)
+    include(CTest)
+    enable_testing()
     add_subdirectory(tests)
 endif()
 

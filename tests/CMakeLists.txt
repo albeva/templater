@@ -17,7 +17,7 @@ FetchContent_MakeAvailable(googletest)
 target_link_libraries(tests PRIVATE templater_lib project_options gtest_main)
 
 include(GoogleTest)
-gtest_discover_tests(tests)
+gtest_discover_tests(tests WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tables")
 
 # gtest has issues with these, disable
 target_disable_static_analysis(tests)

@@ -37,8 +37,7 @@ TEST_P(ParserTests, TestFail)
     EXPECT_EQ(true, true);
 }
 
-INSTANTIATE_TEST_SUITE_P(TestFails,
-    ParserTests,
+INSTANTIATE_TEST_SUITE_P(TestFails, ParserTests,
     testing::Values(
         "fails/parser/unexpected_tokens.tbl",
         "fails/parser/unexpected_tokens2.tbl"));
