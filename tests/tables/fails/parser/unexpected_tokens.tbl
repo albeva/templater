@@ -2,4 +2,3 @@
 # CHECK: table foo @ = []
 # CHECK:           ^
 table foo @ = []
-

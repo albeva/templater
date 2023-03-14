@@ -1,0 +1,4 @@
+# CHECK: fails/parser/missing_token.tbl(4,14): error: Expected identifier, number or a string, got <End-Of-File>
+# CHECK: table foo = [
+# CHECK:              ^
+table foo = [
