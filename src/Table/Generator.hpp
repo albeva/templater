@@ -32,20 +32,18 @@ public:
     void visit(const ast::TableInherit* node);
     void visit(const ast::TableBody* node);
     void visit(const ast::TableRow* node);
-    void visit(const ast::StructBody* node);
     void visit(const ast::UnaryExpression* node);
     void visit(const ast::BinaryExpression* node);
-    void visit(const ast::Literal* node);
     void visit(const ast::Member* node);
 
     [[nodiscard]] auto getSymbolTable() const { return m_symbolTable; }
 
     // for visiting with std::visit
-    void inline operator()(const auto* node) { visit(node); }
+    inline auto operator()(const auto* node) { return visit(node); }
 
     // visit with std::visit
     template <typename... Ts>
-    void inline visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
+    inline auto visit(const std::variant<Ts...>& node) { return std::visit(*this, node); }
 
 private:
     void inline visitEach(const std::ranges::range auto& list)
@@ -55,12 +53,15 @@ private:
         }
     }
 
+    [[noreturn]] void redefinition(const Token& id, SourceLoc existing) const;
+
     Context* m_ctx;
     Diagnostics* m_diag;
     Source* m_source;
     SymbolTable* m_symbolTable;
-
     Table* m_table = nullptr;
+    size_t m_rowIndex = 0;
+    size_t m_colIndex = 0;
 };
 
 } // namespace templater::table

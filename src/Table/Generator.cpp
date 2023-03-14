@@ -2,11 +2,14 @@
 // Created by Albert on 12/03/2023.
 //
 #include "Generator.hpp"
+#include "Column.hpp"
+#include "Gen/TableValue.hpp"
 #include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
 #include "Symbol.hpp"
 #include "SymbolTable.hpp"
 #include "Table.hpp"
+#include "Value.hpp"
 using namespace templater::table;
 using namespace templater::table::ast;
 
@@ -35,12 +38,10 @@ void Generator::visit(const ast::Table* node)
     const auto& id = node->getIdentifier();
     const auto* existing = m_symbolTable->find(id.getValue());
     if (existing != nullptr) {
-        m_diag->error(m_source, id.getLoc(), fmt::format("redefinition of '{}'", id.getValue()));
-        m_diag->notice(m_source, existing->getLoc(), "previous definition is here");
-        throw GeneratorException("");
+        redefinition(id, existing->getLoc());
     }
 
-    m_table = m_ctx->create<Table>();
+    m_table = m_ctx->create<Table>(m_ctx);
     visitEach(node->getColumns());
     visitEach(node->getContent());
     auto* symbol = m_ctx->create<Symbol>(id.getValue(), id.getLoc(), m_table);
@@ -50,32 +51,46 @@ void Generator::visit(const ast::Table* node)
 
 void Generator::visit(const ast::TableColumn* node)
 {
-    (void)this;
-    (void)node;
+    const auto& id = node->getIdentifier();
+    const auto* existing = m_table->findColumn(node->getIdentifier().getValue());
+    if (existing != nullptr) {
+        redefinition(id, existing->getLoc());
+    }
+
+    Value value {};
+    const auto& nodeVal = node->getValue();
+    if (nodeVal.has_value()) {
+        value = std::visit(gen::TableValue(), nodeVal.value());
+        if (std::holds_alternative<std::monostate>(value)) {
+            throw GeneratorException("failed to generate column value");
+        }
+    }
+
+    auto* column = m_ctx->create<Column>(id.getValue(), id.getLoc(), value);
+    m_table->addColumn(column);
 }
 
-void Generator::visit(const ast::TableInherit* node)
+void Generator::visit(const ast::TableInherit* /*node*/)
 {
     (void)this;
-    (void)node;
+    throw GeneratorException("Inheritance not implemented");
 }
 
 void Generator::visit(const ast::TableBody* node)
 {
-    (void)this;
-    (void)node;
+    visitEach(node->getRows());
 }
 
 void Generator::visit(const ast::TableRow* node)
 {
-    (void)this;
-    (void)node;
-}
-
-void Generator::visit(const ast::StructBody* node)
-{
-    (void)this;
-    (void)node;
+    m_rowIndex = m_table->addRow();
+    for (const auto& val : node->getValues()) {
+        auto value = std::visit(gen::TableValue(), val);
+        if (std::holds_alternative<std::monostate>(value)) {
+            throw GeneratorException("Failed to generate value");
+        }
+        m_colIndex = m_table->addValue(m_rowIndex, value);
+    }
 }
 
 void Generator::visit(const ast::UnaryExpression* node)
@@ -90,14 +105,15 @@ void Generator::visit(const ast::BinaryExpression* node)
     (void)node;
 }
 
-void Generator::visit(const ast::Literal* node)
+void Generator::visit(const ast::Member* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::Member* node)
+void Generator::redefinition(const Token& id, SourceLoc existing) const
 {
-    (void)this;
-    (void)node;
+    m_diag->error(m_source, id.getLoc(), fmt::format("redefinition of '{}'", id.getValue()));
+    m_diag->notice(m_source, existing, "previous definition is here");
+    throw GeneratorException("");
 }

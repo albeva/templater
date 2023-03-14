@@ -41,7 +41,7 @@ project(
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
-    # ENABLE_CPPCHECK
+    ENABLE_CPPCHECK
     CPPCHECK_OPTIONS
     --enable=style,performance,warning,portability
     --inline-suppr

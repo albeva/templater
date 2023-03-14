@@ -1,0 +1,6 @@
+# Simpel table
+table Animal(animal species) = [
+    Dog             "lupus familiaris"
+    Cat             catus
+    "Guinea Pig"    porcellus
+]

@@ -54,7 +54,7 @@ void Printer::visit(const Table* node)
 
 void Printer::visit(const TableColumn* node)
 {
-    m_output << node->getIdentifier();
+    m_output << node->getIdentifier().getValue();
     if (auto value = node->getValue()) {
         m_output << " = ";
         visit(value.value());
@@ -120,12 +120,12 @@ void Printer::visit(const BinaryExpression* node)
     m_output << ')';
 }
 
-void Printer::visit(const Literal* node)
+void Printer::visit(const Token& token)
 {
-    if (node->getType() == TokenKind::String) {
-        m_output << '"' << node->getValue() << '"';
+    if (token.getKind() == TokenKind::String) {
+        m_output << '"' << token.getValue() << '"';
     } else {
-        m_output << node->getValue();
+        m_output << token.getValue();
     }
 }
 

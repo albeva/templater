@@ -24,13 +24,13 @@ public:
     void visit(const StructBody* node);
     void visit(const UnaryExpression* node);
     void visit(const BinaryExpression* node);
-    void visit(const Literal* node);
+    void visit(const Token& token);
     void visit(const Member* node);
 
     [[nodiscard]] auto output() const -> std::string;
 
     // for visiting with std::visit
-    void inline operator()(const auto* node) { visit(node); }
+    void inline operator()(const auto& node) { visit(node); }
 
     // visit with std::visit
     template <typename... Ts>

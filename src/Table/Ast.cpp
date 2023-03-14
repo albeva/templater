@@ -27,7 +27,7 @@ Table::Table(SourceLoc loc, Token identifier, List<TableColumn*> columns, List<T
 {
 }
 
-TableColumn::TableColumn(SourceLoc loc, std::string_view identifier, std::optional<TableValue> value)
+TableColumn::TableColumn(SourceLoc loc, Token identifier, std::optional<TableValue> value)
     : Root(loc)
     , m_identifier(identifier)
     , m_value(value)
@@ -65,13 +65,6 @@ BinaryExpression::BinaryExpression(SourceLoc loc, TokenKind type, Expression lhs
     , m_type(type)
     , m_lhs(lhs)
     , m_rhs(rhs)
-{
-}
-
-Literal::Literal(SourceLoc loc, TokenKind type, std::string_view value)
-    : Root(loc)
-    , m_type(type)
-    , m_value(value)
 {
 }
 

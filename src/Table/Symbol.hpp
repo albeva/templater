@@ -9,7 +9,7 @@ namespace templater::table {
 
 class Table;
 class SymbolTable;
-class Column;
+struct Column;
 
 enum class SymbolKind {
     Table,

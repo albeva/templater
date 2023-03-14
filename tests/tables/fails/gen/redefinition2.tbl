@@ -1,0 +1,7 @@
+# CHECK: fails/gen/redefinition2.tbl(7,15): error: redefinition of 'a'
+# CHECK: table foo(a b a) = []
+# CHECK:               ^
+# CHECK: fails/gen/redefinition2.tbl(7,11): note: previous definition is here
+# CHECK: table foo(a b a) = []
+# CHECK:           ^
+table foo(a b a) = []

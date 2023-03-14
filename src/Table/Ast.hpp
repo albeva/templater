@@ -23,12 +23,11 @@ struct TableRow;
 struct StructBody;
 struct UnaryExpression;
 struct BinaryExpression;
-struct Literal;
 struct Member;
 
 using Statement = std::variant<Import*, Table*>;
-using Expression = std::variant<Literal*, UnaryExpression*, BinaryExpression*>;
-using TableValue = std::variant<Literal*, StructBody*>;
+using Expression = std::variant<Token, UnaryExpression*, BinaryExpression*>;
+using TableValue = std::variant<Token, StructBody*>;
 using TableContent = std::variant<TableInherit*, TableBody*>;
 
 template <typename T>
@@ -77,7 +76,7 @@ private:
 struct Table final : Root {
     Table(SourceLoc loc, Token identifier, List<TableColumn*> columns, List<TableContent> content);
 
-    [[nodiscard]] auto getIdentifier() const -> auto& { return m_identifier; }
+    [[nodiscard]] auto getIdentifier() const -> const auto& { return m_identifier; }
     [[nodiscard]] auto getColumns() const -> auto& { return m_columns; }
     [[nodiscard]] auto getContent() const -> auto& { return m_content; }
 
@@ -88,13 +87,13 @@ private:
 };
 
 struct TableColumn final : Root {
-    TableColumn(SourceLoc loc, std::string_view identifier, std::optional<TableValue> value);
+    TableColumn(SourceLoc loc, Token identifier, std::optional<TableValue> value);
 
-    [[nodiscard]] auto getIdentifier() const { return m_identifier; }
+    [[nodiscard]] auto getIdentifier() const -> const Token& { return m_identifier; }
     [[nodiscard]] auto getValue() const { return m_value; }
 
 private:
-    std::string_view m_identifier;
+    Token m_identifier;
     std::optional<TableValue> m_value;
 };
 
@@ -168,17 +167,6 @@ private:
 //--------------------------------------
 // Misc
 //--------------------------------------
-
-struct Literal final : Root {
-    Literal(SourceLoc loc, TokenKind type, std::string_view value);
-
-    [[nodiscard]] auto getType() const { return m_type; }
-    [[nodiscard]] auto getValue() const { return m_value; }
-
-private:
-    TokenKind m_type;
-    std::string_view m_value;
-};
 
 struct Member final : Root {
     explicit Member(SourceLoc loc, std::pmr::vector<std::string_view> identifiers);

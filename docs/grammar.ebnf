@@ -14,13 +14,13 @@ TableInherit     = Member [ "(" Expression ")" ];
 TableBody        = "[" [ TableRowList ] "]";
 TableRowList     = TableRow { "\n" TableRow };
 TableRow         = TableValue { TableValue };
-TableValue       = Literal | StructBody;
+TableValue       = LITERAL | StructBody;
 
 (* expressions. Incomplete; lacks precedence information *)
 Expression       = Primary { BinaryOperator Primary };
 Primary          = ( UnaryOperator Primary )
                  | ( "(" Expression ")" )
-                 | Literal
+                 | LITERAL
                  ;
 BinaryOperator   = "<" | "<=" | ">" | ">=" | "==" | "!=" | "&&" | "||";
 UnaryOperator    = "!";
@@ -28,14 +28,14 @@ UnaryOperator    = "!";
 (* struct *)
 StructBody      = "{" [ StructRowList ] "}";
 StructRowList   = StructRow { "\n" StructRow };
-StructRow       = Member [ TypeSpecifier ] IDENTIFIER [ "=" Literal ];
+StructRow       = Member [ TypeSpecifier ] IDENTIFIER [ "=" LITERAL ];
 TypeSpecifier   = "*" | "[]";
 
 (* Misc *)
 Member          = IDENTIFIER { "." IDENTIFIER };
-Literal         = IDENTIFIER | NUMBER | STRING;
 
 (* Lex tokens *)
+LITERAL         = IDENTIFIER | NUMBER | STRING;
 IDENTIFIER      = ( "_" IDENTBODY { IDENTBODY } )
                 | ( LETTER { IDENTBODY } )
                 ;

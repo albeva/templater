@@ -103,7 +103,8 @@ auto Parser::tableColumnList() -> ast::List<ast::TableColumn*>
 auto Parser::tableColumn() -> ast::TableColumn*
 {
     auto start = m_token.getLoc();
-    auto ident = consume(TokenKind::Identifier);
+    auto ident = m_token;
+    expect(TokenKind::Identifier);
 
     std::optional<ast::TableValue> value {};
     if (accept(TokenKind::Assign)) {
@@ -202,7 +203,12 @@ auto Parser::tableRow() -> ast::TableRow*
 // Literal | StructBody
 auto Parser::tableValue() -> ast::TableValue
 {
-    return literal();
+    auto token = m_token;
+    if (!m_token.isValue()) {
+        expected("value");
+    }
+    next();
+    return token;
 }
 
 //------------------------------------------------------------------------------
@@ -235,16 +241,27 @@ auto Parser::primary() -> ast::Expression
         expect(TokenKind::ParenClose);
         return expr;
     }
-    default:
-        return literal();
+    default: {
+        auto value = m_token;
+        if (!value.isValue()) {
+            expected("value");
+        }
+        next();
+        return value;
+    }
     }
 }
 
 // NOLINTNEXTLINE misc-no-recursion
 auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
 {
-    constexpr static auto getLoc = [](const auto* node) {
-        return node->getLoc();
+    constexpr static auto getLoc = Visitor {
+        [](const auto* node) {
+            return node->getLoc();
+        },
+        [](const Token& token) {
+            return token.getLoc();
+        }
     };
 
     auto start = std::visit(getLoc, lhs);
@@ -279,19 +296,6 @@ auto Parser::member() -> ast::Member*
     } while (accept(TokenKind::Period));
 
     return m_ast.node<ast::Member>(makeLoc(start, m_lastLoc), std::move(members));
-}
-
-// ID | NUMBER | STRING;
-auto Parser::literal() -> ast::Literal*
-{
-    if (!m_token.isValue()) {
-        expected("identifier, number or a string"sv);
-    }
-    auto type = m_token.getKind();
-    auto value = m_token.getValue();
-    auto loc = m_token.getLoc();
-    next();
-    return m_ast.node<ast::Literal>(loc, type, value);
 }
 
 //------------------------------------------------------------------------------

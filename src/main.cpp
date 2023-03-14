@@ -17,7 +17,7 @@ auto main() -> int
     try {
         Diagnostics diag { std::cerr };
         Context ctx {};
-        Source src { "../samples/Tokens.tbl" };
+        Source src { "../samples/Simple.tbl" };
         Lexer lexer { &ctx, &src };
         Parser parser { &ctx, &diag, &lexer };
         auto* ast = parser.parse();

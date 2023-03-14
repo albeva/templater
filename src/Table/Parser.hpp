@@ -47,7 +47,6 @@ private:
     auto expression(ast::Expression lhs, int min) -> ast::Expression;
 
     auto member() -> ast::Member*;
-    auto literal() -> ast::Literal*;
 
     auto accept(TokenKind kind) -> bool;
     void expect(TokenKind kind);
