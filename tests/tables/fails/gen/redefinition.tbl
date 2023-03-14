@@ -1,7 +1,7 @@
 # CHECK: fails/gen/redefinition.tbl(8,7): error: redefinition of 'foo'
 # CHECK: table foo = []
 # CHECK:       ^~~
-# CHECK: fails/gen/redefinition.tbl(7,7): note: note: previous definition is here
+# CHECK: fails/gen/redefinition.tbl(7,7): note: previous definition is here
 # CHECK: table foo = []
 # CHECK:       ^~~
 table foo = []

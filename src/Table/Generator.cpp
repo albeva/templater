@@ -39,7 +39,7 @@ void Generator::visit(const ast::Table* node)
     const auto* existing = m_symbolTable->find(id.getValue());
     if (existing != nullptr) {
         m_diag->error(m_source, id.getLoc(), fmt::format("redefinition of '{}'", id.getValue()));
-        m_diag->notice(m_source, existing->getLoc(), "note: previous definition is here");
+        m_diag->notice(m_source, existing->getLoc(), "previous definition is here");
         throw GeneratorException("");
     }
 
