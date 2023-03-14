@@ -1,4 +1,4 @@
-# error: unexpected_tokens2.tbl(4,11): Expected '=', got table
-# table foo table = []
-#           ^~~~~
+# CHECK: fails/parser/unexpected_tokens2.tbl(4,11): error: Expected =, got table
+# CHECK: table foo table = []
+# CHECK:           ^~~~~
 table foo table = []

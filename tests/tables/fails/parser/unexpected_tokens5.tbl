@@ -1,4 +1,4 @@
-# error: unexpected_tokens5.tbl(4,23): Expected ), got '|'. Did you mean '||'?
-# table foo = inherit(a | b)
-#                       ^
+# CHECK: fails/parser/unexpected_tokens5.tbl(4,23): error: Expected ), got '|'. Did you mean '||'?
+# CHECK: table foo = inherit(a | b)
+# CHECK:                       ^
 table foo = inherit(a | b)

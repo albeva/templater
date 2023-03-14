@@ -15,7 +15,7 @@ public:
     };
 
     NO_COPY_AND_MOVE(Diagnostics)
-    explicit Diagnostics(std::FILE* file = stderr);
+    explicit Diagnostics(std::ostream& output);
     ~Diagnostics() = default;
 
     void print(Level level, const Source* source, const SourceLoc& loc, const std::string& message);
@@ -33,7 +33,7 @@ public:
     [[nodiscard]] auto hasErrors() const { return m_errorCount != 0; }
 
 private:
-    std::FILE* m_file;
+    std::ostream& m_output; // cppcoreguidelines-avoid-const-or-ref-data-members
     int m_errorCount;
 };
 

@@ -6,7 +6,7 @@
 using namespace templater;
 
 Source::Source(const std::filesystem::path& path)
-    : m_name { path.string() }
+    : m_name { path.generic_string() }
 {
     if (!std::filesystem::exists(path)) {
         throw SourceException("File '" + m_name + "' not found");

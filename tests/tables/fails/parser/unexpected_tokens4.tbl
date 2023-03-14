@@ -1,6 +1,6 @@
-# error: unexpected_tokens4.tbl(5,5): Expected identifier, number or a string, got ==
-#     == !=
-#     ^~
+# CHECK: fails/parser/unexpected_tokens4.tbl(5,5): error: Expected identifier, number or a string, got ==
+# CHECK:     == !=
+# CHECK:     ^~
 table foo(a b) = [
     == !=
 ]

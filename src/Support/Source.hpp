@@ -13,8 +13,6 @@ class SourceException final : public std::runtime_error {
 
 class Source final {
 public:
-    using Range = std::pair<const char*, const char*>;
-
     explicit Source(const std::filesystem::path& path);
     Source(std::string name, std::string source);
 
@@ -37,6 +35,8 @@ public:
     [[nodiscard]] auto length() const -> std::size_t { return m_source.length(); }
 
 private:
+    using Range = std::pair<const char*, const char*>;
+
     [[nodiscard]] auto normalize(const SourceLoc& loc) const -> Range;
     [[nodiscard]] auto getLineStart(size_t line) const -> const char*;
 

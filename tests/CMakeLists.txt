@@ -1,5 +1,5 @@
 # Tests
-add_executable(tests LexerTests.cpp SourceTests.cpp ParserTests.cpp)
+add_executable(tests LexerTests.cpp SourceTests.cpp ParserTests.cpp CompilerBase.hpp)
 
 # Get GoogleTest
 include(FetchContent)

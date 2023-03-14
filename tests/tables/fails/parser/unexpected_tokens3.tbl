@@ -1,4 +1,4 @@
-# error: unexpected_tokens3.tbl(4,11): Expected '<Identifier>', got import
-# table foo(import) = []
-#           ^~~~~~
+# CHECK: fails/parser/unexpected_tokens3.tbl(4,11): error: Expected <Identifier>, got import
+# CHECK: table foo(import) = []
+# CHECK:           ^~~~~~
 table foo(import) = []

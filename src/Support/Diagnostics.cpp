@@ -4,6 +4,7 @@
 #include "Diagnostics.hpp"
 #include "Source.hpp"
 #include "SourceLoc.hpp"
+#include <fmt/ostream.h>
 using namespace templater;
 
 namespace {
@@ -20,8 +21,8 @@ namespace {
 }
 }
 
-Diagnostics::Diagnostics(std::FILE* file)
-    : m_file(file)
+Diagnostics::Diagnostics(std::ostream& output)
+    : m_output(output)
     , m_errorCount(0)
 {
 }
@@ -34,7 +35,7 @@ void Diagnostics::print(Level level, const Source* source, const SourceLoc& loc,
 
     auto pos = source->getPosition(loc);
     fmt::print(
-        m_file,
+        m_output,
         "{}({},{}): {}: {}\n"
         "{}\n",
         source->getName(), pos.getLine(), pos.getCol(), getString(level), message,

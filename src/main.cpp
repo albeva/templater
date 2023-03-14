@@ -15,7 +15,7 @@ using namespace ast;
 auto main() -> int
 {
     try {
-        Diagnostics diag {};
+        Diagnostics diag { std::cerr };
         Context ctx {};
         Source src { "../tests/tables/fails/parser/unexpected_tokens2.tbl" };
         Lexer lexer { &ctx, &src };
