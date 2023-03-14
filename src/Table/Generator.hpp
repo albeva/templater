@@ -15,6 +15,10 @@ namespace templater::table {
 class SymbolTable;
 class Table;
 
+class GeneratorException final : public std::runtime_error {
+    using std::runtime_error::runtime_error;
+};
+
 class Generator final {
 public:
     NO_COPY_AND_MOVE(Generator)
@@ -34,6 +38,9 @@ public:
     void operator()(const ast::Literal* node);
     void operator()(const ast::Member* node);
 
+    [[nodiscard]] auto getSymbolTable() const { return m_symbolTable; }
+
+private:
     void inline visit(const auto* node) { operator()(node); } // cppcheck-suppress functionStatic
 
     template <typename... Ts>
@@ -46,7 +53,6 @@ public:
         }
     }
 
-private:
     Context* m_ctx;
     Diagnostics* m_diag;
     Source* m_source;

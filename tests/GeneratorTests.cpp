@@ -10,18 +10,18 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using templater::table::ParserException;
+using templater::table::GeneratorException;
 using templater::tests::CompilerBase;
-struct ParserTests: CompilerBase{};
+struct GeneratorTests: CompilerBase{};
 
-TEST_P(ParserTests, ParserFails)
+TEST_P(GeneratorTests, GeneratorFails)
 {
-    EXPECT_THROW(parse(), ParserException);
+    EXPECT_THROW(gen(), GeneratorException);
     EXPECT_EQ(expected(), reality());
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    TestParserFails, ParserTests,
-    testing::ValuesIn(CompilerBase::enumerate("fails/parser/")));
+    TestGeneratorFails, GeneratorTests,
+    testing::ValuesIn(CompilerBase::enumerate("fails/gen/")));
 }
 // NOLINTEND

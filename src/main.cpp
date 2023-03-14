@@ -18,7 +18,7 @@ auto main() -> int
         Diagnostics diag { std::cerr };
         Context ctx {};
         // Source src { "../samples/Tokens.tbl" };
-        Source src { "../tests/tables/fails/gen/duplicate_definition.tbl" };
+        Source src { "../tests/tables/fails/gen/redefinition.tbl" };
         Lexer lexer { &ctx, &src };
         Parser parser { &ctx, &diag, &lexer };
         auto* ast = parser.parse();

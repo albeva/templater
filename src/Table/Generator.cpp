@@ -40,6 +40,7 @@ void Generator::operator()(const ast::Table* node)
     if (existing != nullptr) {
         m_diag->error(m_source, id.getLoc(), fmt::format("redefinition of '{}'", id.getValue()));
         m_diag->notice(m_source, existing->getLoc(), "note: previous definition is here");
+        throw GeneratorException("");
     }
 
     m_table = m_ctx->create<Table>();

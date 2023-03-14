@@ -7,11 +7,13 @@
 #include "Support/Source.hpp"
 #include "Table/Lexer.hpp"
 #include "Table/Parser.hpp"
+#include "Table/Generator.hpp"
 #include "gtest/gtest.h"
 
 namespace templater::tests {
 using templater::table::Lexer;
 using templater::table::Parser;
+using templater::table::Generator;
 
 struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
     void SetUp() override
@@ -24,6 +26,12 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
         Lexer lexer { &m_ctx, m_source.get() };
         Parser parser { &m_ctx, &m_diag, &lexer };
         return parser.parse();
+    }
+
+    auto gen() -> const auto* {
+        const auto* ast = parse();
+        Generator const gen{&m_ctx, &m_diag, m_source.get(), ast};
+        return gen.getSymbolTable();
     }
 
     [[nodiscard]] auto expected() const -> std::string
@@ -44,21 +52,21 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
 
     [[nodiscard]] auto reality() const -> auto { return m_output.str(); }
 
+    static auto enumerate(const std::filesystem::path& base) -> std::vector<std::filesystem::path>
+    {
+        std::vector<std::filesystem::path> paths;
+        std::ranges::for_each(std::filesystem::directory_iterator { base },
+            [&](const auto& dir_entry) {
+                paths.push_back(dir_entry);
+            });
+        return paths;
+    }
+
 private:
     std::stringstream m_output {};
     Diagnostics m_diag { m_output };
     Context m_ctx;
     std::unique_ptr<Source> m_source;
 };
-
-auto enumerate(const std::filesystem::path& base) -> std::vector<std::filesystem::path>
-{
-    std::vector<std::filesystem::path> paths;
-    std::ranges::for_each(std::filesystem::directory_iterator { base },
-        [&](const auto& dir_entry) {
-            paths.push_back(dir_entry);
-        });
-    return paths;
-}
 
 } // namespace templater::tests
