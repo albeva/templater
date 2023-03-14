@@ -15,24 +15,26 @@ using namespace templater;
 
 class SourceTests : public testing::Test {
 protected:
-    void load(std::string_view src) {
+    void load(std::string_view src)
+    {
         source = std::make_unique<Source>("unnamed", std::string(src));
     }
     std::unique_ptr<Source> source;
 };
 
-TEST_F(SourceTests, Empty) {
+TEST_F(SourceTests, Empty)
+{
     load("");
     EXPECT_EQ(source->length(), 0);
     EXPECT_NE(source->data(), nullptr);
     EXPECT_EQ(std::string(source->data()), ""s);
 }
 
-TEST_F(SourceTests, GetLine) {
-    static constexpr auto src =
-        "hello\n"
-        "world\n"
-        "!";
+TEST_F(SourceTests, GetLine)
+{
+    static constexpr auto src = "hello\n"
+                                "world\n"
+                                "!";
     load(src);
 
     EXPECT_EQ(source->length(), 13);
@@ -41,11 +43,11 @@ TEST_F(SourceTests, GetLine) {
     EXPECT_EQ(source->getLine(3), "!"s);
 }
 
-TEST_F(SourceTests, GetLoc) {
-    static constexpr auto src =
-        "hello\n"
-        " world \n"
-        "!";
+TEST_F(SourceTests, GetLoc)
+{
+    static constexpr auto src = "hello\n"
+                                " world \n"
+                                "!";
     load(src);
 
     {

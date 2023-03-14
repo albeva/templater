@@ -1,9 +1,9 @@
 //
 // Created by Albert on 11/03/2023.
 //
+#include "Support/Context.hpp"
 #include "Support/Source.hpp"
 #include "Support/SourceLoc.hpp"
-#include "Support/Context.hpp"
 #include "Table/Lexer.hpp"
 #include "Table/Token.hpp"
 #include "gtest/gtest.h"
@@ -106,9 +106,9 @@ TEST_F(LexerTests, StringEscape)
 )TPL";
     load(source);
 
-    EXPECT_TOKEN(TokenKind::String, "foo \"bar\"",   2, 1, 13)
+    EXPECT_TOKEN(TokenKind::String, "foo \"bar\"", 2, 1, 13)
     EXPECT_TOKEN(TokenKind::EndOfLine)
-    EXPECT_TOKEN(TokenKind::String, "world \\",      3, 1, 10)
+    EXPECT_TOKEN(TokenKind::String, "world \\", 3, 1, 10)
 }
 
 TEST_F(LexerTests, Stream)
