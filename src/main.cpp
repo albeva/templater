@@ -17,11 +17,12 @@ auto main() -> int
     try {
         Diagnostics diag { std::cerr };
         Context ctx {};
-        Source src { "../tests/tables/fails/parser/unexpected_tokens2.tbl" };
+        // Source src { "../samples/Tokens.tbl" };
+        Source src { "../tests/tables/fails/gen/duplicate_definition.tbl" };
         Lexer lexer { &ctx, &src };
         Parser parser { &ctx, &diag, &lexer };
         auto* ast = parser.parse();
-        Generator { &ctx, ast };
+        Generator { &ctx, &diag, &src, ast };
         return diag.hasErrors() ? EXIT_FAILURE : EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << exc.what();

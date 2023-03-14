@@ -3,8 +3,3 @@
 //
 #include "Table.hpp"
 using namespace templater::table;
-
-void Table::inherit(Table& /* table */)
-{
-    (void)this;
-}

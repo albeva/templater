@@ -11,7 +11,7 @@ class Context;
 }
 
 namespace templater::table {
-class Token;
+struct Token;
 enum class TokenKind : uint8_t;
 
 class Lexer final {

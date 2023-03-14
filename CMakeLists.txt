@@ -37,14 +37,11 @@ project(
     HOMEPAGE_URL "https://github.com/albeva/templater"
     LANGUAGES CXX C)
 
-# set the startup project for the "play" button in MSVC
-set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT templater)
-
 # Initialize project_options variable related to this project
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
-    ENABLE_CPPCHECK
+    # ENABLE_CPPCHECK
     CPPCHECK_OPTIONS
     --enable=style,performance,warning,portability
     --inline-suppr
@@ -80,11 +77,6 @@ if(ENABLE_DEVELOPER_MODE)
     add_subdirectory(tests)
 endif()
 
-# Experience shows that explicit package naming can help make it easier to sort
-# out potential ABI related issues before they start, while helping you
-# track a build to a specific GIT SHA
-set(CPACK_PACKAGE_FILE_NAME
-    "${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}-${GIT_SHORT_SHA}-${CMAKE_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}-${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}"
-)
+# set the startup project for the "play" button in MSVC
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT templater)
 
-include(CPack)

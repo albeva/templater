@@ -5,6 +5,7 @@
 #include "pch.hpp"
 #include "Support/Context.hpp"
 #include "Support/SourceLoc.hpp"
+#include "Token.hpp"
 
 namespace templater::table {
 enum class TokenKind : uint8_t;
@@ -74,14 +75,14 @@ private:
 //--------------------------------------
 
 struct Table final : Root {
-    Table(SourceLoc loc, std::string_view identifier, List<TableColumn*> columns, List<TableContent> content);
+    Table(SourceLoc loc, Token identifier, List<TableColumn*> columns, List<TableContent> content);
 
-    [[nodiscard]] auto getIdentifier() const { return m_identifier; }
+    [[nodiscard]] auto getIdentifier() const -> auto& { return m_identifier; }
     [[nodiscard]] auto getColumns() const -> auto& { return m_columns; }
     [[nodiscard]] auto getContent() const -> auto& { return m_content; }
 
 private:
-    std::string_view m_identifier;
+    Token m_identifier;
     List<TableColumn*> m_columns;
     List<TableContent> m_content;
 };

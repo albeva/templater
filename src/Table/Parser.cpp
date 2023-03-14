@@ -72,7 +72,8 @@ auto Parser::kwTable() -> ast::Table*
     auto start = m_token.getLoc();
     expect(TokenKind::KwTable);
 
-    auto ident = consume(TokenKind::Identifier);
+    auto ident = m_token;
+    expect(TokenKind::Identifier);
 
     auto columns = m_ast.list<ast::TableColumn*>();
     if (accept(TokenKind::ParenOpen)) {
@@ -280,7 +281,7 @@ auto Parser::member() -> ast::Member*
     return m_ast.node<ast::Member>(makeLoc(start, m_lastLoc), std::move(members));
 }
 
-// IDENTIFIER | NUMBER | STRING;
+// ID | NUMBER | STRING;
 auto Parser::literal() -> ast::Literal*
 {
     if (!m_token.isValue()) {

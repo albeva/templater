@@ -39,8 +39,7 @@ enum class TokenKind : uint8_t {
     KwBy
 };
 
-class Token final {
-public:
+struct Token final {
     void set(TokenKind kind, SourceLoc loc, std::string_view value = ""sv)
     {
         m_kind = kind;

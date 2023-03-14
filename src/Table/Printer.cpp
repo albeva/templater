@@ -23,7 +23,7 @@ void Printer::operator()(const Import* node)
 void Printer::operator()(const Table* node)
 {
     m_output << '\n'
-             << spaces() << "table " << node->getIdentifier();
+             << spaces() << "table " << node->getIdentifier().getValue();
     if (!node->getColumns().empty()) {
         m_output << "(";
         bool isFirst = true;

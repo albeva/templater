@@ -7,15 +7,18 @@
 
 namespace templater {
 class Context;
+class Diagnostics;
+class Source;
 }
 
 namespace templater::table {
 class SymbolTable;
+class Table;
 
 class Generator final {
 public:
     NO_COPY_AND_MOVE(Generator)
-    Generator(Context* ctx, const ast::Content* node);
+    Generator(Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node);
     ~Generator() = default;
 
     void operator()(const ast::Content* node);
@@ -31,15 +34,25 @@ public:
     void operator()(const ast::Literal* node);
     void operator()(const ast::Member* node);
 
-    template <typename T>
-    void visit(const T* node) { operator()(node); } // cppcheck-suppress functionStatic
+    void inline visit(const auto* node) { operator()(node); } // cppcheck-suppress functionStatic
 
     template <typename... Ts>
-    void visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
+    void inline visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
+
+    void inline visitEach(const std::ranges::range auto& list)
+    {
+        for (const auto& node : list) {
+            visit(node);
+        }
+    }
 
 private:
     Context* m_ctx;
+    Diagnostics* m_diag;
+    Source* m_source;
     SymbolTable* m_symbolTable;
+
+    Table* m_table = nullptr;
 };
 
 } // namespace templater::table
