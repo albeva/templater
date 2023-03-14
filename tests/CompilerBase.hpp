@@ -51,14 +51,9 @@ private:
     std::unique_ptr<Source> m_source;
 };
 
-auto enumerate(std::filesystem::path base) -> std::vector<std::filesystem::path>
+auto enumerate(const std::filesystem::path& base) -> std::vector<std::filesystem::path>
 {
     return std::views::all(std::filesystem::directory_iterator { base })
-        | std::views::transform([](const auto& de) {
-              return std::filesystem::path(
-                  de.path().generic_string(),
-                  std::filesystem::path::format::generic_format);
-          })
         | std::ranges::to<std::vector<std::filesystem::path>>();
 }
 
