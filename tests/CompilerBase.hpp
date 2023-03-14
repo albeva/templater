@@ -53,8 +53,12 @@ private:
 
 auto enumerate(const std::filesystem::path& base) -> std::vector<std::filesystem::path>
 {
-    return std::views::all(std::filesystem::directory_iterator { base })
-        | std::ranges::to<std::vector<std::filesystem::path>>();
+    std::vector<std::filesystem::path> paths;
+    std::ranges::for_each(std::filesystem::directory_iterator { base },
+        [&](const auto& dir_entry) {
+            paths.push_back(dir_entry);
+        });
+    return paths;
 }
 
 } // namespace templater::tests

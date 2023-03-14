@@ -331,7 +331,7 @@ void Parser::expected(std::string_view message)
 {
     m_diag->error(
         m_lexer->getSource(), m_token.getLoc(),
-        std::format("Expected {}, got {}", message, m_token.getString()));
+        fmt::format("Expected {}, got {}", message, m_token.getString()));
     throw ParserException("");
 }
 
