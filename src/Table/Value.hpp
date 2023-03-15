@@ -28,5 +28,6 @@ namespace details {
 using Identifier = details::Literal<std::string_view>;
 using NumberLiteral = details::Literal<unsigned>;
 using StringLiteral = details::Literal<std::string_view, details::StringTag>;
-using Value = std::variant<Identifier, NumberLiteral, StringLiteral>;
+struct PipeLiteral { };
+using Value = std::variant<Identifier, NumberLiteral, StringLiteral, PipeLiteral>;
 } // namespace templater::table

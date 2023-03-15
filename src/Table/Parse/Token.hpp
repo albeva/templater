@@ -22,6 +22,8 @@ enum class TokenKind : uint8_t {
     Assign,
     Period,
     Plus,
+    Minus,
+    Pipe,
     Less,
     LessOrEqual,
     GreaterOrEqual,

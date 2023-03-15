@@ -46,7 +46,7 @@ TableBody::TableBody(SourceLoc loc, List<TableRow*> rows)
 {
 }
 
-TableRow::TableRow(SourceLoc loc, List<Value> values)
+TableRow::TableRow(SourceLoc loc, List<std::optional<Value>> values)
     : Root(loc)
     , m_values(std::move(values))
 {

@@ -1,6 +1,12 @@
 # Simpel table
-table Animal(name species) = [
-    Dog             "Lupus Familiaris"
-    Cat             Catus
-    "Guinea Pig"    Porcellus
+table Animal(name species comment) = [
+    Dog             "Lupus Familiaris"  -
+    Cat             Catus               "Memes"
+    "Guinea Pig"    Porcellus           -
+]
+
+table Furniture(name size) = [
+    Bed Single
+    |   Double
+    |   King
 ]

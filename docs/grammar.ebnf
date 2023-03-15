@@ -13,7 +13,8 @@ TableContent     = TableInherit | TableBody;
 TableInherit     = Member [ "(" Expression ")" ];
 TableBody        = "[" [ TableRowList ] "]";
 TableRowList     = TableRow { "\n" TableRow };
-TableRow         = Value { Value };
+TableRow         = TableValue { TableValue };
+TableValue       = "-" | Value;
 
 (* expressions. Incomplete; lacks precedence information *)
 Expression       = Primary { BinaryOperator Primary };

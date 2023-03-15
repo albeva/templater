@@ -9,7 +9,6 @@
 #include "Table/SymbolTable.hpp"
 #include "Table/Table.hpp"
 #include "Table/Value.hpp"
-#include "TableValue.hpp"
 using templater::support::Context;
 using templater::support::Diagnostics;
 using templater::support::Source;
@@ -59,13 +58,7 @@ void Generator::visit(const ast::TableColumn* node)
         redefinition(id, existing->getLoc());
     }
 
-    std::optional<Value> value {};
-    const auto& nodeVal = node->getValue();
-    if (nodeVal.has_value()) {
-        value = std::visit(TableValue(), nodeVal.value());
-    }
-
-    auto* column = m_ctx->create<Column>(id.getValue(), id.getLoc(), value);
+    auto* column = m_ctx->create<Column>(id.getValue(), id.getLoc(), node->getValue());
     m_table->addColumn(column);
 }
 
@@ -87,11 +80,14 @@ void Generator::visit(const ast::TableRow* node)
     const auto& values = node->getValues();
     for (size_t col = 0; col < values.size(); col++) {
         const Column* column = m_table->getColumns().at(col);
-        auto value = std::visit(TableValue(), values[col]);
-        m_table->addValue(m_rowIndex, column, value);
+        const auto& val = values[col];
+        if (val.has_value()) {
+            m_table->addValue(m_rowIndex, column, val.value());
+        }
     }
-    // TODO: Add default data
-    // TODO: Report missing column value
+    // FIXME: Add default data
+    // FIXME: Report missing column value
+    // FIXME: show error if piping non existing value
     m_rowIndex++;
 }
 

@@ -39,6 +39,10 @@ auto Token::describe(TokenKind kind) -> std::string_view
         return "."sv;
     case Plus:
         return "+"sv;
+    case Minus:
+        return "-"sv;
+    case Pipe:
+        return "|"sv;
     case Less:
         return "<"sv;
     case LessOrEqual:

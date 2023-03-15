@@ -32,6 +32,7 @@ private:
     void visit(const BinaryExpression* node);
     void visit(const Member* node);
 
+    void visit(const PipeLiteral& node);
     void visit(const Identifier& node);
     void visit(const StringLiteral& node);
     void visit(const NumberLiteral& node);

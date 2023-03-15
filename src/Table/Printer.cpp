@@ -38,31 +38,55 @@ void Printer::visit(const Table* table)
 
     // columns
     const auto& columns = table->getColumns();
-    m_output << " (";
-    Separator sep { ", " };
+    m_output << "(";
+    Separator sep { " " };
     for (const auto* col : columns) {
         m_output << sep();
         visit(col);
     }
-    m_output << ")";
+    m_output << ") = [";
 
-    // rows
-    m_output << " = [\n";
+    // reuse m_output to capture output
+    auto theOutput = std::move(m_output);
+
+    // store all content in a table
+    using StringTable = std::vector<std::string>;
+    StringTable content {};
+    content.reserve(table->getRowCount() * columns.size());
+
+    // iterate over rows and columns and collect the data
     for (size_t index = 0; index < table->getRowCount(); index++) {
-        m_output << "    ";
         const auto& row = table->getRow(index);
-        Separator sep2 { " " };
         for (const auto* col : columns) {
-            m_output << sep2();
             if (auto iter = row.find(col); iter != row.end()) {
+                m_output = std::stringstream {};
                 visit(iter->second);
+                content.emplace_back(m_output.str());
             } else {
-                m_output << '-';
+                content.emplace_back("-");
             }
         }
-        m_output << "\n";
     }
-    m_output << "]\n\n";
+
+    // measure each column
+    std::vector<size_t> widths(columns.size());
+    for (size_t idx = 0; idx < content.size(); idx++) {
+        const size_t col = idx % columns.size();
+        widths[col] = std::max(widths[col], content[idx].length());
+    }
+
+    // print out
+    m_output = std::move(theOutput);
+    for (size_t idx = 0; idx < content.size(); idx++) {
+        const size_t col = idx % columns.size();
+        if (col == 0) {
+            m_output << "\n   ";
+        }
+        fmt::print(m_output,
+            " {0}{1:<{2}}", content[idx],
+            "", (widths[col] - content[idx].length()));
+    }
+    m_output << "\n]\n";
 }
 
 void Printer::visit(const Column* column)
@@ -72,6 +96,11 @@ void Printer::visit(const Column* column)
         m_output << " = ";
         visit(value.value());
     }
+}
+
+void Printer::visit(const PipeLiteral& /*pipe*/)
+{
+    m_output << '|';
 }
 
 void Printer::visit(const Identifier& token)

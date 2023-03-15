@@ -194,10 +194,16 @@ auto Parser::tableRowList() -> ast::List<ast::TableRow*>
 auto Parser::tableRow() -> ast::TableRow*
 {
     auto start = m_token.getLoc();
-    auto values = m_ast.list<Value>();
+    auto values = m_ast.list<std::optional<Value>>();
 
     do {
-        values.push_back(value());
+        if (accept(TokenKind::Minus)) {
+            values.emplace_back();
+        } else if (accept(TokenKind::Pipe)) {
+            values.emplace_back(PipeLiteral {});
+        } else {
+            values.emplace_back(value());
+        }
     } while (m_token.isNot(TokenKind::EndOfLine, TokenKind::BracketClose));
 
     return m_ast.node<ast::TableRow>(makeLoc(start, m_lastLoc), std::move(values));

@@ -9,8 +9,17 @@ table Root(id) = [
     Decl
 ]
 
+table Fields(node type id default) = [
+    Module    unsigned           fileId          -
+    |         bool               hasImplicitMain -
+    |         "List<Import>"     imports         -
+    |         "List<StmtList>"   stmtList        -
+    |         "SymbolTable*"     symbolTable     nullptr
+    ExprList  "List<Expression>" exprs           -
+]
+
 table Basic(id members = "") = [
-    Module
+    Module        @Fields(node == id)
     ExprList
     Attribute
     AttributeList

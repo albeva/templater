@@ -59,15 +59,15 @@ Lexer::Lexer(Context* ctx, Source* source)
 void Lexer::next(Token& token) // NOLINT readability-function-cognitive-complexity
 {
     std::size_t size = 1;
-
+    using enum TokenKind;
     while (true) {
         auto ch = *m_input;
         switch (ch) {
         case '\0':
             if (m_hasStmt) {
-                return make(token, TokenKind::EndOfLine, 0);
+                return make(token, EndOfLine, 0);
             }
-            return make(token, TokenKind::EndOfFile, 0);
+            return make(token, EndOfFile, 0);
         case ' ':
         case '\t':
             m_input++;
@@ -79,7 +79,7 @@ void Lexer::next(Token& token) // NOLINT readability-function-cognitive-complexi
             [[fallthrough]];
         case '\n':
             if (m_hasStmt) {
-                return make(token, TokenKind::EndOfLine, size);
+                return make(token, EndOfLine, size);
             }
             std::advance(m_input, size);
             size = 1;
@@ -98,51 +98,53 @@ void Lexer::next(Token& token) // NOLINT readability-function-cognitive-complexi
         case '"':
             return string(token);
         case '(':
-            return make(token, TokenKind::ParenOpen);
+            return make(token, ParenOpen);
         case ')':
-            return make(token, TokenKind::ParenClose);
+            return make(token, ParenClose);
         case '[':
-            return make(token, TokenKind::BracketOpen);
+            return make(token, BracketOpen);
         case ']':
-            return make(token, TokenKind::BracketClose);
+            return make(token, BracketClose);
         case '{':
-            return make(token, TokenKind::BraceOpen);
+            return make(token, BraceOpen);
         case '}':
-            return make(token, TokenKind::BraceClose);
+            return make(token, BraceClose);
         case '<':
             if (m_input[1] == '=') {
-                return make(token, TokenKind::LessOrEqual, 2);
+                return make(token, LessOrEqual, 2);
             }
-            return make(token, TokenKind::Less, 2);
+            return make(token, Less, 2);
         case '>':
             if (m_input[1] == '=') {
-                return make(token, TokenKind::GreaterOrEqual, 2);
+                return make(token, GreaterOrEqual, 2);
             }
-            return make(token, TokenKind::Greater, 2);
+            return make(token, Greater, 2);
         case '=':
             if (m_input[1] == '=') {
-                return make(token, TokenKind::Equal, 2);
+                return make(token, Equal, 2);
             }
-            return make(token, TokenKind::Assign);
+            return make(token, Assign);
         case '.':
-            return make(token, TokenKind::Period);
+            return make(token, Period);
         case '+':
-            return make(token, TokenKind::Plus);
+            return make(token, Plus);
+        case '-':
+            return make(token, Minus);
         case '!':
             if (m_input[1] == '=') {
-                return make(token, TokenKind::NotEqual, 2);
+                return make(token, NotEqual, 2);
             }
-            return make(token, TokenKind::LogicalNot);
+            return make(token, LogicalNot);
         case '&':
             if (m_input[1] == '&') {
-                return make(token, TokenKind::LogicalAnd, 2);
+                return make(token, LogicalAnd, 2);
             }
             return unexpected(token, "'&'. Did you mean '&&'?");
         case '|':
             if (m_input[1] == '|') {
-                return make(token, TokenKind::LogicalOr, 2);
+                return make(token, LogicalOr, 2);
             }
-            return unexpected(token, "'|'. Did you mean '||'?");
+            return make(token, Pipe);
         default:
             if (isAlpha(ch)) {
                 return identifier(token);

@@ -87,7 +87,11 @@ void Printer::visit(const TableRow* node)
     Separator sep { " " };
     for (const auto value : node->getValues()) {
         m_output << sep();
-        visit(value);
+        if (value.has_value()) {
+            visit(value.value());
+        } else {
+            m_output << '-';
+        }
     }
 }
 
@@ -121,6 +125,11 @@ void Printer::visit(const Member* node)
     for (const auto& id : node->getIdentifiers()) {
         m_output << sep() << id.getValue();
     }
+}
+
+void Printer::visit(const PipeLiteral& /*pipe*/)
+{
+    m_output << '|';
 }
 
 void Printer::visit(const Identifier& node)

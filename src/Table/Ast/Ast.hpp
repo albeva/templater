@@ -116,12 +116,12 @@ private:
 };
 
 struct TableRow final : Root {
-    explicit TableRow(support::SourceLoc loc, List<Value> values);
+    explicit TableRow(support::SourceLoc loc, List<std::optional<Value>> values);
 
     [[nodiscard]] auto getValues() const -> auto& { return m_values; }
 
 private:
-    List<Value> m_values;
+    List<std::optional<Value>> m_values;
 };
 
 //--------------------------------------

@@ -21,8 +21,6 @@ add_library(
     Table/Column.hpp
     Table/Gen/Generator.cpp
     Table/Gen/Generator.hpp
-    Table/Gen/TableValue.cpp
-    Table/Gen/TableValue.hpp
     Table/Parse/Lexer.cpp
     Table/Parse/Lexer.hpp
     Table/Parse/Parser.cpp
@@ -54,7 +52,7 @@ target_include_directories(templater_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(templater_lib PRIVATE "${CMAKE_BINARY_DIR}/configured_files/include")
 
 # lbc executable
-add_executable(templater main.cpp Table/Gen/TableValue.cpp Table/Gen/TableValue.hpp)
+add_executable(templater main.cpp)
 target_link_libraries(templater PRIVATE templater_lib project_options project_warnings)
 set_target_properties(templater PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 

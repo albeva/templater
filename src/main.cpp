@@ -26,7 +26,7 @@ auto main() -> int
         Parser parser { &ctx, &diag, &lexer };
         auto* ast = parser.parse();
         Generator const gen { &ctx, &diag, &src, ast };
-        std::cout << Printer(gen.getSymbolTable()) << '\n';
+        std::cout << Printer(gen.getSymbolTable());
         return diag.hasErrors() ? EXIT_FAILURE : EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << exc.what();

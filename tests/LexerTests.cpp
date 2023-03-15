@@ -87,13 +87,13 @@ TEST_F(LexerTests, Empty)
 
 TEST_F(LexerTests, Invalid)
 {
-    static constexpr auto source = "&|@\n"
+    static constexpr auto source = "&?@\n"
                                    "\"open string\n"
                                    "\"open string";
     load(source);
 
     EXPECT_TOKEN(TokenKind::Invalid, "'&'. Did you mean '&&'?", 1, 1, 1)
-    EXPECT_TOKEN(TokenKind::Invalid, "'|'. Did you mean '||'?", 1, 2, 1)
+    EXPECT_TOKEN(TokenKind::Invalid, "?", 1, 2, 1)
     EXPECT_TOKEN(TokenKind::Invalid, "@", 1, 3, 1)
     EXPECT_TOKEN(TokenKind::Invalid, "open string", 2, 13, 1)
     EXPECT_TOKEN(TokenKind::Invalid, "open string", 3, 13, 0)
