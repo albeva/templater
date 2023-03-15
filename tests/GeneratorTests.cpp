@@ -13,7 +13,7 @@ namespace {
 using templater::table::gen::GeneratorException;
 using templater::tests::CompilerBase;
 
-struct GeneratorTests: CompilerBase{};
+struct GeneratorTests : CompilerBase { };
 
 TEST_P(GeneratorTests, GeneratorFails)
 {

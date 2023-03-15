@@ -4,7 +4,6 @@
 #pragma once
 #include "pch.hpp"
 #include "Support/SourceLoc.hpp"
-
 namespace templater::table::parser {
 
 enum class TokenKind : uint8_t {
@@ -40,7 +39,7 @@ enum class TokenKind : uint8_t {
 };
 
 struct Token final {
-    void set(TokenKind kind, SourceLoc loc, std::string_view value = ""sv)
+    void set(TokenKind kind, SourceLoc loc, std::string_view value = "")
     {
         m_kind = kind;
         m_loc = loc;

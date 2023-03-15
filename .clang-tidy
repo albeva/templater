@@ -6,7 +6,6 @@ Checks: "*,
     -fuchsia-*,
     -llvm*,
     -zircon-*,
-    -google-build-using-namespace,
     -bugprone-easily-swappable-parameters,
 "
 WarningsAsErrors:   ''

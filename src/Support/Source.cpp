@@ -3,7 +3,8 @@
 //
 #include "Source.hpp"
 #include <fstream>
-using namespace templater;
+using templater::Source;
+using namespace std::literals;
 
 Source::Source(const std::filesystem::path& path)
     : m_name { path.generic_string() }

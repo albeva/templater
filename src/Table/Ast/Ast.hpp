@@ -28,13 +28,17 @@ using TableContent = std::variant<TableInherit*, TableBody*>;
 template <typename T>
 using List = std::pmr::vector<T>;
 
+//--------------------------------------
+// Root
+//--------------------------------------
+
 struct Root {
     explicit Root(SourceLoc loc)
         : m_loc(loc)
     {
     }
 
-    [[nodiscard]] auto getLoc() const { return m_loc; }
+    [[nodiscard]] inline auto getLoc() const -> const auto& { return m_loc; }
 
 private:
     SourceLoc m_loc;

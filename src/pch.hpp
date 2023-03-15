@@ -17,6 +17,7 @@
 #include <unordered_set>
 #include <variant>
 #include <vector>
+#include <version>
 
 #if defined(__GNUG__) && __has_include(<experimental/algorithm>)
 #include <experimental/algorithm>
@@ -24,10 +25,6 @@
 
 // 3rd party libs
 #include <fmt/core.h>
-
-namespace templater {
-using namespace std::literals;
-} // namespace templater
 
 // templater headers
 #include "Support/Containers.hpp"

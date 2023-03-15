@@ -31,9 +31,10 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
         return parser.parse();
     }
 
-    auto gen() -> const auto* {
+    auto gen() -> const auto*
+    {
         const auto* ast = parse();
-        Generator const gen{&m_ctx, &m_diag, m_source.get(), ast};
+        Generator const gen { &m_ctx, &m_diag, m_source.get(), ast };
         return gen.getSymbolTable();
     }
 

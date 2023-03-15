@@ -10,8 +10,7 @@
 #include "Table/Table.hpp"
 #include "Table/Value.hpp"
 #include "TableValue.hpp"
-using namespace templater::table::ast;
-using namespace templater::table::gen;
+using templater::table::gen::Generator;
 
 Generator::Generator(templater::Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node)
     : m_ctx(ctx)

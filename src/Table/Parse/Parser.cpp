@@ -6,8 +6,8 @@
 #include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
 #include "Table/Ast/Ast.hpp"
-
-using namespace templater::table::parser;
+using templater::table::parser::Parser;
+using namespace std::literals;
 
 Parser::Parser(Context* ctx, Diagnostics* diag, Lexer* lexer)
     : m_ctx(ctx)

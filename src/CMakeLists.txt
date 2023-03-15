@@ -14,7 +14,6 @@ add_library(
     Table/Ast/Ast.cpp
     Table/Ast/Ast.hpp
     Table/Ast/Allocator.hpp
-    Table/Column.cpp
     Table/Column.hpp
     Table/Gen/TableValue.cpp
     Table/Gen/TableValue.hpp
@@ -26,7 +25,6 @@ add_library(
     Table/Parse/Parser.hpp
     Table/Ast/Printer.cpp
     Table/Ast/Printer.hpp
-    Table/Symbol.cpp
     Table/Symbol.hpp
     Table/SymbolTable.cpp
     Table/SymbolTable.hpp
@@ -34,7 +32,6 @@ add_library(
     Table/Table.hpp
     Table/Parse/Token.cpp
     Table/Parse/Token.hpp
-    Table/Value.cpp
     Table/Value.hpp)
 
 # fmt

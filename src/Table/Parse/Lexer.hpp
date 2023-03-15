@@ -28,7 +28,7 @@ private:
     void skipToNextLine();
 
     void make(Token& token, TokenKind kind, std::size_t len = 1);
-    void unexpected(Token& token, std::string_view message = ""sv);
+    void unexpected(Token& token, std::string_view message = {});
     void string(Token& token);
     [[nodiscard]] auto escape() -> std::expected<char, std::string_view>;
     void identifier(Token& token);
@@ -43,4 +43,4 @@ private:
     bool m_hasStmt = false;
 };
 
-} // namespace templater::table
+} // namespace templater::table::parser

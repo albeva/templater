@@ -24,7 +24,7 @@ auto main() -> int
         Lexer lexer { &ctx, &src };
         Parser parser { &ctx, &diag, &lexer };
         auto* ast = parser.parse();
-        Generator gen { &ctx, &diag, &src, ast };
+        Generator const gen { &ctx, &diag, &src, ast };
         return diag.hasErrors() ? EXIT_FAILURE : EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << exc.what();

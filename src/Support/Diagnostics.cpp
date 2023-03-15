@@ -5,7 +5,8 @@
 #include "Source.hpp"
 #include "SourceLoc.hpp"
 #include <fmt/ostream.h>
-using namespace templater;
+using templater::Diagnostics;
+using namespace std::literals;
 
 namespace {
 [[nodiscard]] constexpr auto getString(Diagnostics::Level level) -> std::string_view

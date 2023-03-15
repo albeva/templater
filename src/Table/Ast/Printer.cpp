@@ -4,8 +4,9 @@
 #include "Printer.hpp"
 #include "Ast.hpp"
 #include "Table/Parse/Token.hpp"
-using namespace templater::table::ast;
-using namespace templater::table::parser;
+using templater::table::ast::Printer;
+using templater::table::parser::Token;
+using templater::table::parser::TokenKind;
 
 void Printer::visit(const Content* node)
 {

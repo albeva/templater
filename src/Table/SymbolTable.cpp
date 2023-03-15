@@ -3,7 +3,7 @@
 //
 #include "SymbolTable.hpp"
 #include "Support/Context.hpp"
-using namespace templater::table;
+using templater::table::SymbolTable;
 
 SymbolTable::SymbolTable(Context* ctx)
     : m_symbols(ctx->getAllocator())

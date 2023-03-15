@@ -5,7 +5,7 @@
 #include "Generator.hpp"
 #include "Table/Ast/Ast.hpp"
 #include "Table/Parse/Token.hpp"
-using namespace templater::table::gen;
+using templater::table::gen::TableValue;
 
 auto TableValue::operator()(const parser::Token& node) const -> Value
 {

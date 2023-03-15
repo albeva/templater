@@ -4,7 +4,7 @@
 #include "Table.hpp"
 #include "Column.hpp"
 #include "Support/Context.hpp"
-using namespace templater::table;
+using templater::table::Table;
 
 Table::Table(templater::Context* ctx)
     : m_ctx(ctx)
