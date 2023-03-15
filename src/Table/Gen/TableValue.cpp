@@ -2,8 +2,8 @@
 // Created by Albert on 14/03/2023.
 //
 #include "TableValue.hpp"
+#include "Generator.hpp"
 #include "Table/Ast/Ast.hpp"
-#include "Table/Generator.hpp"
 #include "Table/Parse/Token.hpp"
 using namespace templater::table::gen;
 

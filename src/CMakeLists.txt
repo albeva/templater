@@ -18,8 +18,8 @@ add_library(
     Table/Column.hpp
     Table/Gen/TableValue.cpp
     Table/Gen/TableValue.hpp
-    Table/Generator.cpp
-    Table/Generator.hpp
+    Table/Gen/Generator.cpp
+    Table/Gen/Generator.hpp
     Table/Parse/Lexer.cpp
     Table/Parse/Lexer.hpp
     Table/Parse/Parser.cpp

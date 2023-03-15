@@ -2,16 +2,16 @@
 // Created by Albert on 12/03/2023.
 //
 #include "Generator.hpp"
-#include "Column.hpp"
-#include "Gen/TableValue.hpp"
 #include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
-#include "Symbol.hpp"
-#include "SymbolTable.hpp"
-#include "Table.hpp"
-#include "Value.hpp"
-using namespace templater::table;
+#include "Table/Column.hpp"
+#include "Table/Symbol.hpp"
+#include "Table/SymbolTable.hpp"
+#include "Table/Table.hpp"
+#include "Table/Value.hpp"
+#include "TableValue.hpp"
 using namespace templater::table::ast;
+using namespace templater::table::gen;
 
 Generator::Generator(templater::Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node)
     : m_ctx(ctx)
@@ -60,7 +60,7 @@ void Generator::visit(const ast::TableColumn* node)
     std::optional<Value> value {};
     const auto& nodeVal = node->getValue();
     if (nodeVal.has_value()) {
-        value = std::visit(gen::TableValue(), nodeVal.value());
+        value = std::visit(TableValue(), nodeVal.value());
     }
 
     auto* column = m_ctx->create<Column>(id.getValue(), id.getLoc(), value);
@@ -82,7 +82,7 @@ void Generator::visit(const ast::TableRow* node)
 {
     m_rowIndex = m_table->addRow();
     for (const auto& val : node->getValues()) {
-        auto value = std::visit(gen::TableValue(), val);
+        auto value = std::visit(TableValue(), val);
         m_colIndex = m_table->addValue(m_rowIndex, value);
     }
 }

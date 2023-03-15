@@ -10,7 +10,7 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using templater::table::GeneratorException;
+using templater::table::gen::GeneratorException;
 using templater::tests::CompilerBase;
 
 struct GeneratorTests: CompilerBase{};

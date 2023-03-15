@@ -9,15 +9,16 @@ namespace templater {
 class Context;
 class Diagnostics;
 class Source;
+namespace table {
+    namespace parser {
+        struct Token;
+    }
+    class SymbolTable;
+    class Table;
+}
 }
 
-namespace templater::table {
-namespace parser {
-    struct Token;
-}
-class SymbolTable;
-class Table;
-
+namespace templater::table::gen {
 class GeneratorException final : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
@@ -65,4 +66,4 @@ private:
     size_t m_colIndex = 0;
 };
 
-} // namespace templater::table
+} // namespace templater::table::gen
