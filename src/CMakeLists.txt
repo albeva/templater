@@ -13,7 +13,7 @@ add_library(
     Support/Utils.hpp
     Table/Ast/Ast.cpp
     Table/Ast/Ast.hpp
-    Table/Ast/AstAllocator.hpp
+    Table/Ast/Allocator.hpp
     Table/Column.cpp
     Table/Column.hpp
     Table/Gen/TableValue.cpp

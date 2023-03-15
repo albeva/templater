@@ -4,8 +4,8 @@
 #pragma once
 #include "pch.hpp"
 #include "Support/Source.hpp"
+#include "Table/Ast/Allocator.hpp"
 #include "Table/Ast/Ast.hpp"
-#include "Table/Ast/AstAllocator.hpp"
 #include "Token.hpp"
 
 namespace templater {
@@ -59,7 +59,7 @@ private:
     Context* m_ctx;
     Diagnostics* m_diag;
     Lexer* m_lexer;
-    ast::AstAllocator m_ast;
+    ast::Allocator m_ast;
     Token m_token {};
     SourceLoc m_lastLoc {};
 };

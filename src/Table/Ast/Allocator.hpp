@@ -7,9 +7,9 @@
 #include "Support/Context.hpp"
 
 namespace templater::table::ast {
-class AstAllocator final {
+class Allocator final {
 public:
-    explicit AstAllocator(Context* context)
+    explicit Allocator(Context* context)
         : m_context(context)
     {
     }
