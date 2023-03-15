@@ -45,7 +45,7 @@ private:
     void visit(const ast::TableRow* node);
     void visit(const ast::Member* node);
 
-    [[noreturn]] void redefinition(const parser::Token& id, support::SourceLoc existing) const;
+    [[noreturn]] void redefinition(const Identifier& id, support::SourceLoc existing) const;
 
     support::Context* m_ctx;
     support::Diagnostics* m_diag;

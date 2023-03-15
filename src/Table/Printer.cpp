@@ -56,7 +56,22 @@ void Printer::visit(const Column* column)
     }
 }
 
-void Printer::visit(const parser::Token& token)
+// void Printer::visit(const parser::Token& token)
+//{
+//     m_output << token.getValue();
+// }
+
+void Printer::visit(const Identifier& token)
 {
-    m_output << token.getValue();
+    m_output << token.getValue() << '\n';
+}
+
+void Printer::visit(const NumberLiteral& token)
+{
+    m_output << token.getValue() << '\n';
+}
+
+void Printer::visit(const StringLiteral& token)
+{
+    m_output << token.getValue() << '\n';
 }

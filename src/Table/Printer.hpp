@@ -4,10 +4,8 @@
 #pragma once
 #include "pch.hpp"
 #include "Support/VisitorMixin.hpp"
+#include "Value.hpp"
 namespace templater::table {
-namespace parser {
-    struct Token;
-}
 class SymbolTable;
 class Symbol;
 class Table;
@@ -27,7 +25,10 @@ private:
     void visit(const SymbolTable* symbolTable);
     void visit(const Table* table);
     void visit(const Column* column);
-    void visit(const parser::Token& token);
+    
+    void visit(const Identifier& token);
+    void visit(const NumberLiteral& token);
+    void visit(const StringLiteral& token);
 
     std::stringstream m_output {};
     Symbol* m_symbol = nullptr;

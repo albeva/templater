@@ -15,7 +15,9 @@ namespace ast {
 
 namespace templater::table::gen {
 struct TableValue final {
-    [[nodiscard]] auto operator()(const parser::Token& node) const -> Value;
+    [[nodiscard]] auto operator()(const Identifier& node) const -> Value;
+    [[nodiscard]] auto operator()(const StringLiteral& node) const -> Value;
+    [[nodiscard]] auto operator()(const NumberLiteral& node) const -> Value;
     [[nodiscard]] auto operator()(const ast::StructBody* node) const -> Value;
 };
 }

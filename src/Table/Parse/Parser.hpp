@@ -6,6 +6,7 @@
 #include "Support/Source.hpp"
 #include "Table/Ast/Allocator.hpp"
 #include "Table/Ast/Ast.hpp"
+#include "Table/Value.hpp"
 #include "Token.hpp"
 
 namespace templater::support {
@@ -28,7 +29,6 @@ public:
     [[nodiscard]] auto parse() -> ast::Content*;
 
 private:
-
     auto statement() -> ast::Statement;
     auto kwImport() -> ast::Import*;
 
@@ -48,6 +48,10 @@ private:
     auto expression(ast::Expression lhs, int min) -> ast::Expression;
 
     auto member() -> ast::Member*;
+    auto operation() -> ast::Operation;
+    auto identifier() -> Identifier;
+    auto stringLiteral() -> StringLiteral;
+    auto numberLiteral() -> NumberLiteral;
 
     auto accept(TokenKind kind) -> bool;
     void expect(TokenKind kind);

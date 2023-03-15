@@ -6,6 +6,7 @@
 #include "Support/Context.hpp"
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Token.hpp"
+#include "Table/Value.hpp"
 namespace templater::table::ast {
 struct Content;
 struct Import;
@@ -20,8 +21,8 @@ struct BinaryExpression;
 struct Member;
 
 using Statement = std::variant<Import*, Table*>;
-using Expression = std::variant<parser::Token, UnaryExpression*, BinaryExpression*>;
-using TableValue = std::variant<parser::Token, StructBody*>;
+using Expression = std::variant<Identifier, NumberLiteral, StringLiteral, UnaryExpression*, BinaryExpression*>;
+using TableValue = std::variant<Identifier, NumberLiteral, StringLiteral, StructBody*>;
 using TableContent = std::variant<TableInherit*, TableBody*>;
 
 template <typename T>
@@ -57,14 +58,14 @@ private:
 };
 
 struct Import final : Root {
-    Import(support::SourceLoc loc, parser::Token file, parser::Token identifier);
+    Import(support::SourceLoc loc, Identifier identifier, StringLiteral file);
 
     [[nodiscard]] auto getFile() const { return m_file; }
     [[nodiscard]] auto getIdentifier() const { return m_identifier; }
 
 private:
-    parser::Token m_file;
-    parser::Token m_identifier;
+    Identifier m_identifier;
+    StringLiteral m_file;
 };
 
 //--------------------------------------
@@ -72,26 +73,26 @@ private:
 //--------------------------------------
 
 struct Table final : Root {
-    Table(support::SourceLoc loc, parser::Token identifier, List<TableColumn*> columns, List<TableContent> content);
+    Table(support::SourceLoc loc, Identifier identifier, List<TableColumn*> columns, List<TableContent> content);
 
     [[nodiscard]] auto getIdentifier() const -> const auto& { return m_identifier; }
     [[nodiscard]] auto getColumns() const -> auto& { return m_columns; }
     [[nodiscard]] auto getContent() const -> auto& { return m_content; }
 
 private:
-    parser::Token m_identifier;
+    Identifier m_identifier;
     List<TableColumn*> m_columns;
     List<TableContent> m_content;
 };
 
 struct TableColumn final : Root {
-    TableColumn(support::SourceLoc loc, parser::Token identifier, std::optional<TableValue> value);
+    TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<TableValue> value);
 
-    [[nodiscard]] auto getIdentifier() const -> const parser::Token& { return m_identifier; }
+    [[nodiscard]] auto getIdentifier() const -> const auto& { return m_identifier; }
     [[nodiscard]] auto getValue() const { return m_value; }
 
 private:
-    parser::Token m_identifier;
+    Identifier m_identifier;
     std::optional<TableValue> m_value;
 };
 
@@ -139,26 +140,39 @@ struct StructBody final : Root {
 // Expressions
 //--------------------------------------
 
-struct UnaryExpression final : Root {
-    UnaryExpression(support::SourceLoc loc, parser::TokenKind type, Expression rhs);
+struct Operation final : Root {
+    Operation(support::SourceLoc loc, parser::TokenKind kind)
+        : Root(loc)
+        , m_kind(kind)
+    {
+    }
 
-    [[nodiscard]] auto getType() const { return m_type; }
+    [[nodiscard]] auto getKind() const { return m_kind; }
+
+private:
+    parser::TokenKind m_kind;
+};
+
+struct UnaryExpression final : Root {
+    UnaryExpression(support::SourceLoc loc, Operation op, Expression rhs);
+
+    [[nodiscard]] auto getOp() const { return m_op; }
     [[nodiscard]] auto getRhs() const { return m_rhs; }
 
 private:
-    parser::TokenKind m_type;
+    Operation m_op;
     Expression m_rhs;
 };
 
 struct BinaryExpression final : Root {
-    BinaryExpression(support::SourceLoc loc, parser::TokenKind type, Expression lhs, Expression rhs);
+    BinaryExpression(support::SourceLoc loc, Operation op, Expression lhs, Expression rhs);
 
-    [[nodiscard]] auto getType() const { return m_type; }
+    [[nodiscard]] auto getOp() const { return m_op; }
     [[nodiscard]] auto getLhs() const { return m_lhs; }
     [[nodiscard]] auto getRhs() const { return m_rhs; }
 
 private:
-    parser::TokenKind m_type;
+    Operation m_op;
     Expression m_lhs, m_rhs;
 };
 
@@ -167,12 +181,12 @@ private:
 //--------------------------------------
 
 struct Member final : Root {
-    explicit Member(support::SourceLoc loc, List<parser::Token> identifiers);
+    explicit Member(support::SourceLoc loc, List<Identifier> identifiers);
 
     [[nodiscard]] auto getIdentifiers() const -> auto& { return m_identifiers; }
 
 private:
-    List<parser::Token> m_identifiers;
+    List<Identifier> m_identifiers;
 };
 
 } // namespace templater::table::ast

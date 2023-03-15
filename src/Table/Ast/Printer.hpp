@@ -5,6 +5,7 @@
 #include "pch.hpp"
 #include "Ast.hpp"
 #include "Support/VisitorMixin.hpp"
+#include "Table/Value.hpp"
 namespace templater::table::ast {
 
 class Printer final {
@@ -29,8 +30,11 @@ private:
     void visit(const StructBody* node);
     void visit(const UnaryExpression* node);
     void visit(const BinaryExpression* node);
-    void visit(const parser::Token& token);
     void visit(const Member* node);
+
+    void visit(const Identifier& node);
+    void visit(const StringLiteral& node);
+    void visit(const NumberLiteral& node);
 
     std::size_t m_indent = 0;
     std::stringstream m_output {};

@@ -100,7 +100,7 @@ void Printer::visit(const StructBody* node)
 // NOLINTNEXTLINE misc-no-recursion
 void Printer::visit(const UnaryExpression* node)
 {
-    m_output << Token::describe(node->getType()) << '(';
+    m_output << Token::describe(node->getOp().getKind()) << '(';
     visit(node->getRhs());
     m_output << ')';
 }
@@ -110,18 +110,9 @@ void Printer::visit(const BinaryExpression* node)
 {
     m_output << '(';
     visit(node->getLhs());
-    m_output << ' ' << Token::describe(node->getType()) << ' ';
+    m_output << ' ' << Token::describe(node->getOp().getKind()) << ' ';
     visit(node->getRhs());
     m_output << ')';
-}
-
-void Printer::visit(const Token& token)
-{
-    if (token.getKind() == TokenKind::String) {
-        m_output << '"' << token.getValue() << '"';
-    } else {
-        m_output << token.getValue();
-    }
 }
 
 void Printer::visit(const Member* node)
@@ -130,6 +121,21 @@ void Printer::visit(const Member* node)
     for (const auto& id : node->getIdentifiers()) {
         m_output << sep() << id.getValue();
     }
+}
+
+void Printer::visit(const Identifier& node)
+{
+    m_output << node.getValue();
+}
+
+void Printer::visit(const StringLiteral& node)
+{
+    m_output << '"' << std::quoted(node.getValue()) << '"';
+}
+
+void Printer::visit(const NumberLiteral& node)
+{
+    m_output << node.getValue();
 }
 
 auto Printer::output() const -> std::string

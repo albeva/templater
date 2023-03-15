@@ -7,7 +7,17 @@
 #include "Table/Parse/Token.hpp"
 using templater::table::gen::TableValue;
 
-auto TableValue::operator()(const parser::Token& node) const -> Value
+auto TableValue::operator()(const Identifier& node) const -> Value
+{
+    return node;
+}
+
+auto TableValue::operator()(const StringLiteral& node) const -> Value
+{
+    return node;
+}
+
+auto TableValue::operator()(const NumberLiteral& node) const -> Value
 {
     return node;
 }

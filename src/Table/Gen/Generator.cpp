@@ -95,7 +95,7 @@ void Generator::visit(const ast::Member* node)
     (void)node;
 }
 
-void Generator::redefinition(const parser::Token& id, SourceLoc existing) const
+void Generator::redefinition(const Identifier& id, SourceLoc existing) const
 {
     m_diag->error(m_source, id.getLoc(), fmt::format("redefinition of '{}'", id.getValue()));
     m_diag->notice(m_source, existing, "previous definition is here");

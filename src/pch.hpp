@@ -4,6 +4,7 @@
 #pragma once
 #include <array>
 #include <cassert>
+#include <charconv>
 #include <exception>
 #include <expected>
 #include <filesystem>

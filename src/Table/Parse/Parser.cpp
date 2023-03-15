@@ -10,6 +10,8 @@ using templater::support::Context;
 using templater::support::Diagnostics;
 using templater::support::SourceLoc;
 using templater::support::Visitor;
+using templater::table::Identifier;
+using templater::table::StringLiteral;
 using templater::table::parser::Parser;
 using namespace std::literals;
 
@@ -58,15 +60,11 @@ auto Parser::kwImport() -> ast::Import*
     auto start = m_token.getLoc();
     expect(TokenKind::KwImport);
 
-    auto import = m_token;
-    expect(TokenKind::String);
-
+    auto file = stringLiteral();
     expect(TokenKind::KwAs);
+    auto ident = identifier();
 
-    auto ident = m_token;
-    expect(TokenKind::Identifier);
-
-    return m_ast.node<ast::Import>(makeLoc(start, m_lastLoc), import, ident);
+    return m_ast.node<ast::Import>(makeLoc(start, m_lastLoc), ident, file);
 }
 
 //------------------------------------------------------------------------------
@@ -79,8 +77,7 @@ auto Parser::kwTable() -> ast::Table*
     auto start = m_token.getLoc();
     expect(TokenKind::KwTable);
 
-    auto ident = m_token;
-    expect(TokenKind::Identifier);
+    auto ident = identifier();
 
     auto columns = m_ast.list<ast::TableColumn*>();
     if (accept(TokenKind::ParenOpen)) {
@@ -110,8 +107,7 @@ auto Parser::tableColumnList() -> ast::List<ast::TableColumn*>
 auto Parser::tableColumn() -> ast::TableColumn*
 {
     auto start = m_token.getLoc();
-    auto ident = m_token;
-    expect(TokenKind::Identifier);
+    auto ident = identifier();
 
     std::optional<ast::TableValue> value {};
     if (accept(TokenKind::Assign)) {
@@ -210,12 +206,16 @@ auto Parser::tableRow() -> ast::TableRow*
 // Literal | StructBody
 auto Parser::tableValue() -> ast::TableValue
 {
-    auto token = m_token;
-    if (!m_token.isValue()) {
+    switch (m_token.getKind()) {
+    case TokenKind::Identifier:
+        return identifier();
+    case TokenKind::String:
+        return stringLiteral();
+    case TokenKind::Number:
+        return numberLiteral();
+    default:
         expected("value");
     }
-    next();
-    return token;
 }
 
 //------------------------------------------------------------------------------
@@ -235,11 +235,10 @@ auto Parser::primary() -> ast::Expression
 {
     switch (m_token.getKind()) {
     case TokenKind::LogicalNot: {
-        auto start = m_token.getLoc();
-        next();
+        auto op = operation();
         return m_ast.node<ast::UnaryExpression>(
-            makeLoc(start, m_lastLoc),
-            TokenKind::LogicalNot,
+            makeLoc(op.getLoc(), m_lastLoc),
+            op,
             primary());
     }
     case TokenKind::ParenOpen: {
@@ -248,14 +247,14 @@ auto Parser::primary() -> ast::Expression
         expect(TokenKind::ParenClose);
         return expr;
     }
-    default: {
-        auto value = m_token;
-        if (!value.isValue()) {
-            expected("value");
-        }
-        next();
-        return value;
-    }
+    case TokenKind::Identifier:
+        return identifier();
+    case TokenKind::String:
+        return stringLiteral();
+    case TokenKind::Number:
+        return numberLiteral();
+    default:
+        expected("value");
     }
 }
 
@@ -263,19 +262,24 @@ auto Parser::primary() -> ast::Expression
 auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
 {
     constexpr static auto getLoc = Visitor {
-        [](const auto* node) {
-            return node->getLoc();
+        [](const Identifier& val) {
+            return val.getLoc();
         },
-        [](const Token& token) {
-            return token.getLoc();
-        }
+        [](const NumberLiteral& val) {
+            return val.getLoc();
+        },
+        [](const StringLiteral& val) {
+            return val.getLoc();
+        },
+        [](const auto* val) {
+            return val->getLoc();
+        },
     };
 
     auto start = std::visit(getLoc, lhs);
     while (m_token.getPrecedence() >= min) {
-        auto op = m_token.getKind();
         auto prec = m_token.getPrecedence();
-        next();
+        auto op = operation();
         auto rhs = primary();
 
         while (m_token.getPrecedence() > prec) { // cppcheck-suppress knownConditionTrueFalse
@@ -296,14 +300,50 @@ auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
 auto Parser::member() -> ast::Member*
 {
     auto start = m_token.getLoc();
-    auto members = std::pmr::vector<Token>(m_ctx->getAllocator());
+    auto members = std::pmr::vector<Identifier>(m_ctx->getAllocator());
 
     do {
-        members.emplace_back(m_token);
-        expect(TokenKind::Identifier);
+        members.emplace_back(identifier());
     } while (accept(TokenKind::Period));
 
     return m_ast.node<ast::Member>(makeLoc(start, m_lastLoc), std::move(members));
+}
+
+auto Parser::operation() -> ast::Operation
+{
+    auto op = m_token;
+    if (op.getPrecedence() == 0) {
+        expected("operator");
+    }
+    next();
+    return { op.getLoc(), op.getKind() };
+}
+
+auto Parser::identifier() -> Identifier
+{
+    auto ident = m_token;
+    expect(TokenKind::Identifier);
+    return { ident.getLoc(), ident.getValue() };
+}
+
+auto Parser::stringLiteral() -> StringLiteral
+{
+    auto str = m_token;
+    expect(TokenKind::String);
+    return { str.getLoc(), str.getValue() };
+}
+
+auto Parser::numberLiteral() -> NumberLiteral
+{
+    auto num = m_token;
+
+    unsigned value {};
+    const std::string_view& str = num.getValue();
+    if (std::from_chars(str.data(), str.data() + str.size(), value).ec == std::errc {}) {
+        expect(TokenKind::Number);
+        return { num.getLoc(), value };
+    }
+    expected("number");
 }
 
 //------------------------------------------------------------------------------

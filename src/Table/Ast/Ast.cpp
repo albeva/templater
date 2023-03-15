@@ -11,14 +11,14 @@ Content::Content(SourceLoc loc, List<Statement> statements)
 {
 }
 
-Import::Import(SourceLoc loc, parser::Token file, parser::Token identifier)
+Import::Import(SourceLoc loc, Identifier identifier, StringLiteral file)
     : Root(loc)
-    , m_file(file)
     , m_identifier(identifier)
+    , m_file(file)
 {
 }
 
-Table::Table(SourceLoc loc, parser::Token identifier, List<TableColumn*> columns, List<TableContent> content)
+Table::Table(SourceLoc loc, Identifier identifier, List<TableColumn*> columns, List<TableContent> content)
     : Root(loc)
     , m_identifier(identifier)
     , m_columns(std::move(columns))
@@ -26,7 +26,7 @@ Table::Table(SourceLoc loc, parser::Token identifier, List<TableColumn*> columns
 {
 }
 
-TableColumn::TableColumn(SourceLoc loc, parser::Token identifier, std::optional<TableValue> value)
+TableColumn::TableColumn(SourceLoc loc, Identifier identifier, std::optional<TableValue> value)
     : Root(loc)
     , m_identifier(identifier)
     , m_value(value)
@@ -52,22 +52,22 @@ TableRow::TableRow(SourceLoc loc, List<TableValue> values)
 {
 }
 
-UnaryExpression::UnaryExpression(SourceLoc loc, parser::TokenKind type, Expression rhs)
+UnaryExpression::UnaryExpression(SourceLoc loc, Operation op, Expression rhs)
     : Root(loc)
-    , m_type(type)
+    , m_op(op)
     , m_rhs(rhs)
 {
 }
 
-BinaryExpression::BinaryExpression(SourceLoc loc, parser::TokenKind type, Expression lhs, Expression rhs)
+BinaryExpression::BinaryExpression(SourceLoc loc, Operation op, Expression lhs, Expression rhs)
     : Root(loc)
-    , m_type(type)
+    , m_op(op)
     , m_lhs(lhs)
     , m_rhs(rhs)
 {
 }
 
-Member::Member(SourceLoc loc, List<parser::Token> identifiers)
+Member::Member(SourceLoc loc, List<Identifier> identifiers)
     : Root(loc)
     , m_identifiers(std::move(identifiers))
 {
