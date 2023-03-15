@@ -11,7 +11,7 @@ Content::Content(SourceLoc loc, List<Statement> statements)
 {
 }
 
-Import::Import(SourceLoc loc, std::string_view file, std::string_view identifier)
+Import::Import(SourceLoc loc, parser::Token file, parser::Token identifier)
     : Root(loc)
     , m_file(file)
     , m_identifier(identifier)
@@ -67,7 +67,7 @@ BinaryExpression::BinaryExpression(SourceLoc loc, parser::TokenKind type, Expres
 {
 }
 
-Member::Member(SourceLoc loc, std::pmr::vector<std::string_view> identifiers)
+Member::Member(SourceLoc loc, List<parser::Token> identifiers)
     : Root(loc)
     , m_identifiers(std::move(identifiers))
 {

@@ -57,14 +57,14 @@ private:
 };
 
 struct Import final : Root {
-    Import(support::SourceLoc loc, std::string_view file, std::string_view identifier);
+    Import(support::SourceLoc loc, parser::Token file, parser::Token identifier);
 
     [[nodiscard]] auto getFile() const { return m_file; }
     [[nodiscard]] auto getIdentifier() const { return m_identifier; }
 
 private:
-    std::string_view m_file;
-    std::string_view m_identifier;
+    parser::Token m_file;
+    parser::Token m_identifier;
 };
 
 //--------------------------------------
@@ -167,12 +167,12 @@ private:
 //--------------------------------------
 
 struct Member final : Root {
-    explicit Member(support::SourceLoc loc, std::pmr::vector<std::string_view> identifiers);
+    explicit Member(support::SourceLoc loc, List<parser::Token> identifiers);
 
     [[nodiscard]] auto getIdentifiers() const -> auto& { return m_identifiers; }
 
 private:
-    std::pmr::vector<std::string_view> m_identifiers;
+    List<parser::Token> m_identifiers;
 };
 
 } // namespace templater::table::ast

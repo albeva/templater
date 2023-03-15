@@ -197,8 +197,8 @@ void Lexer::string(Token& token)
 {
     const auto* start = m_input++;
     const auto* begin = m_input;
-
     std::string literal {};
+
     while (true) {
         auto ch = *m_input;
         switch (ch) {

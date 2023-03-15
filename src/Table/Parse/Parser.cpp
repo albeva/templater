@@ -58,9 +58,13 @@ auto Parser::kwImport() -> ast::Import*
     auto start = m_token.getLoc();
     expect(TokenKind::KwImport);
 
-    auto import = consume(TokenKind::String);
+    auto import = m_token;
+    expect(TokenKind::String);
+
     expect(TokenKind::KwAs);
-    auto ident = consume(TokenKind::Identifier);
+
+    auto ident = m_token;
+    expect(TokenKind::Identifier);
 
     return m_ast.node<ast::Import>(makeLoc(start, m_lastLoc), import, ident);
 }
@@ -140,7 +144,7 @@ auto Parser::tableContent() -> ast::TableContent
         return tableBody();
     }
 
-    expected("table inherit or body"sv);
+    expected("["sv);
 }
 
 // Member [ "(" Expression ")" ]
@@ -292,10 +296,11 @@ auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
 auto Parser::member() -> ast::Member*
 {
     auto start = m_token.getLoc();
-    auto members = std::pmr::vector<std::string_view>(m_ctx->getAllocator()); // m_ctx->vector<std::string_view>();
+    auto members = std::pmr::vector<Token>(m_ctx->getAllocator());
 
     do {
-        members.push_back(consume(TokenKind::Identifier));
+        members.emplace_back(m_token);
+        expect(TokenKind::Identifier);
     } while (accept(TokenKind::Period));
 
     return m_ast.node<ast::Member>(makeLoc(start, m_lastLoc), std::move(members));
@@ -320,13 +325,6 @@ void Parser::expect(TokenKind kind)
         expected(Token::describe(kind));
     }
     next();
-}
-
-auto Parser::consume(TokenKind kind) -> std::string_view
-{
-    auto value = m_token.getValue();
-    expect(kind);
-    return value;
 }
 
 void Parser::next()

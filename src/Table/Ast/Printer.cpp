@@ -20,7 +20,11 @@ void Printer::visit(const Content* node)
 
 void Printer::visit(const Import* node)
 {
-    m_output << spaces() << "import \"" << node->getFile() << "\" as " << node->getIdentifier();
+    fmt::print(m_output,
+        "{0:<{1}}import \"{2}\" as {3}",
+        "", (m_indent * 4),
+        node->getFile().getValue(),
+        node->getIdentifier().getValue());
 }
 
 void Printer::visit(const Table* node)
@@ -124,7 +128,7 @@ void Printer::visit(const Member* node)
 {
     Separator sep { "." };
     for (const auto& id : node->getIdentifiers()) {
-        m_output << sep() << id;
+        m_output << sep() << id.getValue();
     }
 }
 

@@ -51,7 +51,6 @@ private:
 
     auto accept(TokenKind kind) -> bool;
     void expect(TokenKind kind);
-    [[nodiscard]] auto consume(TokenKind kind) -> std::string_view;
     void next();
     [[nodiscard]] static auto makeLoc(support::SourceLoc start, support::SourceLoc end) -> support::SourceLoc;
 
@@ -65,4 +64,4 @@ private:
     support::SourceLoc m_lastLoc {};
 };
 
-} // namespace templater::table
+} // namespace templater::table::parser
