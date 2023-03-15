@@ -77,16 +77,22 @@ void Generator::visit(const ast::TableInherit* /*node*/)
 
 void Generator::visit(const ast::TableBody* node)
 {
+    m_rowIndex = 0;
     visitEach(node->getRows());
 }
 
 void Generator::visit(const ast::TableRow* node)
 {
-    m_rowIndex = m_table->addRow();
-    for (const auto& val : node->getValues()) {
-        auto value = std::visit(TableValue(), val);
-        m_colIndex = m_table->addValue(m_rowIndex, value);
+    m_table->addRow();
+    const auto& values = node->getValues();
+    for (size_t col = 0; col < values.size(); col++) {
+        const Column* column = m_table->getColumns().at(col);
+        auto value = std::visit(TableValue(), values[col]);
+        m_table->addValue(m_rowIndex, column, value);
     }
+    // TODO: Add default data
+    // TODO: Report missing column value
+    m_rowIndex++;
 }
 
 void Generator::visit(const ast::Member* node)

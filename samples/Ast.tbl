@@ -10,13 +10,7 @@ table Root(id) = [
 ]
 
 table Basic(id members = "") = [
-    Module struct {
-        unsigned      fileId
-        bool          hasImplicitMain
-        Stmt.Import[] imports
-        Stmt.StmtList stmtList
-        SymbolTable*  symbolTable = nullptr
-    }
+    Module
     ExprList
     Attribute
     AttributeList

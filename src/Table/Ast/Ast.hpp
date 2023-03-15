@@ -22,7 +22,6 @@ struct Member;
 
 using Statement = std::variant<Import*, Table*>;
 using Expression = std::variant<Identifier, NumberLiteral, StringLiteral, UnaryExpression*, BinaryExpression*>;
-using TableValue = std::variant<Identifier, NumberLiteral, StringLiteral, StructBody*>;
 using TableContent = std::variant<TableInherit*, TableBody*>;
 
 template <typename T>
@@ -86,14 +85,14 @@ private:
 };
 
 struct TableColumn final : Root {
-    TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<TableValue> value);
+    TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<Value> value);
 
     [[nodiscard]] auto getIdentifier() const -> const auto& { return m_identifier; }
     [[nodiscard]] auto getValue() const { return m_value; }
 
 private:
     Identifier m_identifier;
-    std::optional<TableValue> m_value;
+    std::optional<Value> m_value;
 };
 
 struct TableInherit final : Root {
@@ -117,23 +116,12 @@ private:
 };
 
 struct TableRow final : Root {
-    explicit TableRow(support::SourceLoc loc, List<TableValue> values);
+    explicit TableRow(support::SourceLoc loc, List<Value> values);
 
     [[nodiscard]] auto getValues() const -> auto& { return m_values; }
 
 private:
-    List<TableValue> m_values;
-};
-
-//--------------------------------------
-// Structs
-//--------------------------------------
-
-struct StructBody final : Root {
-    explicit StructBody(support::SourceLoc loc)
-        : Root { loc }
-    {
-    }
+    List<Value> m_values;
 };
 
 //--------------------------------------

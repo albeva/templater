@@ -28,7 +28,7 @@ auto Printer::output() const -> std::string
 void Printer::visit(const SymbolTable* symbolTable)
 {
     fmt::print(m_output,
-        "import \"{}\" as {}\n",
+        "import {} as {}\n",
         symbolTable->getSource()->getName(), m_symbol->getName());
 }
 
@@ -36,15 +36,33 @@ void Printer::visit(const Table* table)
 {
     fmt::print(m_output, "table {}", m_symbol->getName());
 
-    if (!table->getColumns().empty()) {
-        m_output << " (";
-        Separator sep { ", " };
-        for (const auto* col : table->getColumns()) {
-            m_output << sep();
-            visit(col);
-        }
-        m_output << ")";
+    // columns
+    const auto& columns = table->getColumns();
+    m_output << " (";
+    Separator sep { ", " };
+    for (const auto* col : columns) {
+        m_output << sep();
+        visit(col);
     }
+    m_output << ")";
+
+    // rows
+    m_output << " = [\n";
+    for (size_t index = 0; index < table->getRowCount(); index++) {
+        m_output << "    ";
+        const auto& row = table->getRow(index);
+        Separator sep2 { " " };
+        for (const auto* col : columns) {
+            m_output << sep2();
+            if (auto iter = row.find(col); iter != row.end()) {
+                visit(iter->second);
+            } else {
+                m_output << '-';
+            }
+        }
+        m_output << "\n";
+    }
+    m_output << "]\n\n";
 }
 
 void Printer::visit(const Column* column)
@@ -56,22 +74,17 @@ void Printer::visit(const Column* column)
     }
 }
 
-// void Printer::visit(const parser::Token& token)
-//{
-//     m_output << token.getValue();
-// }
-
 void Printer::visit(const Identifier& token)
 {
-    m_output << token.getValue() << '\n';
+    m_output << token.getValue();
 }
 
 void Printer::visit(const NumberLiteral& token)
 {
-    m_output << token.getValue() << '\n';
+    m_output << token.getValue();
 }
 
 void Printer::visit(const StringLiteral& token)
 {
-    m_output << token.getValue() << '\n';
+    m_output << std::quoted(token.getValue());
 }

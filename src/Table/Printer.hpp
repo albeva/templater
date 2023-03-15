@@ -25,7 +25,7 @@ private:
     void visit(const SymbolTable* symbolTable);
     void visit(const Table* table);
     void visit(const Column* column);
-    
+
     void visit(const Identifier& token);
     void visit(const NumberLiteral& token);
     void visit(const StringLiteral& token);

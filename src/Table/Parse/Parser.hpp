@@ -41,14 +41,29 @@ private:
     auto tableBody() -> ast::TableBody*;
     auto tableRowList() -> ast::List<ast::TableRow*>;
     auto tableRow() -> ast::TableRow*;
-    auto tableValue() -> ast::TableValue;
 
     auto expression() -> ast::Expression;
     auto primary() -> ast::Expression;
     auto expression(ast::Expression lhs, int min) -> ast::Expression;
+    auto operation() -> ast::Operation;
 
     auto member() -> ast::Member*;
-    auto operation() -> ast::Operation;
+
+    template <typename T = Value>
+    auto value() -> T
+    {
+        switch (m_token.getKind()) {
+        case TokenKind::Identifier:
+            return identifier();
+        case TokenKind::String:
+            return stringLiteral();
+        case TokenKind::Number:
+            return numberLiteral();
+        default:
+            expected("value");
+        }
+    }
+
     auto identifier() -> Identifier;
     auto stringLiteral() -> StringLiteral;
     auto numberLiteral() -> NumberLiteral;

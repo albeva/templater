@@ -26,7 +26,7 @@ Table::Table(SourceLoc loc, Identifier identifier, List<TableColumn*> columns, L
 {
 }
 
-TableColumn::TableColumn(SourceLoc loc, Identifier identifier, std::optional<TableValue> value)
+TableColumn::TableColumn(SourceLoc loc, Identifier identifier, std::optional<Value> value)
     : Root(loc)
     , m_identifier(identifier)
     , m_value(value)
@@ -46,7 +46,7 @@ TableBody::TableBody(SourceLoc loc, List<TableRow*> rows)
 {
 }
 
-TableRow::TableRow(SourceLoc loc, List<TableValue> values)
+TableRow::TableRow(SourceLoc loc, List<Value> values)
     : Root(loc)
     , m_values(std::move(values))
 {

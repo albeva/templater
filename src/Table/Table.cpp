@@ -28,14 +28,21 @@ void Table::addColumn(Column* column)
     m_columns.push_back(column);
 }
 
-auto Table::addRow() -> size_t
+void Table::addRow()
 {
     m_data.emplace_back(Row { m_ctx->getAllocator() });
-    return m_data.size() - 1;
 }
 
-auto Table::addValue(size_t row, Value value) -> size_t
+void Table::addValue(size_t row, const Column* column, Value value)
 {
-    m_data[row].emplace_back(value);
-    return m_data[row].size() - 1;
+    m_data[row].insert({ column, value });
+}
+
+auto Table::getValue(size_t row, const Column* column) -> std::optional<Value>
+{
+    auto iter = m_data[row].find(column);
+    if (iter != m_data[row].end()) {
+        return iter->second;
+    }
+    return {};
 }

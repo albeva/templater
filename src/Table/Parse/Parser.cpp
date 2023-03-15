@@ -109,12 +109,12 @@ auto Parser::tableColumn() -> ast::TableColumn*
     auto start = m_token.getLoc();
     auto ident = identifier();
 
-    std::optional<ast::TableValue> value {};
+    std::optional<Value> val {};
     if (accept(TokenKind::Assign)) {
-        value = tableValue();
+        val = value();
     }
 
-    return m_ast.node<ast::TableColumn>(makeLoc(start, m_lastLoc), ident, value);
+    return m_ast.node<ast::TableColumn>(makeLoc(start, m_lastLoc), ident, val);
 }
 
 // TableContent { "+" TableContent }
@@ -190,32 +190,17 @@ auto Parser::tableRowList() -> ast::List<ast::TableRow*>
     return rows;
 }
 
-// TableValue { "," TableValue }
+// Value { "," Value }
 auto Parser::tableRow() -> ast::TableRow*
 {
     auto start = m_token.getLoc();
-    auto values = m_ast.list<ast::TableValue>();
+    auto values = m_ast.list<Value>();
 
     do {
-        values.push_back(tableValue());
+        values.push_back(value());
     } while (m_token.isNot(TokenKind::EndOfLine, TokenKind::BracketClose));
 
     return m_ast.node<ast::TableRow>(makeLoc(start, m_lastLoc), std::move(values));
-}
-
-// Literal | StructBody
-auto Parser::tableValue() -> ast::TableValue
-{
-    switch (m_token.getKind()) {
-    case TokenKind::Identifier:
-        return identifier();
-    case TokenKind::String:
-        return stringLiteral();
-    case TokenKind::Number:
-        return numberLiteral();
-    default:
-        expected("value");
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -247,14 +232,8 @@ auto Parser::primary() -> ast::Expression
         expect(TokenKind::ParenClose);
         return expr;
     }
-    case TokenKind::Identifier:
-        return identifier();
-    case TokenKind::String:
-        return stringLiteral();
-    case TokenKind::Number:
-        return numberLiteral();
     default:
-        expected("value");
+        return value<ast::Expression>();
     }
 }
 
@@ -292,6 +271,16 @@ auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
     return lhs;
 }
 
+auto Parser::operation() -> ast::Operation
+{
+    auto op = m_token;
+    if (op.getPrecedence() == 0) {
+        expected("operator");
+    }
+    next();
+    return { op.getLoc(), op.getKind() };
+}
+
 //------------------------------------------------------------------------------
 // Misc
 //------------------------------------------------------------------------------
@@ -309,16 +298,22 @@ auto Parser::member() -> ast::Member*
     return m_ast.node<ast::Member>(makeLoc(start, m_lastLoc), std::move(members));
 }
 
-auto Parser::operation() -> ast::Operation
-{
-    auto op = m_token;
-    if (op.getPrecedence() == 0) {
-        expected("operator");
-    }
-    next();
-    return { op.getLoc(), op.getKind() };
-}
+//// Literal
+// auto Parser::value() -> Value
+//{
+//     switch (m_token.getKind()) {
+//     case TokenKind::Identifier:
+//         return identifier();
+//     case TokenKind::String:
+//         return stringLiteral();
+//     case TokenKind::Number:
+//         return numberLiteral();
+//     default:
+//         expected("value");
+//     }
+// }
 
+// IDENTIFIER
 auto Parser::identifier() -> Identifier
 {
     auto ident = m_token;
@@ -326,6 +321,7 @@ auto Parser::identifier() -> Identifier
     return { ident.getLoc(), ident.getValue() };
 }
 
+// STRING
 auto Parser::stringLiteral() -> StringLiteral
 {
     auto str = m_token;
@@ -333,15 +329,16 @@ auto Parser::stringLiteral() -> StringLiteral
     return { str.getLoc(), str.getValue() };
 }
 
+// NUMBER
 auto Parser::numberLiteral() -> NumberLiteral
 {
     auto num = m_token;
 
-    unsigned value {};
+    unsigned val {};
     const std::string_view& str = num.getValue();
-    if (std::from_chars(str.data(), str.data() + str.size(), value).ec == std::errc {}) {
+    if (std::from_chars(str.data(), str.data() + str.size(), val).ec == std::errc {}) {
         expect(TokenKind::Number);
-        return { num.getLoc(), value };
+        return { num.getLoc(), val };
     }
     expected("number");
 }

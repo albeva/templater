@@ -53,7 +53,6 @@ private:
     SymbolTable* m_symbolTable;
     Table* m_table = nullptr;
     size_t m_rowIndex = 0;
-    size_t m_colIndex = 0;
 };
 
 } // namespace templater::table::gen
