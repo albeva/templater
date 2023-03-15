@@ -13,7 +13,7 @@ class Symbol final {
 public:
     using Value = std::variant<Table*, SymbolTable*>;
 
-    Symbol(std::string_view name, SourceLoc loc, Value value)
+    Symbol(std::string_view name, support::SourceLoc loc, Value value)
         : m_name(name)
         , m_loc(loc)
         , m_value(value)
@@ -26,7 +26,7 @@ public:
 
 private:
     std::string_view m_name;
-    SourceLoc m_loc;
+    support::SourceLoc m_loc;
     Value m_value;
 };
 

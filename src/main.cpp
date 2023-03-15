@@ -8,9 +8,9 @@
 #include "Table/Parse/Lexer.hpp"
 #include "Table/Parse/Parser.hpp"
 #include "Table/Printer.hpp"
-using templater::Context;
-using templater::Diagnostics;
-using templater::Source;
+using templater::support::Context;
+using templater::support::Diagnostics;
+using templater::support::Source;
 using templater::table::Printer;
 using templater::table::gen::Generator;
 using templater::table::parser::Lexer;

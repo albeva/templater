@@ -4,9 +4,10 @@
 #include "Table.hpp"
 #include "Column.hpp"
 #include "Support/Context.hpp"
+using templater::support::Context;
 using templater::table::Table;
 
-Table::Table(templater::Context* ctx)
+Table::Table(Context* ctx)
     : m_ctx(ctx)
     , m_columns(ctx->getAllocator())
     , m_data(ctx->getAllocator())

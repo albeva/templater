@@ -39,7 +39,7 @@ enum class TokenKind : uint8_t {
 };
 
 struct Token final {
-    void set(TokenKind kind, SourceLoc loc, std::string_view value = {})
+    void set(TokenKind kind, support::SourceLoc loc, std::string_view value = {})
     {
         m_kind = kind;
         m_loc = loc;
@@ -47,7 +47,7 @@ struct Token final {
     }
 
     [[nodiscard]] auto getKind() const -> TokenKind { return m_kind; }
-    [[nodiscard]] auto getLoc() const -> const SourceLoc& { return m_loc; }
+    [[nodiscard]] auto getLoc() const -> const support::SourceLoc& { return m_loc; }
     [[nodiscard]] auto getValue() const -> const std::string_view& { return m_value; }
 
     [[nodiscard]] auto getString() const -> std::string_view;
@@ -95,7 +95,7 @@ struct Token final {
 
 private:
     TokenKind m_kind {};
-    SourceLoc m_loc {};
+    support::SourceLoc m_loc {};
     std::string_view m_value {};
 };
 

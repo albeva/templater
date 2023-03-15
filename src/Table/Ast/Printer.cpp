@@ -5,7 +5,7 @@
 #include "Ast.hpp"
 #include "Support/Separator.hpp"
 #include "Table/Parse/Token.hpp"
-using templater::Separator;
+using templater::support::Separator;
 using templater::table::ast::Printer;
 using templater::table::parser::Token;
 using templater::table::parser::TokenKind;

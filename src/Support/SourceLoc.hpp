@@ -3,8 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-
-namespace templater {
+namespace templater::support {
 
 // defines a location range based on start and end index
 struct SourceLoc final {
@@ -48,4 +47,4 @@ private:
     unsigned m_line = 0, m_col = 0, m_len = 0;
 };
 
-} // namespace templater
+} // namespace templater::support

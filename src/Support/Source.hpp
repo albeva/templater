@@ -4,8 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "SourceLoc.hpp"
-
-namespace templater {
+namespace templater::support {
 
 class SourceException final : public std::runtime_error {
     using std::runtime_error::runtime_error;
@@ -44,4 +43,4 @@ private:
     std::string m_source;
 };
 
-} // namespace templater
+} // namespace templater::support

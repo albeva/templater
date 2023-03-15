@@ -12,8 +12,10 @@
 
 namespace templater::tests {
 using namespace std::literals;
-using templater::Context;
-using templater::Source;
+using templater::support::Context;
+using templater::support::Source;
+using templater::support::SourceException;
+using templater::support::Diagnostics;
 using templater::table::gen::Generator;
 using templater::table::parser::Lexer;
 using templater::table::parser::Parser;

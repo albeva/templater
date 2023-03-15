@@ -5,7 +5,7 @@
 #include "pch.hpp"
 #include "Symbol.hpp"
 
-namespace templater {
+namespace templater::support {
 class Context;
 class Source;
 }
@@ -16,7 +16,7 @@ class Symbol;
 class SymbolTable final {
 public:
     NO_COPY_AND_MOVE(SymbolTable)
-    explicit SymbolTable(Context* ctx, Source* source);
+    explicit SymbolTable(support::Context* ctx, support::Source* source);
     ~SymbolTable() = default;
 
     [[nodiscard]] auto getSymbols() const -> const auto& { return m_symbols; }
@@ -62,7 +62,7 @@ private:
     };
 
     std::pmr::unordered_set<Symbol*, Hash, Comparison> m_symbols;
-    Source* m_source;
+    support::Source* m_source;
 };
 
 } // namespace templater::table

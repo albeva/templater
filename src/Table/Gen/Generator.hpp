@@ -6,20 +6,22 @@
 #include "Support/VisitorMixin.hpp"
 #include "Table/Ast/Ast.hpp"
 
-namespace templater {
+namespace templater::support {
 class Context;
 class Diagnostics;
 class Source;
-namespace table {
-    namespace parser {
-        struct Token;
-    }
-    class SymbolTable;
-    class Table;
 }
+
+namespace templater::table {
+namespace parser {
+    struct Token;
+}
+class SymbolTable;
+class Table;
 }
 
 namespace templater::table::gen {
+
 class GeneratorException final : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
@@ -27,7 +29,7 @@ class GeneratorException final : public std::runtime_error {
 class Generator final {
 public:
     NO_COPY_AND_MOVE(Generator)
-    Generator(Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node);
+    Generator(support::Context* ctx, support::Diagnostics* diag, support::Source* source, const ast::Content* node);
     ~Generator() = default;
 
     VISITOR_MIXIN
@@ -43,11 +45,11 @@ private:
     void visit(const ast::TableRow* node);
     void visit(const ast::Member* node);
 
-    [[noreturn]] void redefinition(const parser::Token& id, SourceLoc existing) const;
+    [[noreturn]] void redefinition(const parser::Token& id, support::SourceLoc existing) const;
 
-    Context* m_ctx;
-    Diagnostics* m_diag;
-    Source* m_source;
+    support::Context* m_ctx;
+    support::Diagnostics* m_diag;
+    support::Source* m_source;
     SymbolTable* m_symbolTable;
     Table* m_table = nullptr;
     size_t m_rowIndex = 0;

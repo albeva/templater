@@ -7,64 +7,65 @@ using namespace std::literals;
 
 auto Token::describe(TokenKind kind) -> std::string_view
 {
+    using enum TokenKind;
     switch (kind) {
-    case TokenKind::Invalid:
+    case Invalid:
         return "<Invalid>"sv;
-    case TokenKind::EndOfFile:
+    case EndOfFile:
         return "<End-Of-File>"sv;
-    case TokenKind::EndOfLine:
+    case EndOfLine:
         return "<End-Of-Line>"sv;
-    case TokenKind::String:
+    case String:
         return "<String-Literal>"sv;
-    case TokenKind::Number:
+    case Number:
         return "<Number-Literal>"sv;
-    case TokenKind::Identifier:
+    case Identifier:
         return "<Identifier>"sv;
-    case TokenKind::ParenOpen:
+    case ParenOpen:
         return "("sv;
-    case TokenKind::ParenClose:
+    case ParenClose:
         return ")"sv;
-    case TokenKind::BraceOpen:
+    case BraceOpen:
         return "{"sv;
-    case TokenKind::BraceClose:
+    case BraceClose:
         return "}"sv;
-    case TokenKind::BracketOpen:
+    case BracketOpen:
         return "["sv;
-    case TokenKind::BracketClose:
+    case BracketClose:
         return "]"sv;
-    case TokenKind::Assign:
+    case Assign:
         return "="sv;
-    case TokenKind::Period:
+    case Period:
         return "."sv;
-    case TokenKind::Plus:
+    case Plus:
         return "+"sv;
-    case TokenKind::Less:
+    case Less:
         return "<"sv;
-    case TokenKind::LessOrEqual:
+    case LessOrEqual:
         return "<="sv;
-    case TokenKind::GreaterOrEqual:
+    case GreaterOrEqual:
         return ">="sv;
-    case TokenKind::Greater:
+    case Greater:
         return ">"sv;
-    case TokenKind::Equal:
+    case Equal:
         return "=="sv;
-    case TokenKind::NotEqual:
+    case NotEqual:
         return "!="sv;
-    case TokenKind::LogicalAnd:
+    case LogicalAnd:
         return "&&"sv;
-    case TokenKind::LogicalOr:
+    case LogicalOr:
         return "||"sv;
-    case TokenKind::LogicalNot:
+    case LogicalNot:
         return "!"sv;
-    case TokenKind::KwTable:
+    case KwTable:
         return "table"sv;
-    case TokenKind::KwImport:
+    case KwImport:
         return "import"sv;
-    case TokenKind::KwAs:
+    case KwAs:
         return "as"sv;
-    case TokenKind::KwOrder:
+    case KwOrder:
         return "order"sv;
-    case TokenKind::KwBy:
+    case KwBy:
         return "by"sv;
     default:
         std::unreachable();

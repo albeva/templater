@@ -5,8 +5,8 @@
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Token.hpp"
 #include "Value.hpp"
-
 namespace templater::table {
+using support::SourceLoc;
 
 class Column final {
 public:

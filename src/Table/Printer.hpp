@@ -4,7 +4,6 @@
 #pragma once
 #include "pch.hpp"
 #include "Support/VisitorMixin.hpp"
-
 namespace templater::table {
 namespace parser {
     struct Token;
@@ -40,4 +39,4 @@ auto inline operator<<(std::ostream& os, const Printer& printer) -> std::ostream
     return os;
 }
 
-} // namespace templater::table::table
+} // namespace templater::table

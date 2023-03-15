@@ -4,7 +4,7 @@
 #pragma once
 #include "pch.hpp"
 
-namespace templater {
+namespace templater::support {
 class Source;
 struct SourceLoc;
 class Context;
@@ -17,7 +17,7 @@ enum class TokenKind : uint8_t;
 class Lexer final {
 public:
     NO_COPY_AND_MOVE(Lexer)
-    explicit Lexer(Context* ctx, Source* source);
+    explicit Lexer(support::Context* ctx, support::Source* source);
     ~Lexer() = default;
 
     void next(Token&);
@@ -34,10 +34,10 @@ private:
     void identifier(Token& token);
     void number(Token& token);
 
-    auto loc(const char* start) -> SourceLoc;
+    auto loc(const char* start) -> support::SourceLoc;
 
-    Context* m_ctx;
-    Source* m_source;
+    support::Context* m_ctx;
+    support::Source* m_source;
     const char* m_buffer;
     const char* m_input;
     bool m_hasStmt = false;

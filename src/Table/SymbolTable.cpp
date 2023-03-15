@@ -3,6 +3,8 @@
 //
 #include "SymbolTable.hpp"
 #include "Support/Context.hpp"
+using templater::support::Context;
+using templater::support::Source;
 using templater::table::SymbolTable;
 
 SymbolTable::SymbolTable(Context* ctx, Source* source)

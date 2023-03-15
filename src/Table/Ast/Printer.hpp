@@ -5,7 +5,6 @@
 #include "pch.hpp"
 #include "Ast.hpp"
 #include "Support/VisitorMixin.hpp"
-
 namespace templater::table::ast {
 
 class Printer final {

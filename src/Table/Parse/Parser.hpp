@@ -8,7 +8,7 @@
 #include "Table/Ast/Ast.hpp"
 #include "Token.hpp"
 
-namespace templater {
+namespace templater::support {
 class Diagnostics;
 }
 
@@ -23,11 +23,12 @@ class Parser final {
 public:
     NO_COPY_AND_MOVE(Parser)
     ~Parser() = default;
-    explicit Parser(Context* ctx, Diagnostics* diag, Lexer* lexer);
+    explicit Parser(support::Context* ctx, support::Diagnostics* diag, Lexer* lexer);
 
     [[nodiscard]] auto parse() -> ast::Content*;
 
 private:
+
     auto statement() -> ast::Statement;
     auto kwImport() -> ast::Import*;
 
@@ -52,16 +53,16 @@ private:
     void expect(TokenKind kind);
     [[nodiscard]] auto consume(TokenKind kind) -> std::string_view;
     void next();
-    [[nodiscard]] static auto makeLoc(SourceLoc start, SourceLoc end) -> SourceLoc;
+    [[nodiscard]] static auto makeLoc(support::SourceLoc start, support::SourceLoc end) -> support::SourceLoc;
 
     [[noreturn]] void expected(std::string_view message);
 
-    Context* m_ctx;
-    Diagnostics* m_diag;
+    support::Context* m_ctx;
+    support::Diagnostics* m_diag;
     Lexer* m_lexer;
     ast::Allocator m_ast;
     Token m_token {};
-    SourceLoc m_lastLoc {};
+    support::SourceLoc m_lastLoc {};
 };
 
 } // namespace templater::table

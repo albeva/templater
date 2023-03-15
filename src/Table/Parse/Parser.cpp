@@ -6,6 +6,10 @@
 #include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
 #include "Table/Ast/Ast.hpp"
+using templater::support::Context;
+using templater::support::Diagnostics;
+using templater::support::SourceLoc;
+using templater::support::Visitor;
 using templater::table::parser::Parser;
 using namespace std::literals;
 

@@ -6,7 +6,6 @@
 #include "Support/Context.hpp"
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Token.hpp"
-
 namespace templater::table::ast {
 struct Content;
 struct Import;
@@ -33,7 +32,7 @@ using List = std::pmr::vector<T>;
 //--------------------------------------
 
 struct Root {
-    explicit Root(SourceLoc loc)
+    explicit Root(support::SourceLoc loc)
         : m_loc(loc)
     {
     }
@@ -41,7 +40,7 @@ struct Root {
     [[nodiscard]] inline auto getLoc() const -> const auto& { return m_loc; }
 
 private:
-    SourceLoc m_loc;
+    support::SourceLoc m_loc;
 };
 
 //--------------------------------------
@@ -49,7 +48,7 @@ private:
 //--------------------------------------
 
 struct Content final : Root {
-    explicit Content(SourceLoc loc, List<Statement> statements);
+    explicit Content(support::SourceLoc loc, List<Statement> statements);
 
     [[nodiscard]] auto getStatements() const -> auto& { return m_statements; }
 
@@ -58,7 +57,7 @@ private:
 };
 
 struct Import final : Root {
-    Import(SourceLoc loc, std::string_view file, std::string_view identifier);
+    Import(support::SourceLoc loc, std::string_view file, std::string_view identifier);
 
     [[nodiscard]] auto getFile() const { return m_file; }
     [[nodiscard]] auto getIdentifier() const { return m_identifier; }
@@ -73,7 +72,7 @@ private:
 //--------------------------------------
 
 struct Table final : Root {
-    Table(SourceLoc loc, parser::Token identifier, List<TableColumn*> columns, List<TableContent> content);
+    Table(support::SourceLoc loc, parser::Token identifier, List<TableColumn*> columns, List<TableContent> content);
 
     [[nodiscard]] auto getIdentifier() const -> const auto& { return m_identifier; }
     [[nodiscard]] auto getColumns() const -> auto& { return m_columns; }
@@ -86,7 +85,7 @@ private:
 };
 
 struct TableColumn final : Root {
-    TableColumn(SourceLoc loc, parser::Token identifier, std::optional<TableValue> value);
+    TableColumn(support::SourceLoc loc, parser::Token identifier, std::optional<TableValue> value);
 
     [[nodiscard]] auto getIdentifier() const -> const parser::Token& { return m_identifier; }
     [[nodiscard]] auto getValue() const { return m_value; }
@@ -97,7 +96,7 @@ private:
 };
 
 struct TableInherit final : Root {
-    TableInherit(SourceLoc loc, Member* member, std::optional<Expression> expression);
+    TableInherit(support::SourceLoc loc, Member* member, std::optional<Expression> expression);
 
     [[nodiscard]] auto getMember() const { return m_member; }
     [[nodiscard]] auto getExpression() const { return m_expression; }
@@ -108,7 +107,7 @@ private:
 };
 
 struct TableBody final : Root {
-    explicit TableBody(SourceLoc loc, List<TableRow*> rows);
+    explicit TableBody(support::SourceLoc loc, List<TableRow*> rows);
 
     [[nodiscard]] auto getRows() const -> auto& { return m_rows; }
 
@@ -117,7 +116,7 @@ private:
 };
 
 struct TableRow final : Root {
-    explicit TableRow(SourceLoc loc, List<TableValue> values);
+    explicit TableRow(support::SourceLoc loc, List<TableValue> values);
 
     [[nodiscard]] auto getValues() const -> auto& { return m_values; }
 
@@ -130,7 +129,7 @@ private:
 //--------------------------------------
 
 struct StructBody final : Root {
-    explicit StructBody(SourceLoc loc)
+    explicit StructBody(support::SourceLoc loc)
         : Root { loc }
     {
     }
@@ -141,7 +140,7 @@ struct StructBody final : Root {
 //--------------------------------------
 
 struct UnaryExpression final : Root {
-    UnaryExpression(SourceLoc loc, parser::TokenKind type, Expression rhs);
+    UnaryExpression(support::SourceLoc loc, parser::TokenKind type, Expression rhs);
 
     [[nodiscard]] auto getType() const { return m_type; }
     [[nodiscard]] auto getRhs() const { return m_rhs; }
@@ -152,7 +151,7 @@ private:
 };
 
 struct BinaryExpression final : Root {
-    BinaryExpression(SourceLoc loc, parser::TokenKind type, Expression lhs, Expression rhs);
+    BinaryExpression(support::SourceLoc loc, parser::TokenKind type, Expression lhs, Expression rhs);
 
     [[nodiscard]] auto getType() const { return m_type; }
     [[nodiscard]] auto getLhs() const { return m_lhs; }
@@ -168,7 +167,7 @@ private:
 //--------------------------------------
 
 struct Member final : Root {
-    explicit Member(SourceLoc loc, std::pmr::vector<std::string_view> identifiers);
+    explicit Member(support::SourceLoc loc, std::pmr::vector<std::string_view> identifiers);
 
     [[nodiscard]] auto getIdentifiers() const -> auto& { return m_identifiers; }
 

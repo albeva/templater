@@ -4,16 +4,16 @@
 #include "Diagnostics.hpp"
 #include "Source.hpp"
 #include "SourceLoc.hpp"
-using templater::Diagnostics;
+using templater::support::Diagnostics;
 using namespace std::literals;
 
 namespace {
 [[nodiscard]] constexpr auto getString(Diagnostics::Level level) -> std::string_view
 {
     switch (level) {
-    case templater::Diagnostics::Level::Error:
+    case Diagnostics::Level::Error:
         return "error"sv;
-    case templater::Diagnostics::Level::Notice:
+    case Diagnostics::Level::Notice:
         return "note"sv;
     default:
         std::unreachable();

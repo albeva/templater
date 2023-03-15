@@ -5,11 +5,11 @@
 #include "pch.hpp"
 #include "Ast.hpp"
 #include "Support/Context.hpp"
-
 namespace templater::table::ast {
+
 class Allocator final {
 public:
-    explicit Allocator(Context* context)
+    explicit Allocator(support::Context* context)
         : m_context(context)
     {
     }
@@ -27,6 +27,6 @@ public:
     }
 
 private:
-    Context* m_context;
+    support::Context* m_context;
 };
 } // namespace templater::table::ast

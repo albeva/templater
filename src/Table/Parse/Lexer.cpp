@@ -5,6 +5,9 @@
 #include "Support/Context.hpp"
 #include "Support/Source.hpp"
 #include "Token.hpp"
+using templater::support::Context;
+using templater::support::Source;
+using templater::support::SourceLoc;
 using templater::table::parser::Lexer;
 using templater::table::parser::TokenKind;
 using namespace std::literals;
@@ -297,7 +300,7 @@ void Lexer::identifier(Token& token)
     }
 }
 
-auto Lexer::loc(const char* start) -> templater::SourceLoc
+auto Lexer::loc(const char* start) -> SourceLoc
 {
     return {
         static_cast<unsigned>(std::distance(m_buffer, start)),

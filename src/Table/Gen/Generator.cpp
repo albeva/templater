@@ -10,9 +10,12 @@
 #include "Table/Table.hpp"
 #include "Table/Value.hpp"
 #include "TableValue.hpp"
+using templater::support::Context;
+using templater::support::Diagnostics;
+using templater::support::Source;
 using templater::table::gen::Generator;
 
-Generator::Generator(templater::Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node)
+Generator::Generator(Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node)
     : m_ctx(ctx)
     , m_diag(diag)
     , m_source(source)

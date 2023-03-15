@@ -14,8 +14,8 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using templater::Context;
-using templater::Source;
+using templater::support::Context;
+using templater::support::Source;
 using templater::table::parser::Lexer;
 using templater::table::parser::Token;
 using templater::table::parser::TokenKind;

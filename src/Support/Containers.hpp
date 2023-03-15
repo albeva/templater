@@ -3,8 +3,8 @@
 //
 #pragma once
 #include "pch.hpp"
+namespace templater::support {
 
-namespace templater {
 namespace containers {
     struct HeterogeneousHash {
         using is_transparent = void;
@@ -35,4 +35,4 @@ namespace pmr {
     using StringMap = std::pmr::unordered_map<std::pmr::string, T, StringSet, std::equal_to<>>;
 }
 
-} // namespace templater
+} // namespace templater::support

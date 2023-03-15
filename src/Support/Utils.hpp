@@ -9,7 +9,7 @@
     auto operator=(Class&&)->Class& = delete; \
     auto operator=(const Class&)->Class& = delete;
 
-namespace templater {
+namespace templater::support {
 // helper type for std::variant visitors
 template <typename... Base>
 struct Visitor : Base... {
@@ -19,4 +19,4 @@ struct Visitor : Base... {
 template <typename... Base>
 Visitor(Base...) -> Visitor<Base...>;
 
-} // namespace templater
+} // namespace templater::support

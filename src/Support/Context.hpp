@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-namespace templater {
+namespace templater::support {
 
 class Context final {
 public:
@@ -32,4 +32,4 @@ private:
     pmr::StringSet m_uniquedStrings { m_pa };
 };
 
-} // namespace templater
+} // namespace templater::support

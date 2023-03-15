@@ -3,6 +3,7 @@
 //
 #include "Ast.hpp"
 using namespace templater::table::ast;
+using templater::support::SourceLoc;
 
 Content::Content(SourceLoc loc, List<Statement> statements)
     : Root(loc)

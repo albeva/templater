@@ -8,7 +8,7 @@
 #include "Symbol.hpp"
 #include "SymbolTable.hpp"
 #include "Table.hpp"
-using templater::Separator;
+using templater::support::Separator;
 using templater::table::Printer;
 using namespace std::literals;
 
