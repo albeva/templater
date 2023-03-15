@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Ast.hpp"
+#include "Table/Ast/Ast.hpp"
 
 namespace templater {
 class Context;
@@ -12,6 +12,9 @@ class Source;
 }
 
 namespace templater::table {
+namespace parser {
+    struct Token;
+}
 class SymbolTable;
 class Table;
 
@@ -32,14 +35,12 @@ public:
     void visit(const ast::TableInherit* node);
     void visit(const ast::TableBody* node);
     void visit(const ast::TableRow* node);
-    void visit(const ast::UnaryExpression* node);
-    void visit(const ast::BinaryExpression* node);
     void visit(const ast::Member* node);
 
     [[nodiscard]] auto getSymbolTable() const { return m_symbolTable; }
 
     // for visiting with std::visit
-    inline auto operator()(const auto* node) { return visit(node); }
+    inline auto operator()(const auto& node) { return visit(node); }
 
     // visit with std::visit
     template <typename... Ts>
@@ -53,7 +54,7 @@ private:
         }
     }
 
-    [[noreturn]] void redefinition(const Token& id, SourceLoc existing) const;
+    [[noreturn]] void redefinition(const parser::Token& id, SourceLoc existing) const;
 
     Context* m_ctx;
     Diagnostics* m_diag;

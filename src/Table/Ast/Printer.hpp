@@ -24,7 +24,7 @@ public:
     void visit(const StructBody* node);
     void visit(const UnaryExpression* node);
     void visit(const BinaryExpression* node);
-    void visit(const Token& token);
+    void visit(const parser::Token& token);
     void visit(const Member* node);
 
     [[nodiscard]] auto output() const -> std::string;

@@ -2,12 +2,12 @@
 // Created by Albert on 14/03/2023.
 //
 #include "TableValue.hpp"
-#include "Table/Ast.hpp"
+#include "Table/Ast/Ast.hpp"
 #include "Table/Generator.hpp"
-#include "Table/Token.hpp"
+#include "Table/Parse/Token.hpp"
 using namespace templater::table::gen;
 
-auto TableValue::operator()(const Token& node) const -> Value
+auto TableValue::operator()(const parser::Token& node) const -> Value
 {
     return node;
 }

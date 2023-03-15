@@ -5,15 +5,18 @@
 #include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
 #include "Support/Source.hpp"
-#include "Table/Lexer.hpp"
-#include "Table/Parser.hpp"
 #include "Table/Generator.hpp"
+#include "Table/Parse/Lexer.hpp"
+#include "Table/Parse/Parser.hpp"
 #include "gtest/gtest.h"
 
 namespace templater::tests {
-using templater::table::Lexer;
-using templater::table::Parser;
+using templater::Context;
+using templater::Source;
 using templater::table::Generator;
+using templater::table::parser::Lexer;
+using templater::table::parser::Parser;
+using templater::table::parser::TokenKind;
 
 struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
     void SetUp() override

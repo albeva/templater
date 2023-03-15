@@ -5,7 +5,7 @@
 #include "pch.hpp"
 #include "Support/SourceLoc.hpp"
 
-namespace templater::table {
+namespace templater::table::parser {
 
 enum class TokenKind : uint8_t {
     Invalid,

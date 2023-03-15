@@ -12,6 +12,7 @@
 namespace {
 using templater::table::GeneratorException;
 using templater::tests::CompilerBase;
+
 struct GeneratorTests: CompilerBase{};
 
 TEST_P(GeneratorTests, GeneratorFails)

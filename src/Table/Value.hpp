@@ -3,8 +3,8 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Token.hpp"
+#include "Table/Parse/Token.hpp"
 
 namespace templater::table {
-using Value = std::variant<Token>;
+using Value = std::variant<parser::Token>;
 }

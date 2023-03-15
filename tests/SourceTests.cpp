@@ -11,7 +11,8 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using namespace templater;
+using templater::Source;
+using templater::SourceLoc;
 
 class SourceTests : public testing::Test {
 protected:
@@ -27,7 +28,7 @@ TEST_F(SourceTests, Empty)
     load("");
     EXPECT_EQ(source->length(), 0);
     EXPECT_NE(source->data(), nullptr);
-    EXPECT_EQ(std::string(source->data()), ""s);
+    EXPECT_EQ(std::string(source->data()), "");
 }
 
 TEST_F(SourceTests, GetLine)
@@ -38,9 +39,9 @@ TEST_F(SourceTests, GetLine)
     load(src);
 
     EXPECT_EQ(source->length(), 13);
-    EXPECT_EQ(source->getLine(1), "hello"s);
-    EXPECT_EQ(source->getLine(2), "world"s);
-    EXPECT_EQ(source->getLine(3), "!"s);
+    EXPECT_EQ(source->getLine(1), "hello");
+    EXPECT_EQ(source->getLine(2), "world");
+    EXPECT_EQ(source->getLine(3), "!");
 }
 
 TEST_F(SourceTests, GetLoc)
@@ -56,7 +57,7 @@ TEST_F(SourceTests, GetLoc)
         EXPECT_EQ(pos.getLine(), 1);
         EXPECT_EQ(pos.getCol(), 1);
         EXPECT_EQ(pos.getLength(), 5);
-        EXPECT_EQ(source->getString(loc), "hello"s);
+        EXPECT_EQ(source->getString(loc), "hello");
     }
 
     {
@@ -65,7 +66,7 @@ TEST_F(SourceTests, GetLoc)
         EXPECT_EQ(pos.getLine(), 2);
         EXPECT_EQ(pos.getCol(), 2);
         EXPECT_EQ(pos.getLength(), 5);
-        EXPECT_EQ(source->getString(loc), "world"s);
+        EXPECT_EQ(source->getString(loc), "world");
     }
 }
 }

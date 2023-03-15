@@ -3,16 +3,16 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Ast.hpp"
-#include "AstAllocator.hpp"
 #include "Support/Source.hpp"
+#include "Table/Ast/Ast.hpp"
+#include "Table/Ast/AstAllocator.hpp"
 #include "Token.hpp"
 
 namespace templater {
 class Diagnostics;
 }
 
-namespace templater::table {
+namespace templater::table::parser {
 class Lexer;
 
 class ParserException final : public std::runtime_error {

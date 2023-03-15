@@ -2,13 +2,12 @@
 // Created by Albert on 05/03/2023.
 //
 #include "Parser.hpp"
-#include "Ast.hpp"
 #include "Lexer.hpp"
 #include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
+#include "Table/Ast/Ast.hpp"
 
-using namespace templater;
-using namespace templater::table;
+using namespace templater::table::parser;
 
 Parser::Parser(Context* ctx, Diagnostics* diag, Lexer* lexer)
     : m_ctx(ctx)

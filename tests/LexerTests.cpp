@@ -4,8 +4,8 @@
 #include "Support/Context.hpp"
 #include "Support/Source.hpp"
 #include "Support/SourceLoc.hpp"
-#include "Table/Lexer.hpp"
-#include "Table/Token.hpp"
+#include "Table/Parse/Lexer.hpp"
+#include "Table/Parse/Token.hpp"
 #include "gtest/gtest.h"
 
 // NOLINTBEGIN (cppcoreguidelines-avoid-non-const-global-variables,
@@ -14,8 +14,11 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using namespace templater;
-using namespace templater::table;
+using templater::Context;
+using templater::Source;
+using templater::table::parser::Lexer;
+using templater::table::parser::Token;
+using templater::table::parser::TokenKind;
 
 class LexerTests : public testing::Test {
 protected:
@@ -28,7 +31,7 @@ protected:
 
     void expect(TokenKind kind, std::string_view lexeme = "", unsigned line = 0, unsigned col = 0, unsigned len = 0)
     {
-        table::Token token;
+        Token token;
         m_lexer->next(token);
         EXPECT_EQ(token.getKind(), kind);
 
@@ -54,7 +57,7 @@ protected:
 
 private:
     std::unique_ptr<Context> m_ctx;
-    std::unique_ptr<table::Lexer> m_lexer;
+    std::unique_ptr<Lexer> m_lexer;
     std::unique_ptr<Source> m_source;
 };
 

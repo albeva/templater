@@ -5,14 +5,9 @@
 #include "pch.hpp"
 #include "Support/Context.hpp"
 #include "Support/SourceLoc.hpp"
-#include "Token.hpp"
-
-namespace templater::table {
-enum class TokenKind : uint8_t;
-}
+#include "Table/Parse/Token.hpp"
 
 namespace templater::table::ast {
-
 struct Content;
 struct Import;
 struct Table;
@@ -26,8 +21,8 @@ struct BinaryExpression;
 struct Member;
 
 using Statement = std::variant<Import*, Table*>;
-using Expression = std::variant<Token, UnaryExpression*, BinaryExpression*>;
-using TableValue = std::variant<Token, StructBody*>;
+using Expression = std::variant<parser::Token, UnaryExpression*, BinaryExpression*>;
+using TableValue = std::variant<parser::Token, StructBody*>;
 using TableContent = std::variant<TableInherit*, TableBody*>;
 
 template <typename T>
@@ -74,26 +69,26 @@ private:
 //--------------------------------------
 
 struct Table final : Root {
-    Table(SourceLoc loc, Token identifier, List<TableColumn*> columns, List<TableContent> content);
+    Table(SourceLoc loc, parser::Token identifier, List<TableColumn*> columns, List<TableContent> content);
 
     [[nodiscard]] auto getIdentifier() const -> const auto& { return m_identifier; }
     [[nodiscard]] auto getColumns() const -> auto& { return m_columns; }
     [[nodiscard]] auto getContent() const -> auto& { return m_content; }
 
 private:
-    Token m_identifier;
+    parser::Token m_identifier;
     List<TableColumn*> m_columns;
     List<TableContent> m_content;
 };
 
 struct TableColumn final : Root {
-    TableColumn(SourceLoc loc, Token identifier, std::optional<TableValue> value);
+    TableColumn(SourceLoc loc, parser::Token identifier, std::optional<TableValue> value);
 
-    [[nodiscard]] auto getIdentifier() const -> const Token& { return m_identifier; }
+    [[nodiscard]] auto getIdentifier() const -> const parser::Token& { return m_identifier; }
     [[nodiscard]] auto getValue() const { return m_value; }
 
 private:
-    Token m_identifier;
+    parser::Token m_identifier;
     std::optional<TableValue> m_value;
 };
 
@@ -142,25 +137,25 @@ struct StructBody final : Root {
 //--------------------------------------
 
 struct UnaryExpression final : Root {
-    UnaryExpression(SourceLoc loc, TokenKind type, Expression rhs);
+    UnaryExpression(SourceLoc loc, parser::TokenKind type, Expression rhs);
 
     [[nodiscard]] auto getType() const { return m_type; }
     [[nodiscard]] auto getRhs() const { return m_rhs; }
 
 private:
-    TokenKind m_type;
+    parser::TokenKind m_type;
     Expression m_rhs;
 };
 
 struct BinaryExpression final : Root {
-    BinaryExpression(SourceLoc loc, TokenKind type, Expression lhs, Expression rhs);
+    BinaryExpression(SourceLoc loc, parser::TokenKind type, Expression lhs, Expression rhs);
 
     [[nodiscard]] auto getType() const { return m_type; }
     [[nodiscard]] auto getLhs() const { return m_lhs; }
     [[nodiscard]] auto getRhs() const { return m_rhs; }
 
 private:
-    TokenKind m_type;
+    parser::TokenKind m_type;
     Expression m_lhs, m_rhs;
 };
 

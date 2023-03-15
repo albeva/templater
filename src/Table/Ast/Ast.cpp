@@ -2,8 +2,6 @@
 // Created by Albert on 05/03/2023.
 //
 #include "Ast.hpp"
-
-#include <utility>
 using namespace templater::table::ast;
 
 Content::Content(SourceLoc loc, List<Statement> statements)
@@ -19,7 +17,7 @@ Import::Import(SourceLoc loc, std::string_view file, std::string_view identifier
 {
 }
 
-Table::Table(SourceLoc loc, Token identifier, List<TableColumn*> columns, List<TableContent> content)
+Table::Table(SourceLoc loc, parser::Token identifier, List<TableColumn*> columns, List<TableContent> content)
     : Root(loc)
     , m_identifier(identifier)
     , m_columns(std::move(columns))
@@ -27,7 +25,7 @@ Table::Table(SourceLoc loc, Token identifier, List<TableColumn*> columns, List<T
 {
 }
 
-TableColumn::TableColumn(SourceLoc loc, Token identifier, std::optional<TableValue> value)
+TableColumn::TableColumn(SourceLoc loc, parser::Token identifier, std::optional<TableValue> value)
     : Root(loc)
     , m_identifier(identifier)
     , m_value(value)
@@ -53,14 +51,14 @@ TableRow::TableRow(SourceLoc loc, List<TableValue> values)
 {
 }
 
-UnaryExpression::UnaryExpression(SourceLoc loc, TokenKind type, Expression rhs)
+UnaryExpression::UnaryExpression(SourceLoc loc, parser::TokenKind type, Expression rhs)
     : Root(loc)
     , m_type(type)
     , m_rhs(rhs)
 {
 }
 
-BinaryExpression::BinaryExpression(SourceLoc loc, TokenKind type, Expression lhs, Expression rhs)
+BinaryExpression::BinaryExpression(SourceLoc loc, parser::TokenKind type, Expression lhs, Expression rhs)
     : Root(loc)
     , m_type(type)
     , m_lhs(lhs)

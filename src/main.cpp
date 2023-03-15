@@ -3,14 +3,17 @@
 //
 #include "Support/Diagnostics.hpp"
 #include "Support/Source.hpp"
-#include "Table/Ast.hpp"
+#include "Table/Ast/Ast.hpp"
+#include "Table/Ast/Printer.hpp"
 #include "Table/Generator.hpp"
-#include "Table/Lexer.hpp"
-#include "Table/Parser.hpp"
-#include "Table/Printer.hpp"
-using namespace templater;
-using namespace table;
-using namespace ast;
+#include "Table/Parse/Lexer.hpp"
+#include "Table/Parse/Parser.hpp"
+using templater::Context;
+using templater::Diagnostics;
+using templater::Source;
+using templater::table::Generator;
+using templater::table::parser::Lexer;
+using templater::table::parser::Parser;
 
 auto main() -> int
 {
@@ -21,7 +24,7 @@ auto main() -> int
         Lexer lexer { &ctx, &src };
         Parser parser { &ctx, &diag, &lexer };
         auto* ast = parser.parse();
-        Generator { &ctx, &diag, &src, ast };
+        Generator gen{ &ctx, &diag, &src, ast };
         return diag.hasErrors() ? EXIT_FAILURE : EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << exc.what();

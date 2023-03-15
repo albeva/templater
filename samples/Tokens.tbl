@@ -58,7 +58,7 @@ table Operators(id string precedence type associativity class keyword = false) =
 ]
 
 # Include keyword operators in this set
-table Keywords(id string) = Operators(keyword == true) + Types.All + [
+table Keywords(id st!ring) = Operators(keyword == true) + Types.All + [
     Any      "ANY"
     As       "AS"
     Continue "CONTINUE"

@@ -6,20 +6,12 @@
 #include "Support/SourceLoc.hpp"
 
 namespace templater::table {
-
 class Table;
 class SymbolTable;
-struct Column;
-
-enum class SymbolKind {
-    Table,
-    Namespace,
-    Column
-};
 
 class Symbol final {
 public:
-    using Value = std::variant<Table*, SymbolTable*, Column*>;
+    using Value = std::variant<Table*, SymbolTable*>;
 
     Symbol(std::string_view name, SourceLoc loc, Value value)
         : m_name(name)
@@ -31,7 +23,6 @@ public:
     [[nodiscard]] auto getName() const { return m_name; }
     [[nodiscard]] auto getLoc() const { return m_loc; }
     [[nodiscard]] auto getValue() const { return m_value; }
-    [[nodiscard]] auto getKind() const -> SymbolKind;
 
 private:
     std::string_view m_name;

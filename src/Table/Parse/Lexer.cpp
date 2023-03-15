@@ -5,7 +5,7 @@
 #include "Support/Context.hpp"
 #include "Support/Source.hpp"
 #include "Token.hpp"
-using namespace templater::table;
+using namespace templater::table::parser;
 
 // Lexer iterates over null terminated const char* using pointer
 // arithmetic

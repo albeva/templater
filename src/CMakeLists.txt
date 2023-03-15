@@ -11,29 +11,29 @@ add_library(
     Support/Source.hpp
     Support/SourceLoc.hpp
     Support/Utils.hpp
-    Table/Ast.cpp
-    Table/Ast.hpp
-    Table/AstAllocator.hpp
+    Table/Ast/Ast.cpp
+    Table/Ast/Ast.hpp
+    Table/Ast/AstAllocator.hpp
     Table/Column.cpp
     Table/Column.hpp
     Table/Gen/TableValue.cpp
     Table/Gen/TableValue.hpp
     Table/Generator.cpp
     Table/Generator.hpp
-    Table/Lexer.cpp
-    Table/Lexer.hpp
-    Table/Parser.cpp
-    Table/Parser.hpp
-    Table/Printer.cpp
-    Table/Printer.hpp
+    Table/Parse/Lexer.cpp
+    Table/Parse/Lexer.hpp
+    Table/Parse/Parser.cpp
+    Table/Parse/Parser.hpp
+    Table/Ast/Printer.cpp
+    Table/Ast/Printer.hpp
     Table/Symbol.cpp
     Table/Symbol.hpp
     Table/SymbolTable.cpp
     Table/SymbolTable.hpp
     Table/Table.cpp
     Table/Table.hpp
-    Table/Token.cpp
-    Table/Token.hpp
+    Table/Parse/Token.cpp
+    Table/Parse/Token.hpp
     Table/Value.cpp
     Table/Value.hpp)
 

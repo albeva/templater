@@ -10,7 +10,7 @@ struct SourceLoc;
 class Context;
 }
 
-namespace templater::table {
+namespace templater::table::parser {
 struct Token;
 enum class TokenKind : uint8_t;
 

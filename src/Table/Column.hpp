@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "Support/SourceLoc.hpp"
-#include "Token.hpp"
+#include "Table/Parse/Token.hpp"
 #include "Value.hpp"
 
 namespace templater::table {
