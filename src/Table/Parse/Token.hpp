@@ -39,7 +39,7 @@ enum class TokenKind : uint8_t {
 };
 
 struct Token final {
-    void set(TokenKind kind, SourceLoc loc, std::string_view value = "")
+    void set(TokenKind kind, SourceLoc loc, std::string_view value = {})
     {
         m_kind = kind;
         m_loc = loc;
