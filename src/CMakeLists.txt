@@ -7,31 +7,35 @@ add_library(
     Support/Context.hpp
     Support/Diagnostics.cpp
     Support/Diagnostics.hpp
+    Support/Separator.hpp
     Support/Source.cpp
     Support/Source.hpp
     Support/SourceLoc.hpp
     Support/Utils.hpp
+    Support/VisitorMixin.hpp
+    Table/Ast/Allocator.hpp
     Table/Ast/Ast.cpp
     Table/Ast/Ast.hpp
-    Table/Ast/Allocator.hpp
+    Table/Ast/Printer.cpp
+    Table/Ast/Printer.hpp
     Table/Column.hpp
-    Table/Gen/TableValue.cpp
-    Table/Gen/TableValue.hpp
     Table/Gen/Generator.cpp
     Table/Gen/Generator.hpp
+    Table/Gen/TableValue.cpp
+    Table/Gen/TableValue.hpp
     Table/Parse/Lexer.cpp
     Table/Parse/Lexer.hpp
     Table/Parse/Parser.cpp
     Table/Parse/Parser.hpp
-    Table/Ast/Printer.cpp
-    Table/Ast/Printer.hpp
+    Table/Parse/Token.cpp
+    Table/Parse/Token.hpp
+    Table/Printer.cpp
+    Table/Printer.hpp
     Table/Symbol.hpp
     Table/SymbolTable.cpp
     Table/SymbolTable.hpp
     Table/Table.cpp
     Table/Table.hpp
-    Table/Parse/Token.cpp
-    Table/Parse/Token.hpp
     Table/Value.hpp)
 
 # fmt

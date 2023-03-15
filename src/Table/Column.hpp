@@ -8,7 +8,8 @@
 
 namespace templater::table {
 
-struct Column final {
+class Column final {
+public:
     Column(std::string_view name, SourceLoc loc, std::optional<Value> value)
         : m_name(name)
         , m_loc(loc)

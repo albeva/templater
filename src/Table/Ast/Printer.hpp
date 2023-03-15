@@ -4,6 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "Ast.hpp"
+#include "Support/VisitorMixin.hpp"
 
 namespace templater::table::ast {
 
@@ -14,6 +15,11 @@ public:
     explicit Printer(const Content* node) { visit(node); }
     ~Printer() = default;
 
+    VISITOR_MIXIN
+
+    [[nodiscard]] auto output() const -> std::string;
+
+private:
     void visit(const Content* node);
     void visit(const Import* node);
     void visit(const Table* node);
@@ -27,16 +33,6 @@ public:
     void visit(const parser::Token& token);
     void visit(const Member* node);
 
-    [[nodiscard]] auto output() const -> std::string;
-
-    // for visiting with std::visit
-    void inline operator()(const auto& node) { visit(node); }
-
-    // visit with std::visit
-    template <typename... Ts>
-    void visit(const std::variant<Ts...>& node) { std::visit(*this, node); }
-
-private:
     std::size_t m_indent = 0;
     std::stringstream m_output {};
     [[nodiscard]] auto spaces() const { return std::string(m_indent * 4, ' '); }

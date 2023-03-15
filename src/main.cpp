@@ -4,13 +4,14 @@
 #include "Support/Diagnostics.hpp"
 #include "Support/Source.hpp"
 #include "Table/Ast/Ast.hpp"
-#include "Table/Ast/Printer.hpp"
 #include "Table/Gen/Generator.hpp"
 #include "Table/Parse/Lexer.hpp"
 #include "Table/Parse/Parser.hpp"
+#include "Table/Printer.hpp"
 using templater::Context;
 using templater::Diagnostics;
 using templater::Source;
+using templater::table::Printer;
 using templater::table::gen::Generator;
 using templater::table::parser::Lexer;
 using templater::table::parser::Parser;
@@ -25,6 +26,7 @@ auto main() -> int
         Parser parser { &ctx, &diag, &lexer };
         auto* ast = parser.parse();
         Generator const gen { &ctx, &diag, &src, ast };
+        std::cout << Printer(gen.getSymbolTable()) << '\n';
         return diag.hasErrors() ? EXIT_FAILURE : EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << exc.what();

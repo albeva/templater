@@ -25,6 +25,7 @@
 
 // 3rd party libs
 #include <fmt/core.h>
+#include <fmt/ostream.h>
 
 // templater headers
 #include "Support/Containers.hpp"

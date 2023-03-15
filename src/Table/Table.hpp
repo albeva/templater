@@ -10,7 +10,7 @@ class Context;
 }
 
 namespace templater::table {
-struct Column;
+class Column;
 
 class Table final {
 public:
@@ -18,7 +18,7 @@ public:
     explicit Table(Context* ctx);
     ~Table() = default;
 
-    [[nodiscard]] auto getColumns() const -> const auto& { return m_columns; }
+    [[nodiscard]] inline auto getColumns() const -> const auto& { return m_columns; }
     [[nodiscard]] auto findColumn(std::string_view name) const -> Column*;
     void addColumn(Column* column);
 

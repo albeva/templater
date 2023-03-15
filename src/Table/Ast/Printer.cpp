@@ -3,7 +3,9 @@
 //
 #include "Printer.hpp"
 #include "Ast.hpp"
+#include "Support/Separator.hpp"
 #include "Table/Parse/Token.hpp"
+using templater::Separator;
 using templater::table::ast::Printer;
 using templater::table::parser::Token;
 using templater::table::parser::TokenKind;
@@ -27,13 +29,9 @@ void Printer::visit(const Table* node)
              << spaces() << "table " << node->getIdentifier().getValue();
     if (!node->getColumns().empty()) {
         m_output << "(";
-        bool isFirst = true;
+        Separator sep { " " };
         for (const auto* col : node->getColumns()) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                m_output << ' ';
-            }
+            m_output << sep();
             visit(col);
         }
         m_output << ")";
@@ -41,13 +39,9 @@ void Printer::visit(const Table* node)
 
     if (!node->getContent().empty()) {
         m_output << " = ";
-        bool isFirst = true;
+        Separator sep { " + " };
         for (const auto& content : node->getContent()) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                m_output << " + ";
-            }
+            m_output << sep();
             visit(content);
         }
     }
@@ -86,13 +80,9 @@ void Printer::visit(const TableBody* node)
 
 void Printer::visit(const TableRow* node)
 {
-    bool isFirst = true;
+    Separator sep { " " };
     for (const auto value : node->getValues()) {
-        if (isFirst) {
-            isFirst = false;
-        } else {
-            m_output << ' ';
-        }
+        m_output << sep();
         visit(value);
     }
 }
@@ -132,14 +122,9 @@ void Printer::visit(const Token& token)
 
 void Printer::visit(const Member* node)
 {
-    bool isFirst = true;
+    Separator sep { "." };
     for (const auto& id : node->getIdentifiers()) {
-        if (isFirst) {
-            isFirst = false;
-        } else {
-            m_output << '.';
-        }
-        m_output << id;
+        m_output << sep() << id;
     }
 }
 

@@ -3,6 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
+#include "Support/VisitorMixin.hpp"
 #include "Table/Ast/Ast.hpp"
 
 namespace templater {
@@ -29,6 +30,10 @@ public:
     Generator(Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node);
     ~Generator() = default;
 
+    VISITOR_MIXIN
+    [[nodiscard]] auto getSymbolTable() const { return m_symbolTable; }
+
+private:
     void visit(const ast::Content* node);
     void visit(const ast::Import* node);
     void visit(const ast::Table* node);
@@ -37,23 +42,6 @@ public:
     void visit(const ast::TableBody* node);
     void visit(const ast::TableRow* node);
     void visit(const ast::Member* node);
-
-    [[nodiscard]] auto getSymbolTable() const { return m_symbolTable; }
-
-    // for visiting with std::visit
-    inline auto operator()(const auto& node) { return visit(node); }
-
-    // visit with std::visit
-    template <typename... Ts>
-    inline auto visit(const std::variant<Ts...>& node) { return std::visit(*this, node); }
-
-private:
-    void inline visitEach(const std::ranges::range auto& list)
-    {
-        for (const auto& node : list) {
-            visit(node);
-        }
-    }
 
     [[noreturn]] void redefinition(const parser::Token& id, SourceLoc existing) const;
 

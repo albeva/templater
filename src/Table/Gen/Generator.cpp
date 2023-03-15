@@ -16,7 +16,7 @@ Generator::Generator(templater::Context* ctx, Diagnostics* diag, Source* source,
     : m_ctx(ctx)
     , m_diag(diag)
     , m_source(source)
-    , m_symbolTable(ctx->create<SymbolTable>(ctx))
+    , m_symbolTable(ctx->create<SymbolTable>(ctx, source))
 {
     visit(node);
 }

@@ -7,6 +7,7 @@
 
 namespace templater {
 class Context;
+class Source;
 }
 
 namespace templater::table {
@@ -15,12 +16,15 @@ class Symbol;
 class SymbolTable final {
 public:
     NO_COPY_AND_MOVE(SymbolTable)
-    explicit SymbolTable(Context* ctx);
+    explicit SymbolTable(Context* ctx, Source* source);
     ~SymbolTable() = default;
 
+    [[nodiscard]] auto getSymbols() const -> const auto& { return m_symbols; }
     [[nodiscard]] auto find(std::string_view name) const -> Symbol*;
     [[nodiscard]] auto contains(std::string_view name) const -> bool;
     void insert(Symbol* symbol);
+
+    [[nodiscard]] auto getSource() const { return m_source; }
 
 private:
     struct Comparison {
@@ -58,6 +62,7 @@ private:
     };
 
     std::pmr::unordered_set<Symbol*, Hash, Comparison> m_symbols;
+    Source* m_source;
 };
 
 } // namespace templater::table

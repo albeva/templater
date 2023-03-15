@@ -5,8 +5,9 @@
 #include "Support/Context.hpp"
 using templater::table::SymbolTable;
 
-SymbolTable::SymbolTable(Context* ctx)
+SymbolTable::SymbolTable(Context* ctx, Source* source)
     : m_symbols(ctx->getAllocator())
+    , m_source(source)
 {
 }
 

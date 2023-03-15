@@ -11,6 +11,7 @@
 #include "gtest/gtest.h"
 
 namespace templater::tests {
+using namespace std::literals;
 using templater::Context;
 using templater::Source;
 using templater::table::gen::Generator;

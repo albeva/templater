@@ -4,7 +4,6 @@
 #include "Diagnostics.hpp"
 #include "Source.hpp"
 #include "SourceLoc.hpp"
-#include <fmt/ostream.h>
 using templater::Diagnostics;
 using namespace std::literals;
 
