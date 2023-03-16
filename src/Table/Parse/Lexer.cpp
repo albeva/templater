@@ -210,8 +210,7 @@ void Lexer::string(Token& token)
             if (begin < m_input) {
                 literal.append(begin, m_input);
             }
-            auto esc = escape();
-            if (esc.has_value()) {
+            if (auto esc = escape()) {
                 literal += esc.value();
             } else {
                 return unexpected(token, esc.error());
