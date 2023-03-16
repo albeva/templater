@@ -27,9 +27,9 @@ private:
     void visit(const TableInherit* node);
     void visit(const TableBody* node);
     static void visit(std::vector<std::string>& dst, const TableRow* node);
-    void visit(const Member* node);
 
     static auto visit(const Value& value) -> std::string;
+    static auto visit(const Member* node) -> std::string;
     auto visit(const UnaryExpression* node) -> std::string;
     auto visit(const BinaryExpression* node) -> std::string;
 

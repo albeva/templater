@@ -19,7 +19,7 @@ table Fields(node type id default) = [
 ]
 
 table Basic(id members = "") = [
-    Module        @Fields(node == id)
+    Module        @Fields(node == table.id)
     ExprList
     Attribute
     AttributeList

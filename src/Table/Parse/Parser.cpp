@@ -238,8 +238,14 @@ auto Parser::primary() -> ast::Expression
         expect(TokenKind::ParenClose);
         return expr;
     }
+    case TokenKind::Identifier:
+        return member();
+    case TokenKind::Number:
+        return numberLiteral();
+    case TokenKind::String:
+        return stringLiteral();
     default:
-        return value<ast::Expression>();
+        expected("expression");
     }
 }
 
@@ -332,6 +338,20 @@ auto Parser::numberLiteral() -> NumberLiteral
         return { num.getLoc(), val };
     }
     expected("number");
+}
+
+auto Parser::value() -> Value
+{
+    switch (m_token.getKind()) {
+    case TokenKind::Identifier:
+        return identifier();
+    case TokenKind::String:
+        return stringLiteral();
+    case TokenKind::Number:
+        return numberLiteral();
+    default:
+        expected("value");
+    }
 }
 
 //------------------------------------------------------------------------------

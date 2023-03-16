@@ -27,7 +27,7 @@ table Symbols(id string) = [
 ]
 
 # Some operators are treated as keywords
-table Operators(id string precedence type associativity class keyword = false) = [
+table Operators(id string precedence type associativity class keyword = "false") = [
     # OOP
     MemberAccess   "."   12 Binary Left Memory
     # Pointers
@@ -58,7 +58,7 @@ table Operators(id string precedence type associativity class keyword = false) =
 ]
 
 # Include keyword operators in this set
-table Keywords(id st!ring) = Operators(keyword == true) + Types.All + [
+table Keywords(id string) = Operators(keyword == "true") + Types.All + [
     Any      "ANY"
     As       "AS"
     Continue "CONTINUE"
@@ -91,4 +91,4 @@ table Keywords(id st!ring) = Operators(keyword == true) + Types.All + [
 ]
 
 # Combine all tokens avoid including keyword operators twice
-table All = General + Literals + Symbols + Operators + Keywords(keyword != true)
+table All = General + Literals + Symbols + Operators + Keywords(keyword != "true")

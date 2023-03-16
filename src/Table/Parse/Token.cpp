@@ -67,10 +67,6 @@ auto Token::describe(TokenKind kind) noexcept -> std::string_view
         return "import"sv;
     case KwAs:
         return "as"sv;
-    case KwOrder:
-        return "order"sv;
-    case KwBy:
-        return "by"sv;
     default:
         std::unreachable();
     }

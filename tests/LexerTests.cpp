@@ -153,8 +153,8 @@ TEST_F(LexerTests, Stream)
     EXPECT_TOKEN(TokenKind::KwTable,      "table",  4, 1,  5)
     EXPECT_TOKEN(TokenKind::KwImport,     "import", 4, 7,  6)
     EXPECT_TOKEN(TokenKind::KwAs,         "as",     4, 14, 2)
-    EXPECT_TOKEN(TokenKind::KwOrder,      "order",  4, 17, 5)
-    EXPECT_TOKEN(TokenKind::KwBy,         "by",     4, 23, 2)
+    EXPECT_TOKEN(TokenKind::Identifier,   "order",  4, 17, 5)
+    EXPECT_TOKEN(TokenKind::Identifier,   "by",     4, 23, 2)
     EXPECT_TOKEN(TokenKind::EndOfLine,    "",       4, 25, 0)
 
     // line 5

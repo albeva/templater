@@ -122,10 +122,12 @@ auto Printer::visit(const BinaryExpression* node) -> std::string
         visit(node->getRhs()));
 }
 
-void Printer::visit(const Member* node)
+auto Printer::visit(const Member* node) -> std::string
 {
+    std::stringstream ss;
     Separator sep { "." };
     for (const auto& id : node->getIdentifiers()) {
-        fmt::print(m_output, "{}{}", sep(), id.getValue());
+        fmt::print(ss, "{}{}", sep(), id.getValue());
     }
+    return ss.str();
 }

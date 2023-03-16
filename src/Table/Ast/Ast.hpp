@@ -21,7 +21,7 @@ struct BinaryExpression;
 struct Member;
 
 using Statement = std::variant<Import*, Table*>;
-using Expression = std::variant<Identifier, NumberLiteral, StringLiteral, UnaryExpression*, BinaryExpression*>;
+using Expression = std::variant<Member*, StringLiteral, NumberLiteral, UnaryExpression*, BinaryExpression*>;
 using TableContent = std::variant<TableInherit*, TableBody*>;
 struct PipeLiteral { };
 using TableValue = std::variant<std::monostate, PipeLiteral, Value>;

@@ -41,9 +41,7 @@ namespace {
 using Keyword = std::pair<std::string_view, TokenKind>;
 constexpr std::array kKeywords {
     Keyword { "as", TokenKind::KwAs },
-    Keyword { "by", TokenKind::KwBy },
     Keyword { "import", TokenKind::KwImport },
-    Keyword { "order", TokenKind::KwOrder },
     Keyword { "table", TokenKind::KwTable },
 };
 } // namespace

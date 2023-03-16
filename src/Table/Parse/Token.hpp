@@ -36,8 +36,6 @@ enum class TokenKind {
     KwTable,
     KwImport,
     KwAs,
-    KwOrder,
-    KwBy
 };
 
 struct Token final {

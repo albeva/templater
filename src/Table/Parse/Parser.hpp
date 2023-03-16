@@ -49,20 +49,7 @@ private:
 
     auto member() -> ast::Member*;
 
-    template <typename T = Value>
-    auto value() -> T
-    {
-        switch (m_token.getKind()) {
-        case TokenKind::Identifier:
-            return identifier();
-        case TokenKind::String:
-            return stringLiteral();
-        case TokenKind::Number:
-            return numberLiteral();
-        default:
-            expected("value");
-        }
-    }
+    [[nodiscard]] auto value() -> Value;
 
     auto identifier() -> Identifier;
     auto stringLiteral() -> StringLiteral;
