@@ -14,7 +14,6 @@ add_library(
     Support/Utils.hpp
     Support/VisitorMixin.hpp
     Table/Ast/Allocator.hpp
-    Table/Ast/Ast.cpp
     Table/Ast/Ast.hpp
     Table/Ast/Printer.cpp
     Table/Ast/Printer.hpp

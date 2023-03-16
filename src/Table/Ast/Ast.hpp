@@ -15,6 +15,7 @@ struct TableColumn;
 struct TableInherit;
 struct TableBody;
 struct TableRow;
+struct Operation;
 struct UnaryExpression;
 struct BinaryExpression;
 struct Member;
@@ -31,12 +32,12 @@ using List = std::pmr::vector<T>;
 //--------------------------------------
 
 struct Root {
-    explicit Root(support::SourceLoc loc)
+    explicit constexpr Root(support::SourceLoc loc)
         : m_loc(loc)
     {
     }
 
-    [[nodiscard]] inline auto getLoc() const -> const auto& { return m_loc; }
+    [[nodiscard]] constexpr auto getLoc() const -> const auto& { return m_loc; }
 
 private:
     support::SourceLoc m_loc;
@@ -47,19 +48,28 @@ private:
 //--------------------------------------
 
 struct Content final : Root {
-    explicit Content(support::SourceLoc loc, List<Statement> statements);
+    explicit constexpr Content(support::SourceLoc loc, List<Statement> statements)
+        : Root(loc)
+        , m_statements(std::move(statements))
+    {
+    }
 
-    [[nodiscard]] auto getStatements() const -> auto& { return m_statements; }
+    [[nodiscard]] constexpr auto getStatements() const -> auto& { return m_statements; }
 
 private:
     List<Statement> m_statements;
 };
 
 struct Import final : Root {
-    Import(support::SourceLoc loc, Identifier identifier, StringLiteral file);
+    constexpr Import(support::SourceLoc loc, Identifier identifier, StringLiteral file)
+        : Root(loc)
+        , m_identifier(identifier)
+        , m_file(file)
+    {
+    }
 
-    [[nodiscard]] auto getFile() const { return m_file; }
-    [[nodiscard]] auto getIdentifier() const { return m_identifier; }
+    [[nodiscard]] constexpr auto getFile() const -> auto& { return m_file; }
+    [[nodiscard]] constexpr auto getIdentifier() const -> auto& { return m_identifier; }
 
 private:
     Identifier m_identifier;
@@ -71,11 +81,17 @@ private:
 //--------------------------------------
 
 struct Table final : Root {
-    Table(support::SourceLoc loc, Identifier identifier, List<TableColumn*> columns, List<TableContent> content);
+    constexpr Table(support::SourceLoc loc, Identifier identifier, List<TableColumn*> columns, List<TableContent> content)
+        : Root(loc)
+        , m_identifier(identifier)
+        , m_columns(std::move(columns))
+        , m_content(std::move(content))
+    {
+    }
 
-    [[nodiscard]] auto getIdentifier() const -> const auto& { return m_identifier; }
-    [[nodiscard]] auto getColumns() const -> auto& { return m_columns; }
-    [[nodiscard]] auto getContent() const -> auto& { return m_content; }
+    [[nodiscard]] constexpr auto getIdentifier() const -> const auto& { return m_identifier; }
+    [[nodiscard]] constexpr auto getColumns() const -> const auto& { return m_columns; }
+    [[nodiscard]] constexpr auto getContent() const -> const auto& { return m_content; }
 
 private:
     Identifier m_identifier;
@@ -84,10 +100,15 @@ private:
 };
 
 struct TableColumn final : Root {
-    TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<Value> value);
+    constexpr TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<Value> value)
+        : Root(loc)
+        , m_identifier(identifier)
+        , m_value(value)
+    {
+    }
 
-    [[nodiscard]] auto getIdentifier() const -> const auto& { return m_identifier; }
-    [[nodiscard]] auto getValue() const { return m_value; }
+    [[nodiscard]] constexpr auto getIdentifier() const -> const auto& { return m_identifier; }
+    [[nodiscard]] constexpr auto getValue() const -> const auto& { return m_value; }
 
 private:
     Identifier m_identifier;
@@ -95,10 +116,15 @@ private:
 };
 
 struct TableInherit final : Root {
-    TableInherit(support::SourceLoc loc, Member* member, std::optional<Expression> expression);
+    constexpr TableInherit(support::SourceLoc loc, Member* member, std::optional<Expression> expression)
+        : Root(loc)
+        , m_member(member)
+        , m_expression(expression)
+    {
+    }
 
-    [[nodiscard]] auto getMember() const { return m_member; }
-    [[nodiscard]] auto getExpression() const { return m_expression; }
+    [[nodiscard]] constexpr auto getMember() const -> const auto& { return m_member; }
+    [[nodiscard]] constexpr auto getExpression() const -> const auto& { return m_expression; }
 
 private:
     Member* m_member;
@@ -106,18 +132,26 @@ private:
 };
 
 struct TableBody final : Root {
-    explicit TableBody(support::SourceLoc loc, List<TableRow*> rows);
+    constexpr explicit TableBody(support::SourceLoc loc, List<TableRow*> rows)
+        : Root(loc)
+        , m_rows(std::move(rows))
+    {
+    }
 
-    [[nodiscard]] auto getRows() const -> auto& { return m_rows; }
+    [[nodiscard]] constexpr auto getRows() const -> const auto& { return m_rows; }
 
 private:
     List<TableRow*> m_rows;
 };
 
 struct TableRow final : Root {
-    explicit TableRow(support::SourceLoc loc, List<std::optional<Value>> values);
+    constexpr explicit TableRow(support::SourceLoc loc, List<std::optional<Value>> values)
+        : Root(loc)
+        , m_values(std::move(values))
+    {
+    }
 
-    [[nodiscard]] auto getValues() const -> auto& { return m_values; }
+    [[nodiscard]] constexpr auto getValues() const -> const auto& { return m_values; }
 
 private:
     List<std::optional<Value>> m_values;
@@ -128,23 +162,28 @@ private:
 //--------------------------------------
 
 struct Operation final : Root {
-    Operation(support::SourceLoc loc, parser::TokenKind kind)
+    constexpr Operation(support::SourceLoc loc, parser::TokenKind kind)
         : Root(loc)
         , m_kind(kind)
     {
     }
 
-    [[nodiscard]] auto getKind() const { return m_kind; }
+    [[nodiscard]] constexpr auto getKind() const -> const auto& { return m_kind; }
 
 private:
     parser::TokenKind m_kind;
 };
 
 struct UnaryExpression final : Root {
-    UnaryExpression(support::SourceLoc loc, Operation op, Expression rhs);
+    constexpr UnaryExpression(support::SourceLoc loc, Operation op, Expression rhs)
+        : Root(loc)
+        , m_op(op)
+        , m_rhs(rhs)
+    {
+    }
 
-    [[nodiscard]] auto getOp() const { return m_op; }
-    [[nodiscard]] auto getRhs() const { return m_rhs; }
+    [[nodiscard]] constexpr auto getOp() const -> const auto& { return m_op; }
+    [[nodiscard]] constexpr auto getRhs() const -> const auto& { return m_rhs; }
 
 private:
     Operation m_op;
@@ -152,11 +191,17 @@ private:
 };
 
 struct BinaryExpression final : Root {
-    BinaryExpression(support::SourceLoc loc, Operation op, Expression lhs, Expression rhs);
+    constexpr BinaryExpression(support::SourceLoc loc, Operation op, Expression lhs, Expression rhs)
+        : Root(loc)
+        , m_op(op)
+        , m_lhs(lhs)
+        , m_rhs(rhs)
+    {
+    }
 
-    [[nodiscard]] auto getOp() const { return m_op; }
-    [[nodiscard]] auto getLhs() const { return m_lhs; }
-    [[nodiscard]] auto getRhs() const { return m_rhs; }
+    [[nodiscard]] constexpr auto getOp() const -> const auto& { return m_op; }
+    [[nodiscard]] constexpr auto getLhs() const -> const auto& { return m_lhs; }
+    [[nodiscard]] constexpr auto getRhs() const -> const auto& { return m_rhs; }
 
 private:
     Operation m_op;
@@ -168,9 +213,13 @@ private:
 //--------------------------------------
 
 struct Member final : Root {
-    explicit Member(support::SourceLoc loc, List<Identifier> identifiers);
+    constexpr explicit Member(support::SourceLoc loc, List<Identifier> identifiers)
+        : Root(loc)
+        , m_identifiers(std::move(identifiers))
+    {
+    }
 
-    [[nodiscard]] auto getIdentifiers() const -> auto& { return m_identifiers; }
+    [[nodiscard]] constexpr auto getIdentifiers() const -> const auto& { return m_identifiers; }
 
 private:
     List<Identifier> m_identifiers;
