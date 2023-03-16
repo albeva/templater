@@ -4,6 +4,7 @@
 #include "Support/Diagnostics.hpp"
 #include "Support/Source.hpp"
 #include "Table/Ast/Ast.hpp"
+#include "Table/Ast/Printer.hpp"
 #include "Table/Gen/Generator.hpp"
 #include "Table/Parse/Lexer.hpp"
 #include "Table/Parse/Parser.hpp"
@@ -27,6 +28,7 @@ auto main() -> int
         auto* ast = parser.parse();
         Generator const gen { &ctx, &diag, &src, ast };
         std::cout << Printer(gen.getSymbolTable());
+        // std::cout << templater::table::ast::Printer(ast) << '\n';
         return diag.hasErrors() ? EXIT_FAILURE : EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << exc.what();

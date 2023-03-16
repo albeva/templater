@@ -26,17 +26,13 @@ private:
     void visit(const TableColumn* node);
     void visit(const TableInherit* node);
     void visit(const TableBody* node);
-    void visit(const TableRow* node);
-    void visit(const UnaryExpression* node);
-    void visit(const BinaryExpression* node);
+    static void visit(std::vector<std::string>& dst, const TableRow* node);
     void visit(const Member* node);
 
-    void visit(const PipeLiteral& node);
-    void visit(const Identifier& node);
-    void visit(const StringLiteral& node);
-    void visit(const NumberLiteral& node);
+    static auto visit(const Value& value) -> std::string;
+    auto visit(const UnaryExpression* node) -> std::string;
+    auto visit(const BinaryExpression* node) -> std::string;
 
-    std::size_t m_indent = 0;
     std::stringstream m_output {};
 };
 

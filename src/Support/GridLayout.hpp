@@ -7,5 +7,9 @@ namespace templater::support {
 void printGrid(
     std::ostream& stream,
     const std::vector<std::string>& table,
-    size_t cols, std::string_view sep = " ");
+    size_t cols);
+
+void printGrid(
+    std::ostream& stream,
+    const std::vector<std::vector<std::string>>& table);
 } // namespace templater::support

@@ -65,7 +65,7 @@ void Printer::visit(const Table* table)
     }
 
     // print out
-    printGrid(m_output, content, columns.size(), " ");
+    printGrid(m_output, content, columns.size());
     fmt::print(m_output, "\n]\n");
 }
 

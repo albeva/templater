@@ -3,9 +3,12 @@
 //
 #include "Printer.hpp"
 #include "Ast.hpp"
+#include "Support/GridLayout.hpp"
 #include "Support/Separator.hpp"
 #include "Table/Parse/Token.hpp"
+using templater::support::printGrid;
 using templater::support::Separator;
+using templater::table::toString;
 using templater::table::ast::Printer;
 using templater::table::parser::Token;
 using templater::table::parser::TokenKind;
@@ -21,15 +24,14 @@ void Printer::visit(const Content* node)
 void Printer::visit(const Import* node)
 {
     fmt::print(m_output,
-        "{0:<{1}}import \"{2}\" as {3}",
-        "", m_indent,
+        "import \"{}\" as {}",
         node->getFile().getValue(),
         node->getIdentifier().getValue());
 }
 
 void Printer::visit(const Table* node)
 {
-    fmt::print(m_output, "{0:<}{1}{2}", "", m_indent, node->getIdentifier().getValue());
+    fmt::print(m_output, "table {}", node->getIdentifier().getValue());
     if (!node->getColumns().empty()) {
         fmt::print(m_output, "(");
         Separator sep { " " };
@@ -54,8 +56,7 @@ void Printer::visit(const TableColumn* node)
 {
     m_output << node->getIdentifier().getValue();
     if (auto value = node->getValue()) {
-        fmt::print(m_output, " = ");
-        visit(value.value());
+        fmt::print(m_output, " = {}", toString(value.value()));
     }
 }
 
@@ -70,41 +71,47 @@ void Printer::visit(const TableInherit* node)
 void Printer::visit(const TableBody* node)
 {
     fmt::print(m_output, "[");
-    m_indent += 4;
+    std::vector<std::vector<std::string>> content {};
+    content.reserve(node->getRows().size());
     for (const auto* row : node->getRows()) {
-        fmt::print(m_output, "\n{0:<{1}}", "", m_indent);
-        visit(row);
+        visit(content.emplace_back(), row);
     }
-    m_indent -= 4;
-    fmt::print(m_output, "\n{0:<{1}}]", "", m_indent);
+    printGrid(m_output, content);
+    fmt::print(m_output, "\n]");
 }
 
-void Printer::visit(const TableRow* node)
+void Printer::visit(std::vector<std::string>& dst, const TableRow* node)
 {
-    Separator sep { " " };
+    dst.reserve(node->getValues().size());
     for (const auto value : node->getValues()) {
-        fmt::print(m_output, "{}", sep());
         if (value.has_value()) {
-            visit(value.value());
+            dst.emplace_back(toString(value.value()));
         } else {
-            fmt::print(m_output, "-");
+            dst.emplace_back("-");
         }
     }
 }
 
-// NOLINTNEXTLINE misc-no-recursion
-void Printer::visit(const UnaryExpression* node)
+auto Printer::visit(const Value& value) -> std::string
 {
-    fmt::print(m_output, "{}", Token::describe(node->getOp().getKind()));
-    visit(node->getRhs());
+    return toString(value);
 }
 
 // NOLINTNEXTLINE misc-no-recursion
-void Printer::visit(const BinaryExpression* node)
+auto Printer::visit(const UnaryExpression* node) -> std::string
 {
-    visit(node->getLhs());
-    fmt::print(m_output, " {} ", Token::describe(node->getOp().getKind()));
-    visit(node->getRhs());
+    return fmt::format("{} {}",
+        Token::describe(node->getOp().getKind()),
+        visit(node->getRhs()));
+}
+
+// NOLINTNEXTLINE misc-no-recursion
+auto Printer::visit(const BinaryExpression* node) -> std::string
+{
+    return fmt::format("{} {} {}",
+        visit(node->getLhs()),
+        Token::describe(node->getOp().getKind()),
+        visit(node->getRhs()));
 }
 
 void Printer::visit(const Member* node)
@@ -113,24 +120,4 @@ void Printer::visit(const Member* node)
     for (const auto& id : node->getIdentifiers()) {
         fmt::print(m_output, "{}{}", sep(), id.getValue());
     }
-}
-
-void Printer::visit(const PipeLiteral& /*pipe*/)
-{
-    fmt::print(m_output, "{}", '|');
-}
-
-void Printer::visit(const Identifier& node)
-{
-    fmt::print(m_output, "{}", node.getValue());
-}
-
-void Printer::visit(const StringLiteral& node)
-{
-    m_output << std::quoted(node.getValue());
-}
-
-void Printer::visit(const NumberLiteral& node)
-{
-    fmt::print(m_output, "{}", node.getValue());
 }
