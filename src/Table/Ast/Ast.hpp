@@ -15,7 +15,6 @@ struct TableColumn;
 struct TableInherit;
 struct TableBody;
 struct TableRow;
-struct StructBody;
 struct UnaryExpression;
 struct BinaryExpression;
 struct Member;

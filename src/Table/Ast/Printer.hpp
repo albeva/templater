@@ -17,7 +17,7 @@ public:
 
     VISITOR_MIXIN
 
-    [[nodiscard]] auto output() const -> std::string;
+    [[nodiscard]] auto output() const { return m_output.str(); }
 
 private:
     void visit(const Content* node);
@@ -27,7 +27,6 @@ private:
     void visit(const TableInherit* node);
     void visit(const TableBody* node);
     void visit(const TableRow* node);
-    void visit(const StructBody* node);
     void visit(const UnaryExpression* node);
     void visit(const BinaryExpression* node);
     void visit(const Member* node);
@@ -39,7 +38,6 @@ private:
 
     std::size_t m_indent = 0;
     std::stringstream m_output {};
-    [[nodiscard]] auto spaces() const { return std::string(m_indent * 4, ' '); }
 };
 
 auto inline operator<<(std::ostream& os, const Printer& printer) -> std::ostream&

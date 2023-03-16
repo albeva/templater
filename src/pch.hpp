@@ -25,6 +25,7 @@
 #endif
 
 // 3rd party libs
+// replace with std <format> and <print> when C++23 matures
 #include <fmt/core.h>
 #include <fmt/ostream.h>
 

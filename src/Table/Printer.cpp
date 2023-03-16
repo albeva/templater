@@ -38,16 +38,14 @@ void Printer::visit(const Table* table)
 
     // columns
     const auto& columns = table->getColumns();
-    m_output << "(";
+    fmt::print(m_output, "(");
     Separator sep { " " };
     for (const auto* col : columns) {
-        m_output << sep();
+        fmt::print(m_output, "{}", sep());
         visit(col);
     }
-    m_output << ") = [";
-
-    // reuse m_output to capture output
-    auto theOutput = std::move(m_output);
+    fmt::print(m_output, ") = [");
+    auto holder = std::move(m_output);
 
     // store all content in a table
     using StringTable = std::vector<std::string>;
@@ -76,41 +74,41 @@ void Printer::visit(const Table* table)
     }
 
     // print out
-    m_output = std::move(theOutput);
+    m_output = std::move(holder);
     for (size_t idx = 0; idx < content.size(); idx++) {
         const size_t col = idx % columns.size();
         if (col == 0) {
-            m_output << "\n   ";
+            fmt::print(m_output, "\n   ");
         }
         fmt::print(m_output,
             " {0}{1:<{2}}", content[idx],
             "", (widths[col] - content[idx].length()));
     }
-    m_output << "\n]\n";
+    fmt::print(m_output, "\n]\n");
 }
 
 void Printer::visit(const Column* column)
 {
-    m_output << column->getName();
+    fmt::print(m_output, "{}", column->getName());
     if (auto value = column->getValue()) {
-        m_output << " = ";
+        fmt::print(m_output, " = ");
         visit(value.value());
     }
 }
 
 void Printer::visit(const PipeLiteral& /*pipe*/)
 {
-    m_output << '|';
+    fmt::print(m_output, "|");
 }
 
 void Printer::visit(const Identifier& token)
 {
-    m_output << token.getValue();
+    fmt::print(m_output, "{}", token.getValue());
 }
 
 void Printer::visit(const NumberLiteral& token)
 {
-    m_output << token.getValue();
+    fmt::print(m_output, "{}", token.getValue());
 }
 
 void Printer::visit(const StringLiteral& token)
