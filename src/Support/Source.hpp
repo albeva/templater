@@ -15,7 +15,7 @@ public:
     explicit Source(const std::filesystem::path& path);
     Source(std::string name, std::string source);
 
-    [[nodiscard]] auto getName() const -> const auto& { return m_name; }
+    [[nodiscard]] inline auto getName() const -> const auto& { return m_name; }
 
     [[nodiscard]] auto getLine(std::size_t line) const -> std::string_view;
     [[nodiscard]] auto getString(SourceLoc loc) const -> std::string_view;
@@ -23,15 +23,9 @@ public:
     [[nodiscard]] auto getPosition(SourceLoc loc) const -> SourcePos;
     [[nodiscard]] auto highlight(SourcePos pos) const -> std::string;
 
-    [[nodiscard]] auto data() const -> const char* { return m_source.data(); }
-    [[nodiscard]] auto end() const -> const char*
-    {
-        const auto* end = data();
-        std::advance(end, m_source.length());
-        return end;
-    }
-
-    [[nodiscard]] auto length() const -> std::size_t { return m_source.length(); }
+    [[nodiscard]] inline auto data() const -> const char* { return m_source.data(); }
+    [[nodiscard]] inline auto end() const -> const char* { return m_source.data() + m_source.length(); /*  NOLINT */ }
+    [[nodiscard]] inline auto length() const -> std::size_t { return m_source.length(); }
 
 private:
     using Range = std::pair<const char*, const char*>;

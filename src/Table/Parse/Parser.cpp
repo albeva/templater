@@ -304,21 +304,6 @@ auto Parser::member() -> ast::Member*
     return m_ast.node<ast::Member>(makeLoc(start, m_lastLoc), std::move(members));
 }
 
-//// Literal
-// auto Parser::value() -> Value
-//{
-//     switch (m_token.getKind()) {
-//     case TokenKind::Identifier:
-//         return identifier();
-//     case TokenKind::String:
-//         return stringLiteral();
-//     case TokenKind::Number:
-//         return numberLiteral();
-//     default:
-//         expected("value");
-//     }
-// }
-
 // IDENTIFIER
 auto Parser::identifier() -> Identifier
 {

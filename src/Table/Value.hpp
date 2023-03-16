@@ -8,7 +8,7 @@ namespace templater::table {
 namespace details {
     struct Tag { };
     struct StringTag { };
-    template <typename T, typename Tag = details::Tag>
+    template <typename T, typename X = Tag>
     struct Literal {
         constexpr Literal(support::SourceLoc loc, const T& value)
             : m_value(value)

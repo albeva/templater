@@ -48,7 +48,7 @@ private:
 //--------------------------------------
 
 struct Content final : Root {
-    explicit constexpr Content(support::SourceLoc loc, List<Statement> statements)
+    constexpr Content(support::SourceLoc loc, List<Statement> statements)
         : Root(loc)
         , m_statements(std::move(statements))
     {
@@ -132,7 +132,7 @@ private:
 };
 
 struct TableBody final : Root {
-    constexpr explicit TableBody(support::SourceLoc loc, List<TableRow*> rows)
+    constexpr TableBody(support::SourceLoc loc, List<TableRow*> rows)
         : Root(loc)
         , m_rows(std::move(rows))
     {
@@ -145,7 +145,7 @@ private:
 };
 
 struct TableRow final : Root {
-    constexpr explicit TableRow(support::SourceLoc loc, List<std::optional<Value>> values)
+    constexpr TableRow(support::SourceLoc loc, List<std::optional<Value>> values)
         : Root(loc)
         , m_values(std::move(values))
     {
@@ -213,7 +213,7 @@ private:
 //--------------------------------------
 
 struct Member final : Root {
-    constexpr explicit Member(support::SourceLoc loc, List<Identifier> identifiers)
+    constexpr Member(support::SourceLoc loc, List<Identifier> identifiers)
         : Root(loc)
         , m_identifiers(std::move(identifiers))
     {

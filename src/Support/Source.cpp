@@ -15,7 +15,7 @@ Source::Source(const std::filesystem::path& path)
 
     std::ifstream file { path, std::ios::binary | std::ios::in };
     if (!file.is_open()) {
-        throw SourceException("Failed to open '"s + m_name + "'");
+        throw SourceException("Failed to open '" + m_name + "'");
     }
 
     m_source = std::string { std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
@@ -93,10 +93,8 @@ auto Source::getLineStart(size_t line) const -> const char*
         return --line == 1;
     });
     if (start == end()) {
-        std::stringstream is;
-        is << "Line " << line << "out of Source range";
-        throw SourceException(is.str());
+        throw SourceException(fmt::format("Kube {} us out of Source range", line));
     }
-    std::advance(start, 1);
+    std::advance(start, 1); // skip \n
     return start;
 }

@@ -48,20 +48,17 @@ struct Token final {
         m_value = value;
     }
 
-    [[nodiscard]] auto getKind() const -> TokenKind { return m_kind; }
-    [[nodiscard]] auto getLoc() const -> const support::SourceLoc& { return m_loc; }
-    [[nodiscard]] auto getValue() const -> const std::string_view& { return m_value; }
-
-    [[nodiscard]] auto getString() const -> std::string_view;
-
-    [[nodiscard]] inline auto isValue() const -> bool
+    [[nodiscard]] constexpr auto getKind() const -> const TokenKind& { return m_kind; }
+    [[nodiscard]] constexpr auto getLoc() const -> const support::SourceLoc& { return m_loc; }
+    [[nodiscard]] constexpr auto getValue() const -> const std::string_view& { return m_value; }
+    [[nodiscard]] constexpr inline auto isValue() const -> bool
     {
         return m_kind == TokenKind::Number
             || m_kind == TokenKind::Identifier
             || m_kind == TokenKind::String;
     }
 
-    [[nodiscard]] auto getPrecedence() const -> int
+    [[nodiscard]] constexpr auto getPrecedence() const -> int
     {
         switch (m_kind) {
         case TokenKind::LogicalNot:
@@ -84,16 +81,17 @@ struct Token final {
         }
     }
 
+    [[nodiscard]] auto getString() const -> std::string_view;
     [[nodiscard]] auto description() const -> std::string_view { return describe(m_kind); }
     [[nodiscard]] static auto describe(TokenKind kind) -> std::string_view;
 
-    [[nodiscard]] auto is(TokenKind kind) const -> bool { return m_kind == kind; }
+    [[nodiscard]] constexpr auto is(TokenKind kind) const -> bool { return m_kind == kind; }
     template <typename... Ty>
-    [[nodiscard]] auto is(TokenKind kind, Ty... ty) const -> bool { return is(kind) || is(ty...); }
+    [[nodiscard]] constexpr auto is(TokenKind kind, Ty... ty) const -> bool { return is(kind) || is(ty...); }
 
-    [[nodiscard]] auto isNot(TokenKind kind) const -> bool { return m_kind != kind; }
+    [[nodiscard]] constexpr auto isNot(TokenKind kind) const -> bool { return m_kind != kind; }
     template <typename... Ty>
-    [[nodiscard]] auto isNot(TokenKind kind, Ty... ty) const -> bool { return isNot(kind) && isNot(ty...); }
+    [[nodiscard]] constexpr auto isNot(TokenKind kind, Ty... ty) const -> bool { return isNot(kind) && isNot(ty...); }
 
 private:
     TokenKind m_kind {};
