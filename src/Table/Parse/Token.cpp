@@ -5,7 +5,7 @@
 using templater::table::parser::Token;
 using namespace std::literals;
 
-auto Token::describe(TokenKind kind) -> std::string_view
+auto Token::describe(TokenKind kind) noexcept -> std::string_view
 {
     using enum TokenKind;
     switch (kind) {
@@ -76,7 +76,7 @@ auto Token::describe(TokenKind kind) -> std::string_view
     }
 }
 
-auto Token::getString() const -> std::string_view
+auto Token::getString() const noexcept -> std::string_view
 {
     if (isValue() || is(TokenKind::Invalid)) {
         return m_value;

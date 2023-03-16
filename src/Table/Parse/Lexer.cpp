@@ -17,23 +17,23 @@ using namespace std::literals;
 // NOLINTBEGIN cppcoreguidelines-pro-bounds-pointer-arithmetic
 
 namespace {
-[[nodiscard]] inline auto isDigit(char ch) -> bool
+[[nodiscard]] inline auto isDigit(char ch) noexcept -> bool
 {
     return ch >= '0' && ch <= '9';
 }
 
-[[nodiscard]] inline auto isAlpha(char ch) -> bool
+[[nodiscard]] inline auto isAlpha(char ch) noexcept -> bool
 {
     return (ch >= 'a' && ch <= 'z')
         || (ch >= 'A' && ch <= 'Z');
 }
 
-[[nodiscard]] inline auto isIdentChar(char ch) -> bool
+[[nodiscard]] inline auto isIdentChar(char ch) noexcept -> bool
 {
     return isAlpha(ch) || isDigit(ch) || ch == '_';
 }
 
-[[nodiscard]] inline auto isLineOrFileEnd(char ch) -> bool
+[[nodiscard]] inline auto isLineOrFileEnd(char ch) noexcept -> bool
 {
     return ch == '\n' || ch == '\r' || ch == '\0';
 }
@@ -48,7 +48,7 @@ constexpr std::array kKeywords {
 };
 } // namespace
 
-Lexer::Lexer(Context* ctx, Source* source)
+Lexer::Lexer(Context* ctx, Source* source) noexcept
     : m_ctx(ctx)
     , m_source(source)
     , m_buffer(source->data())
@@ -157,14 +157,14 @@ void Lexer::next(Token& token) // NOLINT readability-function-cognitive-complexi
     }
 }
 
-void Lexer::skipToLineEnd()
+void Lexer::skipToLineEnd() noexcept
 {
     while (!isLineOrFileEnd(*m_input)) {
         m_input++;
     }
 }
 
-void Lexer::skipToNextLine()
+void Lexer::skipToNextLine() noexcept
 {
     skipToLineEnd();
     if (*m_input == '\r') {
@@ -175,7 +175,7 @@ void Lexer::skipToNextLine()
     }
 }
 
-void Lexer::make(Token& token, TokenKind kind, std::size_t len)
+void Lexer::make(Token& token, TokenKind kind, std::size_t len) noexcept
 {
     m_hasStmt = kind != TokenKind::EndOfLine;
     const auto* start = m_input;
@@ -183,7 +183,7 @@ void Lexer::make(Token& token, TokenKind kind, std::size_t len)
     token.set(kind, loc(start));
 }
 
-void Lexer::unexpected(Token& token, std::string_view message)
+void Lexer::unexpected(Token& token, std::string_view message) noexcept
 {
     const auto* start = m_input;
     if (*m_input != '\0') {
@@ -246,7 +246,7 @@ void Lexer::string(Token& token)
     token.set(TokenKind::String, loc(start), lit);
 }
 
-auto Lexer::escape() -> std::expected<char, std::string_view>
+auto Lexer::escape() noexcept -> std::expected<char, std::string_view>
 {
     // assume m_input[0] == '\\'
     switch (*++m_input) {
@@ -302,7 +302,7 @@ void Lexer::identifier(Token& token)
     }
 }
 
-auto Lexer::loc(const char* start) -> SourceLoc
+auto Lexer::loc(const char* start) noexcept -> SourceLoc
 {
     return {
         static_cast<unsigned>(std::distance(m_buffer, start)),

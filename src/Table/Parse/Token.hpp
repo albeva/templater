@@ -6,7 +6,7 @@
 #include "Support/SourceLoc.hpp"
 namespace templater::table::parser {
 
-enum class TokenKind : uint8_t {
+enum class TokenKind {
     Invalid,
     EndOfFile,
     EndOfLine,
@@ -41,24 +41,24 @@ enum class TokenKind : uint8_t {
 };
 
 struct Token final {
-    void set(TokenKind kind, support::SourceLoc loc, std::string_view value = {})
+    void set(TokenKind kind, support::SourceLoc loc, std::string_view value = {}) noexcept
     {
         m_kind = kind;
         m_loc = loc;
         m_value = value;
     }
 
-    [[nodiscard]] constexpr auto getKind() const -> const TokenKind& { return m_kind; }
-    [[nodiscard]] constexpr auto getLoc() const -> const support::SourceLoc& { return m_loc; }
-    [[nodiscard]] constexpr auto getValue() const -> const std::string_view& { return m_value; }
-    [[nodiscard]] constexpr inline auto isValue() const -> bool
+    [[nodiscard]] constexpr auto getKind() const noexcept -> const TokenKind& { return m_kind; }
+    [[nodiscard]] constexpr auto getLoc() const noexcept -> const support::SourceLoc& { return m_loc; }
+    [[nodiscard]] constexpr auto getValue() const noexcept -> const std::string_view& { return m_value; }
+    [[nodiscard]] constexpr inline auto isValue() const noexcept -> bool
     {
         return m_kind == TokenKind::Number
             || m_kind == TokenKind::Identifier
             || m_kind == TokenKind::String;
     }
 
-    [[nodiscard]] constexpr auto getPrecedence() const -> int
+    [[nodiscard]] constexpr auto getPrecedence() const noexcept -> int
     {
         switch (m_kind) {
         case TokenKind::LogicalNot:
@@ -81,17 +81,17 @@ struct Token final {
         }
     }
 
-    [[nodiscard]] auto getString() const -> std::string_view;
-    [[nodiscard]] auto description() const -> std::string_view { return describe(m_kind); }
-    [[nodiscard]] static auto describe(TokenKind kind) -> std::string_view;
+    [[nodiscard]] auto getString() const noexcept -> std::string_view;
+    [[nodiscard]] auto description() const noexcept -> std::string_view { return describe(m_kind); }
+    [[nodiscard]] static auto describe(TokenKind kind) noexcept -> std::string_view;
 
-    [[nodiscard]] constexpr auto is(TokenKind kind) const -> bool { return m_kind == kind; }
+    [[nodiscard]] constexpr auto is(TokenKind kind) const noexcept -> bool { return m_kind == kind; }
     template <typename... Ty>
-    [[nodiscard]] constexpr auto is(TokenKind kind, Ty... ty) const -> bool { return is(kind) || is(ty...); }
+    [[nodiscard]] constexpr auto is(TokenKind kind, Ty... ty) const noexcept -> bool { return is(kind) || is(ty...); }
 
-    [[nodiscard]] constexpr auto isNot(TokenKind kind) const -> bool { return m_kind != kind; }
+    [[nodiscard]] constexpr auto isNot(TokenKind kind) const noexcept -> bool { return m_kind != kind; }
     template <typename... Ty>
-    [[nodiscard]] constexpr auto isNot(TokenKind kind, Ty... ty) const -> bool { return isNot(kind) && isNot(ty...); }
+    [[nodiscard]] constexpr auto isNot(TokenKind kind, Ty... ty) const noexcept -> bool { return isNot(kind) && isNot(ty...); }
 
 private:
     TokenKind m_kind {};

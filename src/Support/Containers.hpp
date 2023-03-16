@@ -8,15 +8,15 @@ namespace templater::support {
 namespace containers {
     struct HeterogeneousHash {
         using is_transparent = void;
-        [[nodiscard]] auto operator()(const char* txt) const -> size_t
+        [[nodiscard]] inline auto operator()(const char* txt) const noexcept -> size_t
         {
             return std::hash<std::string_view> {}(txt);
         }
-        [[nodiscard]] auto operator()(std::string_view txt) const -> size_t
+        [[nodiscard]] inline auto operator()(std::string_view txt) const noexcept -> size_t
         {
             return std::hash<std::string_view> {}(txt);
         }
-        [[nodiscard]] auto operator()(const std::string& txt) const -> size_t
+        [[nodiscard]] inline auto operator()(const std::string& txt) const noexcept -> size_t
         {
             return std::hash<std::string> {}(txt);
         }

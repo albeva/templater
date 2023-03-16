@@ -21,7 +21,7 @@ namespace {
 }
 }
 
-Diagnostics::Diagnostics(std::ostream& output)
+Diagnostics::Diagnostics(std::ostream& output) noexcept
     : m_output(output)
     , m_errorCount(0)
 {

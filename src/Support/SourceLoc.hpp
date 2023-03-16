@@ -7,23 +7,22 @@ namespace templater::support {
 
 // defines a location range based on start and end index
 struct SourceLoc final {
-    SourceLoc() = default;
-
-    SourceLoc(unsigned start, unsigned end)
+    SourceLoc() noexcept = default;
+    SourceLoc(unsigned start, unsigned end) noexcept
         : m_start { start }
         , m_end { end }
     {
     }
 
-    SourceLoc(const SourceLoc& lhs, const SourceLoc& rhs)
+    SourceLoc(const SourceLoc& lhs, const SourceLoc& rhs) noexcept
         : m_start { lhs.m_start }
         , m_end { rhs.m_end }
     {
     }
 
-    [[nodiscard]] auto getStart() const { return m_start; }
-    [[nodiscard]] auto getEnd() const { return m_end; }
-    [[nodiscard]] auto length() const { return m_end - m_start; }
+    [[nodiscard]] inline auto getStart() const noexcept { return m_start; }
+    [[nodiscard]] inline auto getEnd() const noexcept { return m_end; }
+    [[nodiscard]] inline auto length() const noexcept { return m_end - m_start; }
 
 private:
     unsigned m_start = 0, m_end = 0;
@@ -31,17 +30,17 @@ private:
 
 // defines source position in terms of human friendly line, col and length
 struct SourcePos final {
-    SourcePos() = default;
-    SourcePos(unsigned line, unsigned col, unsigned len)
+    constexpr SourcePos() noexcept = default;
+    constexpr SourcePos(unsigned line, unsigned col, unsigned len) noexcept
         : m_line(line)
         , m_col(col)
         , m_len(len)
     {
     }
 
-    [[nodiscard]] auto getLine() const { return m_line; }
-    [[nodiscard]] auto getCol() const { return m_col; }
-    [[nodiscard]] auto getLength() const { return m_len; }
+    [[nodiscard]] constexpr auto getLine() const noexcept { return m_line; }
+    [[nodiscard]] constexpr auto getCol() const noexcept { return m_col; }
+    [[nodiscard]] constexpr auto getLength() const noexcept { return m_len; }
 
 private:
     unsigned m_line = 0, m_col = 0, m_len = 0;

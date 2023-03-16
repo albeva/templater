@@ -369,7 +369,7 @@ void Parser::expected(std::string_view message)
     throw ParserException("");
 }
 
-auto Parser::makeLoc(SourceLoc start, SourceLoc end) -> SourceLoc
+auto Parser::makeLoc(SourceLoc start, SourceLoc end) noexcept -> SourceLoc
 {
     return { start, end };
 }

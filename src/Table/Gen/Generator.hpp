@@ -33,7 +33,7 @@ public:
     ~Generator() = default;
 
     VISITOR_MIXIN
-    [[nodiscard]] auto getSymbolTable() const { return m_symbolTable; }
+    [[nodiscard]] auto getSymbolTable() const noexcept { return m_symbolTable; }
 
 private:
     void visit(const ast::Content* node);

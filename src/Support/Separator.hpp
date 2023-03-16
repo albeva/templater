@@ -6,12 +6,12 @@
 namespace templater::support {
 
 struct Separator final {
-    constexpr explicit Separator(std::string_view separator)
+    constexpr explicit Separator(std::string_view separator) noexcept
         : m_separator(separator)
     {
     }
 
-    constexpr auto operator()() -> std::string_view
+    constexpr auto operator()() noexcept -> std::string_view
     {
         if (m_first) {
             m_first = false;

@@ -13,7 +13,7 @@ SymbolTable::SymbolTable(Context* ctx, Source* source)
 {
 }
 
-auto SymbolTable::find(std::string_view name) const -> Symbol*
+auto SymbolTable::find(std::string_view name) const noexcept -> Symbol*
 {
     auto iter = m_symbols.find(name);
     if (iter != m_symbols.end()) {
@@ -22,7 +22,7 @@ auto SymbolTable::find(std::string_view name) const -> Symbol*
     return nullptr;
 }
 
-auto SymbolTable::contains(std::string_view name) const -> bool
+auto SymbolTable::contains(std::string_view name) const noexcept -> bool
 {
     return m_symbols.contains(name);
 }

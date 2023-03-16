@@ -30,7 +30,7 @@ using NumberLiteral = details::Literal<unsigned>;
 using StringLiteral = details::Literal<std::string_view, details::StringTag>;
 using Value = std::variant<Identifier, NumberLiteral, StringLiteral>;
 
-[[nodiscard]] constexpr auto toString(const Value& value) -> std::string
+[[nodiscard]] inline auto toString(const Value& value) -> std::string
 {
     return std::visit(
         support::Visitor {

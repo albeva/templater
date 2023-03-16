@@ -15,7 +15,7 @@ Table::Table(Context* ctx)
     (void)m_ctx;
 }
 
-auto Table::findColumn(std::string_view name) const -> Column*
+auto Table::findColumn(std::string_view name) const noexcept -> Column*
 {
     auto res = std::ranges::find_if(m_columns, [&](const Column* col) {
         return col->getName() == name;
@@ -38,7 +38,7 @@ void Table::addValue(size_t row, const Column* column, Value value)
     m_data[row].insert({ column, value });
 }
 
-auto Table::getValue(size_t row, const Column* column) -> std::optional<Value>
+auto Table::getValue(size_t row, const Column* column) const noexcept -> std::optional<Value>
 {
     auto iter = m_data[row].find(column);
     if (iter != m_data[row].end()) {

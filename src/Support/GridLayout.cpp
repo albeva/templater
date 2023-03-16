@@ -8,7 +8,7 @@ void templater::support::printGrid(
     const std::vector<std::string>& table,
     size_t cols)
 {
-    // Find the maximum length of string in each column and pad the strings with spaces
+    // Find column sizes
     std::vector<size_t> widths(cols);
     for (size_t idx = 0; idx < table.size(); idx++) {
         const size_t col = idx % cols;
@@ -19,11 +19,9 @@ void templater::support::printGrid(
     for (size_t idx = 0; idx < table.size(); idx++) {
         const size_t col = idx % cols;
         if (col == 0) {
-            fmt::print(stream, "\n   ");
+            stream << "\n   ";
         }
-        fmt::print(stream,
-            " {0}{1:<{2}}", table[idx],
-            "", (widths[col] - table[idx].length()));
+        fmt::print(stream, " {:<{}}", table[idx], widths[col]);
     }
 }
 
@@ -31,7 +29,7 @@ void templater::support::printGrid(
     std::ostream& stream,
     const std::vector<std::vector<std::string>>& table)
 {
-    // Determine the maximum width for each column
+    // Find column sizes
     std::vector<size_t> widths;
     for (const auto& row : table) {
         for (size_t col = 0; col < row.size(); col++) {
@@ -42,15 +40,13 @@ void templater::support::printGrid(
         }
     }
 
-    // Print the table with aligned columns
+    // Print
     for (const auto& row : table) {
         for (size_t col = 0; col < row.size(); col++) {
             if (col == 0) {
                 fmt::print(stream, "\n   ");
             }
-            fmt::print(stream,
-                " {0}{1:<{2}}", row[col],
-                "", (widths[col] - row[col].length()));
+            fmt::print(stream, " {:<{}}", row[col], widths[col]);
         }
     }
 }

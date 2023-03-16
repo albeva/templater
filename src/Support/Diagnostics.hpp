@@ -15,7 +15,7 @@ public:
     };
 
     NO_COPY_AND_MOVE(Diagnostics)
-    explicit Diagnostics(std::ostream& output);
+    explicit Diagnostics(std::ostream& output) noexcept;
     ~Diagnostics() = default;
 
     void print(Level level, const Source* source, const SourceLoc& loc, const std::string& message);
@@ -30,7 +30,7 @@ public:
         print(Level::Notice, source, loc, message);
     }
 
-    [[nodiscard]] auto hasErrors() const { return m_errorCount != 0; }
+    [[nodiscard]] inline auto hasErrors() const noexcept { return m_errorCount != 0; }
 
 private:
     std::ostream& m_output; // cppcoreguidelines-avoid-const-or-ref-data-members

@@ -92,8 +92,8 @@ void Printer::visit(std::vector<std::string>& dst, const TableRow* node)
                 [](const PipeLiteral&) {
                     return std::string("|");
                 },
-                [](const Value& value) {
-                    return toString(value);
+                [](const Value& val) {
+                    return toString(val);
                 },
             },
             value);

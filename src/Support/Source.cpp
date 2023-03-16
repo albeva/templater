@@ -21,7 +21,7 @@ Source::Source(const std::filesystem::path& path)
     m_source = std::string { std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
 }
 
-Source::Source(std::string name, std::string source)
+Source::Source(std::string name, std::string source) noexcept
     : m_name { std::move(name) }
     , m_source { std::move(source) }
 {

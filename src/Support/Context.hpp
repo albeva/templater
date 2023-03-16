@@ -8,20 +8,20 @@ namespace templater::support {
 class Context final {
 public:
     template <typename T, typename... Args>
-    [[nodiscard]] auto create(Args&&... args) -> T*
+    [[nodiscard]] inline auto create(Args&&... args) -> T*
     {
         auto* res = m_pa.allocate_object<T>();
         return std::construct_at(res, std::forward<Args>(args)...);
     }
 
-    [[nodiscard]] auto getAllocator() -> auto& { return m_pa; }
+    [[nodiscard]] inline auto getAllocator() const noexcept -> auto& { return m_pa; }
 
-    [[nodiscard]] auto retain(std::string&& str) -> std::string_view
+    [[nodiscard]] inline auto retain(std::string&& str) -> std::string_view
     {
         return *m_uniquedStrings.emplace(std::move(str)).first;
     }
 
-    [[nodiscard]] auto retain(std::string_view str) -> std::string_view
+    [[nodiscard]] inline auto retain(std::string_view str) -> std::string_view
     {
         return *m_uniquedStrings.emplace(str).first;
     }

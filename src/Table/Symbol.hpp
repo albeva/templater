@@ -13,16 +13,16 @@ class Symbol final {
 public:
     using Value = std::variant<Table*, SymbolTable*>;
 
-    constexpr Symbol(std::string_view name, support::SourceLoc loc, Value value)
+    constexpr Symbol(std::string_view name, support::SourceLoc loc, Value value) noexcept
         : m_name(name)
         , m_loc(loc)
         , m_value(value)
     {
     }
 
-    [[nodiscard]] constexpr auto getName() const -> const auto& { return m_name; }
-    [[nodiscard]] constexpr auto getLoc() const -> const auto& { return m_loc; }
-    [[nodiscard]] constexpr auto getValue() const -> const auto& { return m_value; }
+    [[nodiscard]] constexpr auto getName() const noexcept -> const auto& { return m_name; }
+    [[nodiscard]] constexpr auto getLoc() const noexcept -> const auto& { return m_loc; }
+    [[nodiscard]] constexpr auto getValue() const noexcept -> const auto& { return m_value; }
 
 private:
     std::string_view m_name;

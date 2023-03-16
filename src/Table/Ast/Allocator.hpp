@@ -9,7 +9,7 @@ namespace templater::table::ast {
 
 class Allocator final {
 public:
-    explicit Allocator(support::Context* context)
+    explicit Allocator(support::Context* context) noexcept
         : m_context(context)
     {
     }

@@ -71,7 +71,7 @@ private:
     auto accept(TokenKind kind) -> bool;
     void expect(TokenKind kind);
     void next();
-    [[nodiscard]] static auto makeLoc(support::SourceLoc start, support::SourceLoc end) -> support::SourceLoc;
+    [[nodiscard]] static auto makeLoc(support::SourceLoc start, support::SourceLoc end) noexcept -> support::SourceLoc;
 
     [[noreturn]] void expected(std::string_view message);
 

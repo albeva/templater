@@ -10,16 +10,16 @@ using support::SourceLoc;
 
 class Column final {
 public:
-    Column(std::string_view name, SourceLoc loc, std::optional<Value> value)
+    Column(std::string_view name, SourceLoc loc, std::optional<Value> value) noexcept
         : m_name(name)
         , m_loc(loc)
         , m_value(value)
     {
     }
 
-    [[nodiscard]] inline auto getName() const -> const std::string_view& { return m_name; }
-    [[nodiscard]] inline auto getLoc() const -> const SourceLoc& { return m_loc; }
-    [[nodiscard]] inline auto getValue() const -> const std::optional<Value>& { return m_value; }
+    [[nodiscard]] inline auto getName() const noexcept -> const std::string_view& { return m_name; }
+    [[nodiscard]] inline auto getLoc() const noexcept -> const SourceLoc& { return m_loc; }
+    [[nodiscard]] inline auto getValue() const noexcept -> const std::optional<Value>& { return m_value; }
 
 private:
     std::string_view m_name;

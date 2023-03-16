@@ -18,16 +18,16 @@ public:
     explicit Table(support::Context* ctx);
     ~Table() = default;
 
-    [[nodiscard]] inline auto getColumns() const -> const auto& { return m_columns; }
-    [[nodiscard]] auto findColumn(std::string_view name) const -> Column*;
+    [[nodiscard]] inline auto getColumns() const noexcept -> const auto& { return m_columns; }
+    [[nodiscard]] auto findColumn(std::string_view name) const noexcept -> Column*;
     void addColumn(Column* column);
 
     void addRow();
-    [[nodiscard]] inline auto getRowCount() const { return m_data.size(); }
+    [[nodiscard]] inline auto getRowCount() const noexcept { return m_data.size(); }
 
     void addValue(size_t row, const Column* column, Value value);
-    [[nodiscard]] auto getValue(size_t row, const Column* column) -> std::optional<Value>;
-    [[nodiscard]] inline auto getRow(size_t row) const -> const auto& { return m_data[row]; }
+    [[nodiscard]] auto getValue(size_t row, const Column* column) const noexcept -> std::optional<Value>;
+    [[nodiscard]] inline auto getRow(size_t row) const noexcept -> const auto& { return m_data[row]; }
 
 private:
     using Row = std::pmr::unordered_map<const Column*, Value>;
