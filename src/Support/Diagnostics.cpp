@@ -8,7 +8,7 @@ using templater::support::Diagnostics;
 using namespace std::literals;
 
 namespace {
-[[nodiscard]] constexpr auto getString(Diagnostics::Level level) -> std::string_view
+[[nodiscard]] auto getString(Diagnostics::Level level) -> std::string_view
 {
     switch (level) {
     case Diagnostics::Level::Error:

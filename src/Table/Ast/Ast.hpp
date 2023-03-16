@@ -56,7 +56,7 @@ struct Content final : Root {
     {
     }
 
-    [[nodiscard]] inline auto getStatements() const noexcept -> auto& { return m_statements; }
+    [[nodiscard]] inline auto getStatements() const noexcept -> const auto& { return m_statements; }
 
 private:
     List<Statement> m_statements;
@@ -70,8 +70,8 @@ struct Import final : Root {
     {
     }
 
-    [[nodiscard]] inline auto getFile() const noexcept -> auto& { return m_file; }
-    [[nodiscard]] inline auto getIdentifier() const noexcept -> auto& { return m_identifier; }
+    [[nodiscard]] inline auto getFile() const noexcept -> const auto& { return m_file; }
+    [[nodiscard]] inline auto getIdentifier() const noexcept -> const auto& { return m_identifier; }
 
 private:
     Identifier m_identifier;

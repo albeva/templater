@@ -43,7 +43,7 @@ void Printer::visit(const Table* table)
     fmt::print(m_output, "(");
     Separator sep { " " };
     for (const auto* col : columns) {
-        fmt::print(m_output, "{}", sep());
+        m_output << sep();
         visit(col);
     }
     fmt::print(m_output, ") = [");

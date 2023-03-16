@@ -30,17 +30,17 @@ private:
 
 // defines source position in terms of human friendly line, col and length
 struct SourcePos final {
-    constexpr SourcePos() noexcept = default;
-    constexpr SourcePos(unsigned line, unsigned col, unsigned len) noexcept
+    SourcePos() noexcept = default;
+    SourcePos(unsigned line, unsigned col, unsigned len) noexcept
         : m_line(line)
         , m_col(col)
         , m_len(len)
     {
     }
 
-    [[nodiscard]] constexpr auto getLine() const noexcept { return m_line; }
-    [[nodiscard]] constexpr auto getCol() const noexcept { return m_col; }
-    [[nodiscard]] constexpr auto getLength() const noexcept { return m_len; }
+    [[nodiscard]] inline auto getLine() const noexcept { return m_line; }
+    [[nodiscard]] inline auto getCol() const noexcept { return m_col; }
+    [[nodiscard]] inline auto getLength() const noexcept { return m_len; }
 
 private:
     unsigned m_line = 0, m_col = 0, m_len = 0;

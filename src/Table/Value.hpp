@@ -10,14 +10,14 @@ namespace details {
     struct StringTag { };
     template <typename T, typename X = Tag>
     struct Literal {
-        constexpr Literal(support::SourceLoc loc, const T& value)
+        Literal(support::SourceLoc loc, const T& value)
             : m_value(value)
             , m_loc(loc)
         {
         }
 
-        [[nodiscard]] constexpr auto getLoc() const -> const support::SourceLoc& { return m_loc; }
-        [[nodiscard]] constexpr auto getValue() const -> const T& { return m_value; }
+        [[nodiscard]] inline auto getLoc() const -> const auto& { return m_loc; }
+        [[nodiscard]] inline auto getValue() const -> const T& { return m_value; }
 
     private:
         T m_value;
