@@ -3,11 +3,13 @@
 //
 #include "Printer.hpp"
 #include "Column.hpp"
+#include "Support/GridLayout.hpp"
 #include "Support/Separator.hpp"
 #include "Support/Source.hpp"
 #include "Symbol.hpp"
 #include "SymbolTable.hpp"
 #include "Table.hpp"
+using templater::support::printGrid;
 using templater::support::Separator;
 using templater::table::Printer;
 using namespace std::literals;
@@ -45,11 +47,9 @@ void Printer::visit(const Table* table)
         visit(col);
     }
     fmt::print(m_output, ") = [");
-    auto holder = std::move(m_output);
 
     // store all content in a table
-    using StringTable = std::vector<std::string>;
-    StringTable content {};
+    std::vector<std::string> content {};
     content.reserve(table->getRowCount() * columns.size());
 
     // iterate over rows and columns and collect the data
@@ -57,33 +57,15 @@ void Printer::visit(const Table* table)
         const auto& row = table->getRow(index);
         for (const auto* col : columns) {
             if (auto iter = row.find(col); iter != row.end()) {
-                m_output = std::stringstream {};
-                visit(iter->second);
-                content.emplace_back(m_output.str());
+                content.emplace_back(toString(iter->second));
             } else {
                 content.emplace_back("-");
             }
         }
     }
 
-    // measure each column
-    std::vector<size_t> widths(columns.size());
-    for (size_t idx = 0; idx < content.size(); idx++) {
-        const size_t col = idx % columns.size();
-        widths[col] = std::max(widths[col], content[idx].length());
-    }
-
     // print out
-    m_output = std::move(holder);
-    for (size_t idx = 0; idx < content.size(); idx++) {
-        const size_t col = idx % columns.size();
-        if (col == 0) {
-            fmt::print(m_output, "\n   ");
-        }
-        fmt::print(m_output,
-            " {0}{1:<{2}}", content[idx],
-            "", (widths[col] - content[idx].length()));
-    }
+    printGrid(m_output, content, columns.size(), " ");
     fmt::print(m_output, "\n]\n");
 }
 
@@ -91,27 +73,6 @@ void Printer::visit(const Column* column)
 {
     fmt::print(m_output, "{}", column->getName());
     if (auto value = column->getValue()) {
-        fmt::print(m_output, " = ");
-        visit(value.value());
+        fmt::print(m_output, " = {}", toString(value.value()));
     }
-}
-
-void Printer::visit(const PipeLiteral& /*pipe*/)
-{
-    fmt::print(m_output, "|");
-}
-
-void Printer::visit(const Identifier& token)
-{
-    fmt::print(m_output, "{}", token.getValue());
-}
-
-void Printer::visit(const NumberLiteral& token)
-{
-    fmt::print(m_output, "{}", token.getValue());
-}
-
-void Printer::visit(const StringLiteral& token)
-{
-    m_output << std::quoted(token.getValue());
 }

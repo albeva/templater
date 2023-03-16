@@ -26,11 +26,6 @@ private:
     void visit(const Table* table);
     void visit(const Column* column);
 
-    void visit(const PipeLiteral& token);
-    void visit(const Identifier& token);
-    void visit(const NumberLiteral& token);
-    void visit(const StringLiteral& token);
-
     std::stringstream m_output {};
     Symbol* m_symbol = nullptr;
 };

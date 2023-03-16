@@ -30,4 +30,25 @@ using NumberLiteral = details::Literal<unsigned>;
 using StringLiteral = details::Literal<std::string_view, details::StringTag>;
 struct PipeLiteral { };
 using Value = std::variant<Identifier, NumberLiteral, StringLiteral, PipeLiteral>;
+
+[[nodiscard]] constexpr auto toString(const Value& value) -> std::string
+{
+    return std::visit(
+        support::Visitor {
+            [](const Identifier& id) {
+                return std::string(id.getValue());
+            },
+            [](const NumberLiteral& num) {
+                return std::to_string(num.getValue());
+            },
+            [](const StringLiteral& str) {
+                std::stringstream ss {};
+                ss << std::quoted(str.getValue());
+                return ss.str();
+            },
+            [](const PipeLiteral&) {
+                return std::string("|");
+            } },
+        value);
+}
 } // namespace templater::table
