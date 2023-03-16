@@ -79,19 +79,27 @@ void Generator::visit(const ast::TableRow* node)
 {
     m_table->addRow();
     const auto& values = node->getValues();
+
+    if (values.size() != m_table->getColumns().size()) {
+        throw GeneratorException("Row value count mismatches declared column count.");
+    }
+
     for (size_t col = 0; col < values.size(); col++) {
         const Column* column = m_table->getColumns().at(col);
-        // FIXME: Add default data
-        // FIXME: Report missing column value
-        // FIXME: show error if piping non existing value
         std::visit(
             support::Visitor {
                 [](const std::monostate&) {
-                    // FIXME: throw error if this column is declared
+                    // No op?
                 },
                 [&](const ast::PipeLiteral&) {
-                    // FIXME: populate with value from 1 row up, throw error if 1st row
-                    m_table->addValue(m_rowIndex, column, StringLiteral { {}, "FIXME"sv });
+                    if (m_table->getRowCount() < 2) {
+                        throw GeneratorException("'|' can only be used under another value.");
+                    }
+                    if (auto previous = m_table->getValue(m_table->getRowCount() - 2, column)) {
+                        m_table->addValue(m_rowIndex, column, previous.value());
+                    } else {
+                        throw GeneratorException("'|' No previous value");
+                    }
                 },
                 [&](const Value& value) {
                     m_table->addValue(m_rowIndex, column, value);

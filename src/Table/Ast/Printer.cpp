@@ -84,17 +84,18 @@ void Printer::visit(std::vector<std::string>& dst, const TableRow* node)
 {
     dst.reserve(node->getValues().size());
     std::ranges::transform(node->getValues(), std::back_inserter(dst), [](const TableValue& value) {
-        return std::visit(support::Visitor {
-                              [](const std::monostate&) {
-                                  return std::string("-");
-                              },
-                              [](const PipeLiteral&) {
-                                  return std::string("|");
-                              },
-                              [](const Value& value) {
-                                  return toString(value);
-                              },
-                          },
+        return std::visit(
+            support::Visitor {
+                [](const std::monostate&) {
+                    return std::string("-");
+                },
+                [](const PipeLiteral&) {
+                    return std::string("|");
+                },
+                [](const Value& value) {
+                    return toString(value);
+                },
+            },
             value);
     });
 }

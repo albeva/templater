@@ -44,9 +44,6 @@ using Value = std::variant<Identifier, NumberLiteral, StringLiteral>;
                 std::stringstream ss {};
                 ss << std::quoted(str.getValue());
                 return ss.str();
-            },
-            [](const PipeLiteral&) {
-                return std::string("|");
             } },
         value);
 }
