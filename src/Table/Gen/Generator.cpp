@@ -9,6 +9,7 @@
 #include "Table/SymbolTable.hpp"
 #include "Table/Table.hpp"
 #include "Table/Value.hpp"
+using namespace std::literals;
 using templater::support::Context;
 using templater::support::Diagnostics;
 using templater::support::Source;
@@ -80,14 +81,23 @@ void Generator::visit(const ast::TableRow* node)
     const auto& values = node->getValues();
     for (size_t col = 0; col < values.size(); col++) {
         const Column* column = m_table->getColumns().at(col);
-        const auto& val = values[col];
-        if (val.has_value()) {
-            m_table->addValue(m_rowIndex, column, val.value());
-        }
+        // FIXME: Add default data
+        // FIXME: Report missing column value
+        // FIXME: show error if piping non existing value
+        std::visit(
+            support::Visitor {
+                [](const std::monostate&) {
+                    // FIXME: throw error if this column is declared
+                },
+                [&](const ast::PipeLiteral&) {
+                    // FIXME: populate with value from 1 row up, throw error if 1st row
+                    m_table->addValue(m_rowIndex, column, StringLiteral { {}, "FIXME"sv });
+                },
+                [&](const Value& value) {
+                    m_table->addValue(m_rowIndex, column, value);
+                } },
+            values[col]);
     }
-    // FIXME: Add default data
-    // FIXME: Report missing column value
-    // FIXME: show error if piping non existing value
     m_rowIndex++;
 }
 

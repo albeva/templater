@@ -53,8 +53,8 @@ void Printer::visit(const Table* table)
     content.reserve(table->getRowCount() * columns.size());
 
     // iterate over rows and columns and collect the data
-    for (size_t index = 0; index < table->getRowCount(); index++) {
-        const auto& row = table->getRow(index);
+    for (size_t rowIdx = 0; rowIdx < table->getRowCount(); rowIdx++) {
+        const auto& row = table->getRow(rowIdx);
         for (const auto* col : columns) {
             if (auto iter = row.find(col); iter != row.end()) {
                 content.emplace_back(toString(iter->second));

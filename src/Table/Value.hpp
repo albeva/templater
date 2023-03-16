@@ -28,8 +28,7 @@ namespace details {
 using Identifier = details::Literal<std::string_view>;
 using NumberLiteral = details::Literal<unsigned>;
 using StringLiteral = details::Literal<std::string_view, details::StringTag>;
-struct PipeLiteral { };
-using Value = std::variant<Identifier, NumberLiteral, StringLiteral, PipeLiteral>;
+using Value = std::variant<Identifier, NumberLiteral, StringLiteral>;
 
 [[nodiscard]] constexpr auto toString(const Value& value) -> std::string
 {

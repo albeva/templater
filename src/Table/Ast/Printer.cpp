@@ -83,13 +83,20 @@ void Printer::visit(const TableBody* node)
 void Printer::visit(std::vector<std::string>& dst, const TableRow* node)
 {
     dst.reserve(node->getValues().size());
-    for (const auto value : node->getValues()) {
-        if (value.has_value()) {
-            dst.emplace_back(toString(value.value()));
-        } else {
-            dst.emplace_back("-");
-        }
-    }
+    std::ranges::transform(node->getValues(), std::back_inserter(dst), [](const TableValue& value) {
+        return std::visit(support::Visitor {
+                              [](const std::monostate&) {
+                                  return std::string("-");
+                              },
+                              [](const PipeLiteral&) {
+                                  return std::string("|");
+                              },
+                              [](const Value& value) {
+                                  return toString(value);
+                              },
+                          },
+            value);
+    });
 }
 
 auto Printer::visit(const Value& value) -> std::string

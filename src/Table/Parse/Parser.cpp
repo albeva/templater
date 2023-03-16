@@ -194,13 +194,13 @@ auto Parser::tableRowList() -> ast::List<ast::TableRow*>
 auto Parser::tableRow() -> ast::TableRow*
 {
     auto start = m_token.getLoc();
-    auto values = m_ast.list<std::optional<Value>>();
+    auto values = m_ast.list<ast::TableValue>();
 
     do {
         if (accept(TokenKind::Minus)) {
             values.emplace_back();
         } else if (accept(TokenKind::Pipe)) {
-            values.emplace_back(PipeLiteral {});
+            values.emplace_back(ast::PipeLiteral {});
         } else {
             values.emplace_back(value());
         }

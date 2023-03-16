@@ -23,6 +23,8 @@ struct Member;
 using Statement = std::variant<Import*, Table*>;
 using Expression = std::variant<Identifier, NumberLiteral, StringLiteral, UnaryExpression*, BinaryExpression*>;
 using TableContent = std::variant<TableInherit*, TableBody*>;
+struct PipeLiteral { };
+using TableValue = std::variant<std::monostate, PipeLiteral, Value>;
 
 template <typename T>
 using List = std::pmr::vector<T>;
@@ -145,7 +147,7 @@ private:
 };
 
 struct TableRow final : Root {
-    constexpr TableRow(support::SourceLoc loc, List<std::optional<Value>> values)
+    constexpr TableRow(support::SourceLoc loc, List<TableValue> values)
         : Root(loc)
         , m_values(std::move(values))
     {
@@ -154,7 +156,7 @@ struct TableRow final : Root {
     [[nodiscard]] constexpr auto getValues() const -> const auto& { return m_values; }
 
 private:
-    List<std::optional<Value>> m_values;
+    List<TableValue> m_values;
 };
 
 //--------------------------------------
