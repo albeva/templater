@@ -3,11 +3,31 @@ name: Tests
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - 'docs/**'
+      - 'samples/**'
+      - '.gitattributes'
+      - '.gitignore'
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.cmake-format.yaml'
+      - 'LICENCE'
+      - 'README.md'
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - 'docs/**'
+      - 'samples/**'
+      - '.gitattributes'
+      - '.gitignore'
+      - '.clang-format'
+      - '.clang-tidy'
+      - '.cmake-format.yaml'
+      - 'LICENCE'
+      - 'README.md'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
