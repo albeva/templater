@@ -16,13 +16,20 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Install Ninja
+      id: ninja
+      uses: turtlesec-no/get-ninja@main
+
+    - name: Ninja version
+      run: echo "${{ steps.ninja.outputs.version }}"
+    
     - name: Install latest GCC
       uses: egor-tensin/setup-gcc@v1
       with:
         version: 12
 
     - name: Configure CMake
-      run: cmake -S . -G "Unix Makefiles" --preset="unixlike-gcc-debug" -D ENABLE_CPPCHECK=OFF
+      run: cmake -S . -G "Ninja" --preset="unixlike-gcc-debug" -D ENABLE_CPPCHECK=OFF
       env:
         CC:   gcc-12
         CXX:  g++-12
