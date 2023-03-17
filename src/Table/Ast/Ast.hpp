@@ -7,7 +7,7 @@
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Token.hpp"
 #include "Table/Value.hpp"
-namespace templater::table::ast {
+namespace table::ast {
 struct Content;
 struct Import;
 struct Table;
@@ -227,4 +227,4 @@ private:
     List<Identifier> m_identifiers;
 };
 
-} // namespace templater::table::ast
+} // namespace table::ast

@@ -4,13 +4,13 @@
 #pragma once
 #include "pch.hpp"
 
-namespace templater::support {
+namespace support {
 class Source;
 struct SourceLoc;
 class Context;
 }
 
-namespace templater::table::parser {
+namespace table::parser {
 struct Token;
 enum class TokenKind;
 
@@ -43,4 +43,4 @@ private:
     bool m_hasStmt = false;
 };
 
-} // namespace templater::table::parser
+} // namespace table::parser

@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-namespace templater::support {
+namespace support {
 void printGrid(
     std::ostream& stream,
     const std::vector<std::string>& table,
@@ -12,4 +12,4 @@ void printGrid(
 void printGrid(
     std::ostream& stream,
     const std::vector<std::vector<std::string>>& table);
-} // namespace templater::support
+} // namespace support

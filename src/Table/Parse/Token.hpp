@@ -4,7 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "Support/SourceLoc.hpp"
-namespace templater::table::parser {
+namespace table::parser {
 
 enum class TokenKind {
     Invalid,
@@ -97,4 +97,4 @@ private:
     std::string_view m_value {};
 };
 
-} // namespace templater::table::parser
+} // namespace table::parser

@@ -6,12 +6,12 @@
 #include "Support/GridLayout.hpp"
 #include "Support/Separator.hpp"
 #include "Table/Parse/Token.hpp"
-using templater::support::printGrid;
-using templater::support::Separator;
-using templater::table::toString;
-using templater::table::ast::Printer;
-using templater::table::parser::Token;
-using templater::table::parser::TokenKind;
+using support::printGrid;
+using support::Separator;
+using table::toString;
+using table::ast::Printer;
+using table::parser::Token;
+using table::parser::TokenKind;
 
 void Printer::visit(const Content* node)
 {

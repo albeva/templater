@@ -6,13 +6,13 @@
 #include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
 #include "Table/Ast/Ast.hpp"
-using templater::support::Context;
-using templater::support::Diagnostics;
-using templater::support::SourceLoc;
-using templater::support::Visitor;
-using templater::table::Identifier;
-using templater::table::StringLiteral;
-using templater::table::parser::Parser;
+using support::Context;
+using support::Diagnostics;
+using support::SourceLoc;
+using support::Visitor;
+using table::Identifier;
+using table::StringLiteral;
+using table::parser::Parser;
 using namespace std::literals;
 
 Parser::Parser(Context* ctx, Diagnostics* diag, Lexer* lexer)

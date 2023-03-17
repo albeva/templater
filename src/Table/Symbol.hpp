@@ -5,7 +5,7 @@
 #include "pch.hpp"
 #include "Support/SourceLoc.hpp"
 
-namespace templater::table {
+namespace table {
 class Table;
 class SymbolTable;
 
@@ -30,4 +30,4 @@ private:
     Value m_value;
 };
 
-} // namespace templater::table
+} // namespace table

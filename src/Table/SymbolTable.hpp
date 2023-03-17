@@ -5,12 +5,12 @@
 #include "pch.hpp"
 #include "Symbol.hpp"
 
-namespace templater::support {
+namespace support {
 class Context;
 class Source;
 }
 
-namespace templater::table {
+namespace table {
 class Symbol;
 
 class SymbolTable final {
@@ -65,4 +65,4 @@ private:
     support::Source* m_source;
 };
 
-} // namespace templater::table
+} // namespace table

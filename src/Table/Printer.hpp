@@ -5,7 +5,7 @@
 #include "pch.hpp"
 #include "Support/VisitorMixin.hpp"
 #include "Value.hpp"
-namespace templater::table {
+namespace table {
 class SymbolTable;
 class Symbol;
 class Table;
@@ -36,4 +36,4 @@ auto inline operator<<(std::ostream& os, const Printer& printer) -> std::ostream
     return os;
 }
 
-} // namespace templater::table
+} // namespace table

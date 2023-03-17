@@ -10,10 +10,10 @@
 #include "Table/Table.hpp"
 #include "Table/Value.hpp"
 using namespace std::literals;
-using templater::support::Context;
-using templater::support::Diagnostics;
-using templater::support::Source;
-using templater::table::gen::Generator;
+using support::Context;
+using support::Diagnostics;
+using support::Source;
+using table::gen::Generator;
 
 Generator::Generator(Context* ctx, Diagnostics* diag, Source* source, const ast::Content* node)
     : m_ctx(ctx)

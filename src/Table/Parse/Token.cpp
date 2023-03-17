@@ -2,7 +2,7 @@
 // Created by Albert on 05/03/2023.
 //
 #include "Token.hpp"
-using templater::table::parser::Token;
+using table::parser::Token;
 using namespace std::literals;
 
 auto Token::describe(TokenKind kind) noexcept -> std::string_view

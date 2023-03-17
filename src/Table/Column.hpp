@@ -5,7 +5,7 @@
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Token.hpp"
 #include "Value.hpp"
-namespace templater::table {
+namespace table {
 using support::SourceLoc;
 
 class Column final {
@@ -27,4 +27,4 @@ private:
     std::optional<Value> m_value;
 };
 
-} // namespace templater::table
+} // namespace table

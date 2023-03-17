@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-namespace templater::support {
+namespace support {
 
 namespace containers {
     struct HeterogeneousHash {
@@ -35,4 +35,4 @@ namespace pmr {
     using StringMap = std::pmr::unordered_map<std::pmr::string, T, StringSet, std::equal_to<>>;
 }
 
-} // namespace templater::support
+} // namespace support

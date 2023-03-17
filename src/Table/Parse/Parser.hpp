@@ -9,11 +9,11 @@
 #include "Table/Value.hpp"
 #include "Token.hpp"
 
-namespace templater::support {
+namespace support {
 class Diagnostics;
 }
 
-namespace templater::table::parser {
+namespace table::parser {
 class Lexer;
 
 class ParserException final : public std::runtime_error {
@@ -70,4 +70,4 @@ private:
     support::SourceLoc m_lastLoc {};
 };
 
-} // namespace templater::table::parser
+} // namespace table::parser

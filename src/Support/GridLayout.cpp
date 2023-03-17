@@ -3,7 +3,7 @@
 //
 #include "GridLayout.hpp"
 
-void templater::support::printGrid(
+void support::printGrid(
     std::ostream& stream,
     const std::vector<std::string>& table,
     size_t cols)
@@ -25,7 +25,7 @@ void templater::support::printGrid(
     }
 }
 
-void templater::support::printGrid(
+void support::printGrid(
     std::ostream& stream,
     const std::vector<std::vector<std::string>>& table)
 {

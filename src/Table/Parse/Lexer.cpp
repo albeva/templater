@@ -5,11 +5,11 @@
 #include "Support/Context.hpp"
 #include "Support/Source.hpp"
 #include "Token.hpp"
-using templater::support::Context;
-using templater::support::Source;
-using templater::support::SourceLoc;
-using templater::table::parser::Lexer;
-using templater::table::parser::TokenKind;
+using support::Context;
+using support::Source;
+using support::SourceLoc;
+using table::parser::Lexer;
+using table::parser::TokenKind;
 using namespace std::literals;
 
 // Lexer iterates over null terminated const char* using pointer

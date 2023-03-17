@@ -11,8 +11,8 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using templater::support::Source;
-using templater::support::SourceLoc;
+using support::Source;
+using support::SourceLoc;
 
 class SourceTests : public testing::Test {
 protected:

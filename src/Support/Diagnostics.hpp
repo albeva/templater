@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-namespace templater::support {
+namespace support {
 class Source;
 struct SourceLoc;
 
@@ -37,4 +37,4 @@ private:
     int m_errorCount;
 };
 
-} // namespace templater::support
+} // namespace support

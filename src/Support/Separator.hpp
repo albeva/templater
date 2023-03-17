@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-namespace templater::support {
+namespace support {
 
 struct Separator final {
     constexpr explicit Separator(std::string_view separator) noexcept
@@ -25,4 +25,4 @@ private:
     std::string_view m_separator;
 };
 
-} // namespace templater::support
+} // namespace support

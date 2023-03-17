@@ -6,7 +6,7 @@
 #include "Ast.hpp"
 #include "Support/VisitorMixin.hpp"
 #include "Table/Value.hpp"
-namespace templater::table::ast {
+namespace table::ast {
 
 class Printer final {
 public:
@@ -42,4 +42,4 @@ auto inline operator<<(std::ostream& os, const Printer& printer) -> std::ostream
     return os;
 }
 
-} // namespace templater::table::ast
+} // namespace table::ast

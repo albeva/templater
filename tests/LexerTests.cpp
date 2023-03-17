@@ -14,11 +14,11 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using templater::support::Context;
-using templater::support::Source;
-using templater::table::parser::Lexer;
-using templater::table::parser::Token;
-using templater::table::parser::TokenKind;
+using support::Context;
+using support::Source;
+using table::parser::Lexer;
+using table::parser::Token;
+using table::parser::TokenKind;
 
 class LexerTests : public testing::Test {
 protected:

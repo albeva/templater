@@ -5,11 +5,11 @@
 #include "pch.hpp"
 #include "Value.hpp"
 
-namespace templater::support {
+namespace support {
 class Context;
 }
 
-namespace templater::table {
+namespace table {
 class Column;
 
 class Table final {
@@ -38,4 +38,4 @@ private:
     Data m_data;
 };
 
-} // namespace templater::table
+} // namespace table

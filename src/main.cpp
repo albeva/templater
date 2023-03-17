@@ -9,13 +9,13 @@
 #include "Table/Parse/Lexer.hpp"
 #include "Table/Parse/Parser.hpp"
 #include "Table/Printer.hpp"
-using templater::support::Context;
-using templater::support::Diagnostics;
-using templater::support::Source;
-using templater::table::Printer;
-using templater::table::gen::Generator;
-using templater::table::parser::Lexer;
-using templater::table::parser::Parser;
+using support::Context;
+using support::Diagnostics;
+using support::Source;
+using table::Printer;
+using table::gen::Generator;
+using table::parser::Lexer;
+using table::parser::Parser;
 
 auto main() -> int
 {
@@ -28,7 +28,7 @@ auto main() -> int
         auto* ast = parser.parse();
         Generator const gen { &ctx, &diag, &src, ast };
         std::cout << Printer(gen.getSymbolTable());
-        // std::cout << templater::table::ast::Printer(ast) << '\n';
+        // std::cout << table::ast::Printer(ast) << '\n';
         return diag.hasErrors() ? EXIT_FAILURE : EXIT_SUCCESS;
     } catch (std::exception& exc) {
         std::cerr << exc.what();

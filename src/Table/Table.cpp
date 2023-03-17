@@ -4,8 +4,8 @@
 #include "Table.hpp"
 #include "Column.hpp"
 #include "Support/Context.hpp"
-using templater::support::Context;
-using templater::table::Table;
+using support::Context;
+using table::Table;
 
 Table::Table(Context* ctx)
     : m_ctx(ctx)

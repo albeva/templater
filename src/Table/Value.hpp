@@ -4,7 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "Table/Parse/Token.hpp"
-namespace templater::table {
+namespace table {
 namespace details {
     struct Tag { };
     struct StringTag { };
@@ -47,4 +47,4 @@ using Value = std::variant<Identifier, NumberLiteral, StringLiteral>;
             } },
         value);
 }
-} // namespace templater::table
+} // namespace table

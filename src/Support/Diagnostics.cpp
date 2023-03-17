@@ -4,7 +4,7 @@
 #include "Diagnostics.hpp"
 #include "Source.hpp"
 #include "SourceLoc.hpp"
-using templater::support::Diagnostics;
+using support::Diagnostics;
 using namespace std::literals;
 
 namespace {

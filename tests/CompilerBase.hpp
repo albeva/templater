@@ -10,16 +10,16 @@
 #include "Table/Parse/Parser.hpp"
 #include "gtest/gtest.h"
 
-namespace templater::tests {
+namespace tests {
 using namespace std::literals;
-using templater::support::Context;
-using templater::support::Source;
-using templater::support::SourceException;
-using templater::support::Diagnostics;
-using templater::table::gen::Generator;
-using templater::table::parser::Lexer;
-using templater::table::parser::Parser;
-using templater::table::parser::TokenKind;
+using support::Context;
+using support::Source;
+using support::SourceException;
+using support::Diagnostics;
+using table::gen::Generator;
+using table::parser::Lexer;
+using table::parser::Parser;
+using table::parser::TokenKind;
 
 struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
     void SetUp() override
@@ -76,4 +76,4 @@ private:
     std::unique_ptr<Source> m_source;
 };
 
-} // namespace templater::tests
+} // namespace tests

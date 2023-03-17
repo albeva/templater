@@ -10,8 +10,8 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using templater::table::parser::ParserException;
-using templater::tests::CompilerBase;
+using table::parser::ParserException;
+using tests::CompilerBase;
 
 struct ParserTests : CompilerBase { };
 

@@ -11,7 +11,7 @@
     auto operator=(const Class&)->Class& = delete;
 // NOLINTEND
 
-namespace templater::support {
+namespace support {
 
 template <typename... Base>
 struct Visitor : Base... {
@@ -20,4 +20,4 @@ struct Visitor : Base... {
 template <typename... Base>
 Visitor(Base...) -> Visitor<Base...>;
 
-} // namespace templater::support
+} // namespace support
