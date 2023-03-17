@@ -19,6 +19,11 @@ set(ENABLE_DEVELOPER_MODE
     TRUE
     CACHE BOOL "Enable 'developer mode'")
 
+set(ENABLE_CPPCHECK ${ENABLE_DEVELOPER_MODE} CACHE BOOL "Enable cppcheck")
+if(ENABLE_CPPCHECK)
+    set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+endif()
+
 # Fail on warnings
 set(WARNINGS_AS_ERRORS ON)
 
@@ -41,7 +46,7 @@ project(
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
-    ENABLE_CPPCHECK
+    ${ENABLE_CPPCHECK}
     CPPCHECK_OPTIONS
     --enable=style,performance,warning,portability
     --inline-suppr
