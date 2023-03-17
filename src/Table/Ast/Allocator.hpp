@@ -15,9 +15,9 @@ public:
     }
 
     template <class T, class... Args>
-    [[nodiscard]] inline auto node(Args&&... args) -> T*
+    [[nodiscard]] inline auto node(Args&&... args) -> Node<T>
     {
-        return m_context->create<T>(std::forward<Args>(args)...);
+        return Node<T> { m_context->create<T>(std::forward<Args>(args)...) };
     }
 
     template <class T>

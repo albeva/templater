@@ -3,6 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
+#include "Support/Context.hpp"
 #include "Value.hpp"
 
 namespace support {
@@ -16,11 +17,11 @@ class Table final {
 public:
     NO_COPY_AND_MOVE(Table)
     explicit Table(support::Context* ctx);
-    ~Table() = default;
+    ~Table();
 
     [[nodiscard]] inline auto getColumns() const noexcept -> const auto& { return m_columns; }
     [[nodiscard]] auto findColumn(std::string_view name) const noexcept -> Column*;
-    void addColumn(Column* column);
+    void addColumn(support::Context::UniquePtr<Column> column);
 
     void addRow();
     [[nodiscard]] inline auto getRowCount() const noexcept { return m_data.size(); }
@@ -34,7 +35,7 @@ private:
     using Data = std::pmr::vector<Row>;
 
     support::Context* m_ctx;
-    std::pmr::vector<Column*> m_columns;
+    std::pmr::vector<support::Context::UniquePtr<Column>> m_columns;
     Data m_data;
 };
 

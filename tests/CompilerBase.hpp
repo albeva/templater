@@ -9,6 +9,8 @@
 #include "Table/Parse/Lexer.hpp"
 #include "Table/Parse/Parser.hpp"
 #include "gtest/gtest.h"
+#include "Table/Ast/Ast.hpp"
+#include "Table/SymbolTable.hpp"
 
 namespace tests {
 using namespace std::literals;
@@ -27,18 +29,18 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
         m_source = std::make_unique<Source>(GetParam());
     }
 
-    auto parse() -> const auto*
+    auto parse() -> table::ast::Node<table::ast::Content>
     {
         Lexer lexer { &m_ctx, m_source.get() };
         Parser parser { &m_ctx, &m_diag, &lexer };
         return parser.parse();
     }
 
-    auto gen() -> const auto*
+    auto gen() -> Context::UniquePtr<table::SymbolTable>
     {
-        const auto* ast = parse();
-        Generator const gen { &m_ctx, &m_diag, m_source.get(), ast };
-        return gen.getSymbolTable();
+        auto ast = parse();
+        Generator gen { &m_ctx, &m_diag };
+        return gen.visit(ast);
     }
 
     [[nodiscard]] auto expected() const -> std::string

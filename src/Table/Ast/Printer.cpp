@@ -13,7 +13,7 @@ using table::ast::Printer;
 using table::parser::Token;
 using table::parser::TokenKind;
 
-void Printer::visit(const Content* node)
+void Printer::visit(const Node<Content>& node)
 {
     for (const auto& stmt : node->getStatements()) {
         visit(stmt);
@@ -21,7 +21,7 @@ void Printer::visit(const Content* node)
     }
 }
 
-void Printer::visit(const Import* node)
+void Printer::visit(const Node<Import>& node)
 {
     fmt::print(m_output,
         "import \"{}\" as {}",
@@ -29,13 +29,13 @@ void Printer::visit(const Import* node)
         node->getIdentifier().getValue());
 }
 
-void Printer::visit(const Table* node)
+void Printer::visit(const Node<Table>& node)
 {
     fmt::print(m_output, "table {}", node->getIdentifier().getValue());
     if (!node->getColumns().empty()) {
         fmt::print(m_output, "(");
         Separator sep { " " };
-        for (const auto* col : node->getColumns()) {
+        for (const auto& col : node->getColumns()) {
             fmt::print(m_output, "{}", sep());
             visit(col);
         }
@@ -52,7 +52,7 @@ void Printer::visit(const Table* node)
     }
 }
 
-void Printer::visit(const TableColumn* node)
+void Printer::visit(const Node<TableColumn>& node)
 {
     m_output << node->getIdentifier().getValue();
     if (auto value = node->getValue()) {
@@ -60,27 +60,27 @@ void Printer::visit(const TableColumn* node)
     }
 }
 
-void Printer::visit(const TableInherit* node)
+void Printer::visit(const Node<TableInherit>& node)
 {
     visit(node->getMember());
-    if (auto expr = node->getExpression()) {
+    if (const auto& expr = node->getExpression()) {
         visit(expr.value());
     }
 }
 
-void Printer::visit(const TableBody* node)
+void Printer::visit(const Node<TableBody>& node)
 {
     fmt::print(m_output, "[");
     std::vector<std::vector<std::string>> content {};
     content.reserve(node->getRows().size());
-    for (const auto* row : node->getRows()) {
+    for (const auto& row : node->getRows()) {
         visit(content.emplace_back(), row);
     }
     printGrid(m_output, content);
     fmt::print(m_output, "\n]");
 }
 
-void Printer::visit(std::vector<std::string>& dst, const TableRow* node)
+void Printer::visit(std::vector<std::string>& dst, const Node<TableRow>& node)
 {
     dst.reserve(node->getValues().size());
     std::ranges::transform(node->getValues(), std::back_inserter(dst), [](const TableValue& value) {
@@ -106,7 +106,7 @@ auto Printer::visit(const Value& value) -> std::string
 }
 
 // NOLINTNEXTLINE misc-no-recursion
-auto Printer::visit(const UnaryExpression* node) -> std::string
+auto Printer::visit(const Node<UnaryExpression>& node) -> std::string
 {
     return fmt::format("{} {}",
         Token::describe(node->getOp().getKind()),
@@ -114,7 +114,7 @@ auto Printer::visit(const UnaryExpression* node) -> std::string
 }
 
 // NOLINTNEXTLINE misc-no-recursion
-auto Printer::visit(const BinaryExpression* node) -> std::string
+auto Printer::visit(const Node<BinaryExpression>& node) -> std::string
 {
     return fmt::format("{} {} {}",
         visit(node->getLhs()),
@@ -122,7 +122,7 @@ auto Printer::visit(const BinaryExpression* node) -> std::string
         visit(node->getRhs()));
 }
 
-auto Printer::visit(const Member* node) -> std::string
+auto Printer::visit(const Node<Member>& node) -> std::string
 {
     std::stringstream ss;
     Separator sep { "." };

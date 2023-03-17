@@ -7,6 +7,9 @@
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Token.hpp"
 #include "Table/Value.hpp"
+namespace support {
+class Source;
+}
 namespace table::ast {
 struct Content;
 struct Import;
@@ -20,14 +23,17 @@ struct UnaryExpression;
 struct BinaryExpression;
 struct Member;
 
-using Statement = std::variant<Import*, Table*>;
-using Expression = std::variant<Member*, StringLiteral, NumberLiteral, UnaryExpression*, BinaryExpression*>;
-using TableContent = std::variant<TableInherit*, TableBody*>;
-struct PipeLiteral { };
-using TableValue = std::variant<std::monostate, PipeLiteral, Value>;
+template <typename T>
+using Node = support::Context::UniquePtr<T>;
 
 template <typename T>
 using List = std::pmr::vector<T>;
+
+using Statement = std::variant<Node<Import>, Node<Table>>;
+using Expression = std::variant<Node<Member>, StringLiteral, NumberLiteral, Node<UnaryExpression>, Node<BinaryExpression>>;
+using TableContent = std::variant<Node<TableInherit>, Node<TableBody>>;
+struct PipeLiteral { };
+using TableValue = std::variant<std::monostate, PipeLiteral, Value>;
 
 //--------------------------------------
 // Root
@@ -50,15 +56,18 @@ private:
 //--------------------------------------
 
 struct Content final : Root {
-    Content(support::SourceLoc loc, List<Statement> statements) noexcept
+    Content(support::SourceLoc loc, support::Source* source, List<Statement> statements) noexcept
         : Root(loc)
+        , m_source(source)
         , m_statements(std::move(statements))
     {
     }
 
+    [[nodiscard]] inline auto getSource() const noexcept -> const auto& { return m_source; }
     [[nodiscard]] inline auto getStatements() const noexcept -> const auto& { return m_statements; }
 
 private:
+    support::Source* m_source;
     List<Statement> m_statements;
 };
 
@@ -83,7 +92,7 @@ private:
 //--------------------------------------
 
 struct Table final : Root {
-    Table(support::SourceLoc loc, Identifier identifier, List<TableColumn*> columns, List<TableContent> content) noexcept
+    Table(support::SourceLoc loc, Identifier identifier, List<Node<TableColumn>> columns, List<TableContent> content) noexcept
         : Root(loc)
         , m_identifier(identifier)
         , m_columns(std::move(columns))
@@ -97,7 +106,7 @@ struct Table final : Root {
 
 private:
     Identifier m_identifier;
-    List<TableColumn*> m_columns;
+    List<Node<TableColumn>> m_columns;
     List<TableContent> m_content;
 };
 
@@ -118,10 +127,10 @@ private:
 };
 
 struct TableInherit final : Root {
-    TableInherit(support::SourceLoc loc, Member* member, std::optional<Expression> expression) noexcept
+    TableInherit(support::SourceLoc loc, Node<Member> member, std::optional<Expression> expression) noexcept
         : Root(loc)
-        , m_member(member)
-        , m_expression(expression)
+        , m_member(std::move(member))
+        , m_expression(std::move(expression))
     {
     }
 
@@ -129,12 +138,12 @@ struct TableInherit final : Root {
     [[nodiscard]] inline auto getExpression() const noexcept -> const auto& { return m_expression; }
 
 private:
-    Member* m_member;
+    Node<Member> m_member;
     std::optional<Expression> m_expression;
 };
 
 struct TableBody final : Root {
-    TableBody(support::SourceLoc loc, List<TableRow*> rows) noexcept
+    TableBody(support::SourceLoc loc, List<Node<TableRow>> rows) noexcept
         : Root(loc)
         , m_rows(std::move(rows))
     {
@@ -143,7 +152,7 @@ struct TableBody final : Root {
     [[nodiscard]] inline auto getRows() const noexcept -> const auto& { return m_rows; }
 
 private:
-    List<TableRow*> m_rows;
+    List<Node<TableRow>> m_rows;
 };
 
 struct TableRow final : Root {
@@ -180,7 +189,7 @@ struct UnaryExpression final : Root {
     UnaryExpression(support::SourceLoc loc, Operation op, Expression rhs) noexcept
         : Root(loc)
         , m_op(op)
-        , m_rhs(rhs)
+        , m_rhs(std::move(rhs))
     {
     }
 
@@ -196,8 +205,8 @@ struct BinaryExpression final : Root {
     BinaryExpression(support::SourceLoc loc, Operation op, Expression lhs, Expression rhs) noexcept
         : Root(loc)
         , m_op(op)
-        , m_lhs(lhs)
-        , m_rhs(rhs)
+        , m_lhs(std::move(lhs))
+        , m_rhs(std::move(rhs))
     {
     }
 

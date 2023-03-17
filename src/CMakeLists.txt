@@ -33,7 +33,7 @@ add_library(
     Table/SymbolTable.hpp
     Table/Table.cpp
     Table/Table.hpp
-    Table/Value.hpp Support/GridLayout.cpp Support/GridLayout.hpp)
+    Table/Value.hpp Support/GridLayout.cpp Support/GridLayout.hpp Table/Driver.cpp Table/Driver.hpp Table/Symbol.cpp Table/Symbol.cpp)
 
 # fmt
 include(FetchContent)

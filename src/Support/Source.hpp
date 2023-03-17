@@ -12,8 +12,10 @@ class SourceException final : public std::runtime_error {
 
 class Source final {
 public:
+    NO_COPY_AND_MOVE(Source)
     explicit Source(const std::filesystem::path& path);
     Source(std::string name, std::string source) noexcept;
+    ~Source() = default;
 
     [[nodiscard]] inline auto getName() const noexcept -> const auto& { return m_name; }
 
