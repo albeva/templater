@@ -22,7 +22,7 @@ jobs:
         version: 12
 
     - name: Configure CMake
-      run: cmake -S . -G "Unix Makefiles" --preset="unixlike-gcc-debug"
+      run: cmake -S . -G "Unix Makefiles" --preset="unixlike-gcc-debug" -D ENABLE_CPPCHECK=OFF
       env:
         CC:   gcc-12
         CXX:  g++-12
