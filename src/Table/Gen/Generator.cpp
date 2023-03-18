@@ -2,7 +2,6 @@
 // Created by Albert on 12/03/2023.
 //
 #include "Generator.hpp"
-#include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
 #include "Table/Column.hpp"
 #include "Table/Symbol.hpp"

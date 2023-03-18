@@ -16,22 +16,16 @@ public:
     using UniquePtr = std::unique_ptr<T, support::pmr::MonotonicBufferDelete>;
 
     /**
-     * Allocate memory for T and create T at allocated memory
+     * Allocate memory for T in the memory pool and create T
+     * While this returns unique_ptr, it only ensures object destructor will
+     * be called, memory is not freed while Context is alive.
      */
     template <typename T, typename... Args>
-    [[nodiscard]] inline auto create(Args&&... args) -> T*
+    [[nodiscard]] constexpr auto makeUnique(Args&&... args) -> UniquePtr<T>
     {
-        auto* res = m_pa.allocate_object<T>();
-        return std::construct_at(res, std::forward<Args>(args)...);
-    }
-
-    /**
-     * Similar to std::make_unique<T>, returns UniquePtr
-     */
-    template <typename T, typename... Args>
-    [[nodiscard]] inline auto makeUnique(Args&&... args) -> UniquePtr<T>
-    {
-        return UniquePtr<T>(create<T>(std::forward<Args>(args)...));
+        auto* mem = m_pa.allocate_object<T>();
+        T* obj = std::construct_at(mem, std::forward<Args>(args)...);
+        return UniquePtr<T>(obj);
     }
 
     /**

@@ -31,7 +31,7 @@ using StringMap = std::unordered_map<std::string, T, StringSet, std::equal_to<>>
 namespace pmr {
     struct MonotonicBufferDelete {
         template <typename T>
-        inline void operator()(T* obj) const { std::destroy_at(obj); }
+        constexpr void operator()(T* obj) const { std::destroy_at(obj); }
     };
 
     using StringSet = std::pmr::unordered_set<std::pmr::string, containers::HeterogeneousHash, std::equal_to<>>;

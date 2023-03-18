@@ -2,7 +2,6 @@
 // Created by Albert on 17/03/2023.
 //
 #include "Driver.hpp"
-#include "Ast/Ast.hpp"
 #include "Ast/Printer.hpp"
 #include "Gen/Generator.hpp"
 #include "Parse/Lexer.hpp"

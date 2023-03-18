@@ -3,7 +3,6 @@
 //
 #include "Table.hpp"
 #include "Column.hpp"
-#include "Support/Context.hpp"
 using support::Context;
 using table::Table;
 

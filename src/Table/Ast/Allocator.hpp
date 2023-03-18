@@ -17,7 +17,7 @@ public:
     template <class T, class... Args>
     [[nodiscard]] inline auto node(Args&&... args) -> Node<T>
     {
-        return Node<T> { m_context->create<T>(std::forward<Args>(args)...) };
+        return m_context->makeUnique<T>(std::forward<Args>(args)...);
     }
 
     template <class T>

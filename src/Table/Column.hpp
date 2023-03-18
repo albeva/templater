@@ -3,7 +3,6 @@
 //
 #pragma once
 #include "Support/SourceLoc.hpp"
-#include "Table/Parse/Token.hpp"
 #include "Value.hpp"
 namespace table {
 using support::SourceLoc;

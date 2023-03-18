@@ -230,11 +230,12 @@ void Lexer::string(Token& token)
 
     auto lit = [&]() {
         if (literal.empty()) {
-            return m_ctx->retain(std::string_view { begin, m_input });
+            return std::string_view { begin, m_input };
         }
         if (begin < m_input) {
             literal.append(begin, m_input);
         }
+        // retain string as it differs from the source input
         return m_ctx->retain(std::move(literal));
     }();
 
@@ -280,7 +281,7 @@ void Lexer::number(Token& token)
     }
 
     m_hasStmt = true;
-    token.set(TokenKind::Number, loc(start), m_ctx->retain(std::string_view { start, m_input }));
+    token.set(TokenKind::Number, loc(start), std::string_view { start, m_input });
 }
 
 void Lexer::identifier(Token& token)
@@ -295,6 +296,8 @@ void Lexer::identifier(Token& token)
     if (const auto& iter = std::ranges::find(kKeywords, lexeme, &Keyword::first); iter != kKeywords.end()) {
         token.set(iter->second, loc(start));
     } else {
+        // retain identifier so that we comparisons become really cheap
+        // l.length() == r.length() && l.data() r.data()
         token.set(TokenKind::Identifier, loc(start), m_ctx->retain(lexeme));
     }
 }

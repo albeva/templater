@@ -3,7 +3,6 @@
 //
 #include "SymbolTable.hpp"
 #include "Support/Context.hpp"
-#include "Symbol.hpp"
 #include "Table.hpp"
 using support::Context;
 using support::Source;

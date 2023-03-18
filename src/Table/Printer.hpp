@@ -5,7 +5,6 @@
 #include "pch.hpp"
 #include "Support/Context.hpp"
 #include "Support/VisitorMixin.hpp"
-#include "Value.hpp"
 namespace table {
 class SymbolTable;
 class Symbol;

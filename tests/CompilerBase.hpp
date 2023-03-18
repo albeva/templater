@@ -26,12 +26,12 @@ using table::parser::TokenKind;
 struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
     void SetUp() override
     {
-        m_source = std::make_unique<Source>(GetParam());
+        m_source = m_ctx.load(GetParam());
     }
 
     auto parse() -> table::ast::Node<table::ast::Content>
     {
-        Lexer lexer { &m_ctx, m_source.get() };
+        Lexer lexer { &m_ctx, m_source };
         Parser parser { &m_ctx, &m_diag, &lexer };
         return parser.parse();
     }
@@ -75,7 +75,7 @@ private:
     std::stringstream m_output {};
     Diagnostics m_diag { m_output };
     Context m_ctx;
-    std::unique_ptr<Source> m_source;
+    Source* m_source = nullptr;
 };
 
 } // namespace tests

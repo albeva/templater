@@ -23,5 +23,5 @@ auto Context::load(const std::filesystem::path& path) -> Source*
         return res->get();
     }
 
-    return m_sources.emplace_back(create<Source>(path)).get();
+    return m_sources.emplace_back(makeUnique<Source>(path)).get();
 }

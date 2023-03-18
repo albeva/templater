@@ -5,7 +5,6 @@
 #include "Lexer.hpp"
 #include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
-#include "Table/Ast/Ast.hpp"
 using support::Context;
 using support::Diagnostics;
 using support::SourceLoc;
