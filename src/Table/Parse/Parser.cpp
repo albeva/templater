@@ -4,10 +4,8 @@
 #include "Parser.hpp"
 #include "Lexer.hpp"
 #include "Support/Diagnostics.hpp"
-#include "Support/GlobalContext.hpp"
 #include "Table/Ast/Context.hpp"
 using support::Diagnostics;
-using support::GlobalContext;
 using support::SourceLoc;
 using support::Visitor;
 using table::Identifier;
@@ -15,9 +13,8 @@ using table::StringLiteral;
 using table::parser::Parser;
 using namespace std::literals;
 
-Parser::Parser(GlobalContext* ctx, Diagnostics* diag, Lexer* lexer)
-    : m_ctx(ctx)
-    , m_diag(diag)
+Parser::Parser(Diagnostics* diag, Lexer* lexer)
+    : m_diag(diag)
     , m_lexer(lexer)
     , m_ast(nullptr)
 {
@@ -39,7 +36,7 @@ auto Parser::parse() -> std::unique_ptr<ast::Context>
     }
 
     expect(TokenKind::EndOfFile);
-    auto node = m_ast->node<ast::Content>(makeLoc(start, m_lastLoc), std::move(stmtList));
+    auto* node = m_ast->node<ast::Content>(makeLoc(start, m_lastLoc), std::move(stmtList));
     m_ast->setRoot(node);
 
     return std::move(m_ast);

@@ -19,7 +19,7 @@ Printer::Printer(const SymbolTable* symbolTable)
     , m_symbol(nullptr)
 {
     for (const auto& symbol : symbolTable->getSymbols()) {
-        m_symbol = symbol.get();
+        m_symbol = symbol;
         visit(m_symbol->getValue());
     }
 }
@@ -29,14 +29,14 @@ auto Printer::output() const -> std::string
     return m_output.str();
 }
 
-void Printer::visit(const support::GlobalContext::UniquePtr<SymbolTable>& symbolTable)
+void Printer::visit(const SymbolTable* symbolTable)
 {
     fmt::print(m_output,
         "import {} as {}\n",
         symbolTable->getSource()->getName(), m_symbol->getName());
 }
 
-void Printer::visit(const support::GlobalContext::UniquePtr<Table>& table)
+void Printer::visit(const Table* table)
 {
     fmt::print(m_output, "table {}", m_symbol->getName());
 
@@ -44,7 +44,7 @@ void Printer::visit(const support::GlobalContext::UniquePtr<Table>& table)
     const auto& columns = table->getColumns();
     fmt::print(m_output, "(");
     Separator sep { " " };
-    for (const auto& col : columns) {
+    for (const auto* col : columns) {
         m_output << sep();
         visit(col);
     }
@@ -58,7 +58,7 @@ void Printer::visit(const support::GlobalContext::UniquePtr<Table>& table)
     for (size_t rowIdx = 0; rowIdx < table->getRowCount(); rowIdx++) {
         const auto& row = table->getRow(rowIdx);
         for (const auto& col : columns) {
-            if (auto iter = row.find(col.get()); iter != row.end()) {
+            if (auto iter = row.find(col); iter != row.end()) {
                 content.emplace_back(toString(iter->second));
             } else {
                 content.emplace_back("-");
@@ -71,7 +71,7 @@ void Printer::visit(const support::GlobalContext::UniquePtr<Table>& table)
     fmt::print(m_output, "\n]\n");
 }
 
-void Printer::visit(const support::GlobalContext::UniquePtr<Column>& column)
+void Printer::visit(const Column* column)
 {
     fmt::print(m_output, "{}", column->getName());
     if (auto value = column->getValue()) {

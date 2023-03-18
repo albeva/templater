@@ -3,7 +3,6 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Support/GlobalContext.hpp"
 #include "Support/SourceLoc.hpp"
 
 namespace table {
@@ -14,7 +13,7 @@ class Symbol final {
 public:
     NO_COPY_AND_MOVE(Symbol)
 
-    using SymValue = std::variant<support::GlobalContext::UniquePtr<Table>, support::GlobalContext::UniquePtr<SymbolTable>>;
+    using SymValue = std::variant<Table*, SymbolTable*>;
     Symbol(std::string_view name, support::SourceLoc loc, SymValue value) noexcept;
     ~Symbol();
 

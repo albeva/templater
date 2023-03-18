@@ -3,7 +3,6 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Support/GlobalContext.hpp"
 #include "Support/VisitorMixin.hpp"
 #include "Table/Ast/Ast.hpp"
 
@@ -31,10 +30,10 @@ class GeneratorException final : public std::runtime_error {
 class Generator final {
 public:
     NO_COPY_AND_MOVE(Generator)
-    Generator(support::GlobalContext* ctx, support::Diagnostics* diag);
+    explicit Generator(support::Diagnostics* diag);
     ~Generator();
 
-    auto visit(const ast::Context* ast) -> support::GlobalContext::UniquePtr<SymbolTable>;
+    auto visit(const ast::Context* ast) -> std::unique_ptr<SymbolTable>;
 
     VISITOR_MIXIN
 
@@ -49,11 +48,10 @@ private:
 
     [[noreturn]] void redefinition(const Identifier& id, support::SourceLoc existing) const;
 
-    support::GlobalContext* m_ctx;
     support::Diagnostics* m_diag;
     support::Source* m_source;
-    support::GlobalContext::UniquePtr<SymbolTable> m_symbolTable;
-    support::GlobalContext::UniquePtr<Table> m_table;
+    std::unique_ptr<SymbolTable> m_symbolTable;
+    Table* m_table;
     size_t m_rowIndex;
 };
 

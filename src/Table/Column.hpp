@@ -2,6 +2,7 @@
 // Created by Albert on 13/03/2023.
 //
 #pragma once
+#include "pch.hpp"
 #include "Support/SourceLoc.hpp"
 #include "Value.hpp"
 namespace table {

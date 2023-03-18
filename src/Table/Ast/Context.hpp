@@ -16,6 +16,10 @@ public:
     explicit Context(support::Source* source);
     ~Context();
 
+    /**
+     * Allocate and create ast node T. Destructor is never called for Ast nodes,
+     * instead whole memory pool is freed at once when Context deallocates.
+     */
     template <class T, class... Args>
     [[nodiscard]] inline auto node(Args&&... args) -> T*
     {

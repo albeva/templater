@@ -22,9 +22,9 @@ public:
     [[nodiscard]] auto output() const -> std::string;
 
 private:
-    void visit(const support::GlobalContext::UniquePtr<SymbolTable>& symbolTable);
-    void visit(const support::GlobalContext::UniquePtr<Table>& table);
-    void visit(const support::GlobalContext::UniquePtr<Column>& column);
+    void visit(const SymbolTable* symbolTable);
+    void visit(const Table* table);
+    void visit(const Column* column);
 
     std::stringstream m_output;
     Symbol* m_symbol;

@@ -25,7 +25,7 @@ public:
     ~Driver();
 
     [[nodiscard]] auto parse(const std::filesystem::path& path) -> std::unique_ptr<ast::Context>;
-    [[nodiscard]] auto compile(const std::filesystem::path& path) -> support::GlobalContext::UniquePtr<SymbolTable>;
+    [[nodiscard]] auto compile(const std::filesystem::path& path) -> std::unique_ptr<SymbolTable>;
 
     void printAst(const std::filesystem::path& path);
     void printTable(const std::filesystem::path& path);

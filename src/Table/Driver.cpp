@@ -30,13 +30,13 @@ auto Driver::parse(const std::filesystem::path& path) -> std::unique_ptr<ast::Co
 {
     auto* src = m_context->load(path);
     Lexer lexer { m_context.get(), src };
-    return Parser { m_context.get(), m_diag.get(), &lexer }.parse();
+    return Parser { m_diag.get(), &lexer }.parse();
 }
 
-auto Driver::compile(const std::filesystem::path& path) -> support::GlobalContext::UniquePtr<SymbolTable>
+auto Driver::compile(const std::filesystem::path& path) -> std::unique_ptr<SymbolTable>
 {
     auto ast = parse(path);
-    Generator gen { m_context.get(), m_diag.get() };
+    Generator gen { m_diag.get() };
     return gen.visit(ast.get());
 }
 

@@ -33,14 +33,14 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
     auto parse()
     {
         Lexer lexer { &m_ctx, m_source };
-        Parser parser { &m_ctx, &m_diag, &lexer };
+        Parser parser { &m_diag, &lexer };
         return parser.parse();
     }
 
     auto gen()
     {
         auto ast = parse();
-        Generator gen { &m_ctx, &m_diag };
+        Generator gen { &m_diag };
         return gen.visit(ast.get());
     }
 

@@ -3,35 +3,35 @@
 //
 #include "Table.hpp"
 #include "Column.hpp"
-using support::GlobalContext;
+#include "SymbolTable.hpp"
+
 using table::Table;
 
-Table::Table(GlobalContext* ctx)
-    : m_ctx(ctx)
-    , m_columns(ctx->getAllocator())
-    , m_data(ctx->getAllocator())
+Table::Table(SymbolTable* owner)
+    : m_owner(owner)
+    , m_columns(owner->getAllocator())
+    , m_data(owner->getAllocator())
 {
-    (void)m_ctx;
 }
 
 Table::~Table() = default;
 
 auto Table::findColumn(std::string_view name) const noexcept -> Column*
 {
-    auto res = std::ranges::find_if(m_columns, [&](const support::GlobalContext::UniquePtr<Column>& col) {
+    auto res = std::ranges::find_if(m_columns, [&](const Column* col) {
         return col->getName() == name;
     });
-    return res != m_columns.end() ? res->get() : nullptr;
+    return res != m_columns.end() ? *res : nullptr;
 }
 
-void Table::addColumn(support::GlobalContext::UniquePtr<Column> column)
+void Table::addColumn(Column* column)
 {
-    m_columns.push_back(std::move(column));
+    m_columns.push_back(column);
 }
 
 void Table::addRow()
 {
-    m_data.emplace_back(Row(m_ctx->getAllocator()));
+    m_data.emplace_back(Row(m_owner->getAllocator()));
 }
 
 void Table::addValue(size_t row, const Column* column, Value value)

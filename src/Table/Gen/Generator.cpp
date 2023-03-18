@@ -11,12 +11,10 @@
 #include "Table/Value.hpp"
 using namespace std::literals;
 using support::Diagnostics;
-using support::GlobalContext;
 using table::gen::Generator;
 
-Generator::Generator(GlobalContext* ctx, Diagnostics* diag)
-    : m_ctx(ctx)
-    , m_diag(diag)
+Generator::Generator(Diagnostics* diag)
+    : m_diag(diag)
     , m_source(nullptr)
     , m_symbolTable(nullptr)
     , m_table(nullptr)
@@ -26,10 +24,10 @@ Generator::Generator(GlobalContext* ctx, Diagnostics* diag)
 
 Generator::~Generator() = default;
 
-auto Generator::visit(const ast::Context* ast) -> support::GlobalContext::UniquePtr<SymbolTable>
+auto Generator::visit(const ast::Context* ast) -> std::unique_ptr<SymbolTable>
 {
     m_source = ast->getSource();
-    m_symbolTable = m_ctx->makeUnique<SymbolTable>(m_ctx, m_source);
+    m_symbolTable = std::make_unique<SymbolTable>(m_source);
     visitEach(ast->getRoot()->getStatements());
     m_source = nullptr;
     return std::move(m_symbolTable);
@@ -49,11 +47,11 @@ void Generator::visit(const ast::Table* node)
         redefinition(id, existing->getLoc());
     }
 
-    m_table = m_ctx->makeUnique<Table>(m_ctx);
+    m_table = m_symbolTable->create<Table>(m_symbolTable.get());
     visitEach(node->getColumns());
     visitEach(node->getContent());
-    auto symbol = m_ctx->makeUnique<Symbol>(id.getValue(), id.getLoc(), std::move(m_table));
-    m_symbolTable->insert(std::move(symbol));
+    auto* symbol = m_symbolTable->create<Symbol>(id.getValue(), id.getLoc(), m_table);
+    m_symbolTable->insert(symbol);
 }
 
 void Generator::visit(const ast::TableColumn* node)
@@ -64,7 +62,8 @@ void Generator::visit(const ast::TableColumn* node)
         redefinition(id, existing->getLoc());
     }
 
-    m_table->addColumn(m_ctx->makeUnique<Column>(id.getValue(), id.getLoc(), node->getValue()));
+    auto* column = m_symbolTable->create<Column>(id.getValue(), id.getLoc(), node->getValue());
+    m_table->addColumn(column);
 }
 
 void Generator::visit(const ast::TableInherit* /*node*/)
@@ -99,14 +98,14 @@ void Generator::visit(const ast::TableRow* node)
                     if (m_table->getRowCount() < 2) {
                         throw GeneratorException("'|' can only be used under another value.");
                     }
-                    if (auto previous = m_table->getValue(m_table->getRowCount() - 2, column.get())) {
-                        m_table->addValue(m_rowIndex, column.get(), previous.value());
+                    if (auto previous = m_table->getValue(m_table->getRowCount() - 2, column)) {
+                        m_table->addValue(m_rowIndex, column, previous.value());
                     } else {
                         throw GeneratorException("'|' No previous value");
                     }
                 },
                 [&](const Value& value) {
-                    m_table->addValue(m_rowIndex, column.get(), value);
+                    m_table->addValue(m_rowIndex, column, value);
                 } },
             values[col]);
     }
