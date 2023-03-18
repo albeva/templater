@@ -5,8 +5,10 @@
 #include "pch.hpp"
 
 namespace support {
+
 /**
- * Allocator that uses monotonic_buffer_resource and unsynchronized_pool_resource
+ * A memory pool allocator that uses C++20 pmr (polymorphic memory resource) features.
+ * This memory pool is designed to provide efficient memory allocation for objects.
  */
 struct MemoryPool final {
     NO_COPY_AND_MOVE(MemoryPool)
@@ -14,19 +16,29 @@ struct MemoryPool final {
     ~MemoryPool() = default;
 
     /**
-     * Objects allocated in memory pool don't need to deallocate their memory,
-     * but we still want the dtor to be called.
+     * A custom deleter for the unique_ptr that destructs the object without deallocating memory.
+     * This deleter is suitable for objctex created in the pool, as the memory will be deallocated by the pool itself.
      */
     struct MonotonicBufferDelete {
         template <typename T>
         constexpr void operator()(T* obj) const { std::destroy_at(obj); }
     };
+
+    /**
+     * A unique pointer with a custom deleter, designed for use with the MemoryPool.
+     *
+     * @tparam T The type of the object managed by the unique_ptr.
+     */
     template <typename T>
     using UniquePtr = std::unique_ptr<T, MonotonicBufferDelete>;
 
     /**
-     * Allocate memory for T in the memory pool and create T. This returns
-     * a raw pointer means no dtor will be called, unless manually called ~T()
+     * Create an object of type T with the provided arguments in the memory pool.
+     *
+     * @tparam T The type of the object to be created.
+     * @tparam Args The types of the arguments to be forwarded to the constructor of the object.
+     * @param args The arguments to be forwarded to the constructor of the object.
+     * @return A pointer to the newly created object.
      */
     template <typename T, typename... Args>
     [[nodiscard]] constexpr auto create(Args&&... args) -> T*
@@ -36,10 +48,12 @@ struct MemoryPool final {
     }
 
     /**
-     * Allocate memory for T in the memory pool and create T
+     * Create a unique_ptr of an object of type T with the provided arguments in the memory pool.
      *
-     * The UniquePtr will cause dtor to be called as expected, but
-     * memory will not be freed until Context itself is deallocated
+     * @tparam T The type of the object to be created.
+     * @tparam Args The types of the arguments to be forwarded to the constructor of the object.
+     * @param args The arguments to be forwarded to the constructor of the object.
+     * @return A UniquePtr<T> pointing to the newly created object.
      */
     template <typename T, typename... Args>
     [[nodiscard]] constexpr auto makeUnique(Args&&... args) -> UniquePtr<T>
@@ -48,7 +62,9 @@ struct MemoryPool final {
     }
 
     /**
-     * Get polymorphic_allocator instance
+     * Get a reference to the polymorphic allocator used by the memory pool.
+     *
+     * @return std::pmr::polymorphic_allocator used by the pool
      */
     [[nodiscard]] constexpr auto getAllocator() const noexcept -> auto& { return m_pa; }
 
