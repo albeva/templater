@@ -7,6 +7,8 @@ add_library(
     Support/Context.hpp
     Support/Diagnostics.cpp
     Support/Diagnostics.hpp
+    Support/GridLayout.cpp
+    Support/GridLayout.hpp
     Support/Separator.hpp
     Support/Source.cpp
     Support/Source.hpp
@@ -14,10 +16,13 @@ add_library(
     Support/Utils.hpp
     Support/VisitorMixin.hpp
     Table/Ast/Allocator.hpp
+    Table/Ast/Ast.cpp
     Table/Ast/Ast.hpp
     Table/Ast/Printer.cpp
     Table/Ast/Printer.hpp
     Table/Column.hpp
+    Table/Driver.cpp
+    Table/Driver.hpp
     Table/Gen/Generator.cpp
     Table/Gen/Generator.hpp
     Table/Parse/Lexer.cpp
@@ -28,12 +33,14 @@ add_library(
     Table/Parse/Token.hpp
     Table/Printer.cpp
     Table/Printer.hpp
+    Table/Symbol.cpp
+    Table/Symbol.cpp
     Table/Symbol.hpp
     Table/SymbolTable.cpp
     Table/SymbolTable.hpp
     Table/Table.cpp
     Table/Table.hpp
-    Table/Value.hpp Support/GridLayout.cpp Support/GridLayout.hpp Table/Driver.cpp Table/Driver.hpp Table/Symbol.cpp Table/Symbol.cpp)
+    Table/Value.hpp)
 
 # fmt
 include(FetchContent)

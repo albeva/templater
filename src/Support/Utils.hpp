@@ -9,6 +9,12 @@
     Class(const Class&) = delete;             \
     auto operator=(Class&&)->Class& = delete; \
     auto operator=(const Class&)->Class& = delete;
+
+#define NO_NEW_AND_DELETE                             \
+    auto operator new(size_t)->void* = delete;        \
+    auto operator new[](std::size_t)->void* = delete; \
+    void operator delete(void*) = delete;
+
 // NOLINTEND
 
 namespace support {

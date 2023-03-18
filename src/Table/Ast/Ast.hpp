@@ -47,6 +47,7 @@ struct Root {
 
     [[nodiscard]] inline auto getLoc() const -> const auto& { return m_loc; }
 
+    NO_NEW_AND_DELETE
 private:
     support::SourceLoc m_loc;
 };
@@ -56,12 +57,9 @@ private:
 //--------------------------------------
 
 struct Content final : Root {
-    Content(support::SourceLoc loc, support::Source* source, List<Statement> statements) noexcept
-        : Root(loc)
-        , m_source(source)
-        , m_statements(std::move(statements))
-    {
-    }
+    NO_COPY_AND_MOVE(Content)
+    Content(support::SourceLoc loc, support::Source* source, List<Statement> statements) noexcept;
+    ~Content();
 
     [[nodiscard]] inline auto getSource() const noexcept -> const auto& { return m_source; }
     [[nodiscard]] inline auto getStatements() const noexcept -> const auto& { return m_statements; }
@@ -72,12 +70,9 @@ private:
 };
 
 struct Import final : Root {
-    Import(support::SourceLoc loc, Identifier identifier, StringLiteral file) noexcept
-        : Root(loc)
-        , m_identifier(identifier)
-        , m_file(file)
-    {
-    }
+    NO_COPY_AND_MOVE(Import)
+    Import(support::SourceLoc loc, Identifier identifier, StringLiteral file) noexcept;
+    ~Import();
 
     [[nodiscard]] inline auto getFile() const noexcept -> const auto& { return m_file; }
     [[nodiscard]] inline auto getIdentifier() const noexcept -> const auto& { return m_identifier; }
@@ -92,13 +87,9 @@ private:
 //--------------------------------------
 
 struct Table final : Root {
-    Table(support::SourceLoc loc, Identifier identifier, List<Node<TableColumn>> columns, List<TableContent> content) noexcept
-        : Root(loc)
-        , m_identifier(identifier)
-        , m_columns(std::move(columns))
-        , m_content(std::move(content))
-    {
-    }
+    NO_COPY_AND_MOVE(Table)
+    Table(support::SourceLoc loc, Identifier identifier, List<Node<TableColumn>> columns, List<TableContent> content) noexcept;
+    ~Table();
 
     [[nodiscard]] inline auto getIdentifier() const noexcept -> const auto& { return m_identifier; }
     [[nodiscard]] inline auto getColumns() const noexcept -> const auto& { return m_columns; }
@@ -111,12 +102,9 @@ private:
 };
 
 struct TableColumn final : Root {
-    TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<Value> value) noexcept
-        : Root(loc)
-        , m_identifier(identifier)
-        , m_value(value)
-    {
-    }
+    NO_COPY_AND_MOVE(TableColumn)
+    TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<Value> value) noexcept;
+    ~TableColumn();
 
     [[nodiscard]] inline auto getIdentifier() const noexcept -> const auto& { return m_identifier; }
     [[nodiscard]] inline auto getValue() const noexcept -> const auto& { return m_value; }
@@ -127,12 +115,9 @@ private:
 };
 
 struct TableInherit final : Root {
-    TableInherit(support::SourceLoc loc, Node<Member> member, std::optional<Expression> expression) noexcept
-        : Root(loc)
-        , m_member(std::move(member))
-        , m_expression(std::move(expression))
-    {
-    }
+    NO_COPY_AND_MOVE(TableInherit)
+    TableInherit(support::SourceLoc loc, Node<Member> member, std::optional<Expression> expression) noexcept;
+    ~TableInherit();
 
     [[nodiscard]] inline auto getMember() const noexcept -> const auto& { return m_member; }
     [[nodiscard]] inline auto getExpression() const noexcept -> const auto& { return m_expression; }
@@ -143,11 +128,9 @@ private:
 };
 
 struct TableBody final : Root {
-    TableBody(support::SourceLoc loc, List<Node<TableRow>> rows) noexcept
-        : Root(loc)
-        , m_rows(std::move(rows))
-    {
-    }
+    NO_COPY_AND_MOVE(TableBody)
+    TableBody(support::SourceLoc loc, List<Node<TableRow>> rows) noexcept;
+    ~TableBody();
 
     [[nodiscard]] inline auto getRows() const noexcept -> const auto& { return m_rows; }
 
@@ -156,11 +139,9 @@ private:
 };
 
 struct TableRow final : Root {
-    TableRow(support::SourceLoc loc, List<TableValue> values) noexcept
-        : Root(loc)
-        , m_values(std::move(values))
-    {
-    }
+    NO_COPY_AND_MOVE(TableRow)
+    TableRow(support::SourceLoc loc, List<TableValue> values) noexcept;
+    ~TableRow();
 
     [[nodiscard]] inline auto getValues() const noexcept -> const auto& { return m_values; }
 
@@ -172,6 +153,7 @@ private:
 // Expressions
 //--------------------------------------
 
+// This node is held by value
 struct Operation final : Root {
     Operation(support::SourceLoc loc, parser::TokenKind kind) noexcept
         : Root(loc)
@@ -186,12 +168,9 @@ private:
 };
 
 struct UnaryExpression final : Root {
-    UnaryExpression(support::SourceLoc loc, Operation op, Expression rhs) noexcept
-        : Root(loc)
-        , m_op(op)
-        , m_rhs(std::move(rhs))
-    {
-    }
+    NO_COPY_AND_MOVE(UnaryExpression)
+    UnaryExpression(support::SourceLoc loc, Operation op, Expression rhs) noexcept;
+    ~UnaryExpression();
 
     [[nodiscard]] inline auto getOp() const noexcept -> const auto& { return m_op; }
     [[nodiscard]] inline auto getRhs() const noexcept -> const auto& { return m_rhs; }
@@ -202,13 +181,9 @@ private:
 };
 
 struct BinaryExpression final : Root {
-    BinaryExpression(support::SourceLoc loc, Operation op, Expression lhs, Expression rhs) noexcept
-        : Root(loc)
-        , m_op(op)
-        , m_lhs(std::move(lhs))
-        , m_rhs(std::move(rhs))
-    {
-    }
+    NO_COPY_AND_MOVE(BinaryExpression)
+    BinaryExpression(support::SourceLoc loc, Operation op, Expression lhs, Expression rhs) noexcept;
+    ~BinaryExpression();
 
     [[nodiscard]] inline auto getOp() const noexcept -> const auto& { return m_op; }
     [[nodiscard]] inline auto getLhs() const noexcept -> const auto& { return m_lhs; }
@@ -224,11 +199,9 @@ private:
 //--------------------------------------
 
 struct Member final : Root {
-    Member(support::SourceLoc loc, List<Identifier> identifiers) noexcept
-        : Root(loc)
-        , m_identifiers(std::move(identifiers))
-    {
-    }
+    NO_COPY_AND_MOVE(Member)
+    Member(support::SourceLoc loc, List<Identifier> identifiers) noexcept;
+    ~Member();
 
     [[nodiscard]] inline auto getIdentifiers() const noexcept -> const auto& { return m_identifiers; }
 
