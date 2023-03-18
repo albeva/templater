@@ -3,11 +3,11 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Value.hpp"
 
 namespace support {
-class Context;
+class GlobalContext;
 }
 
 namespace table {
@@ -16,12 +16,12 @@ class Column;
 class Table final {
 public:
     NO_COPY_AND_MOVE(Table)
-    explicit Table(support::Context* ctx);
+    explicit Table(support::GlobalContext* ctx);
     ~Table();
 
     [[nodiscard]] inline auto getColumns() const noexcept -> const auto& { return m_columns; }
     [[nodiscard]] auto findColumn(std::string_view name) const noexcept -> Column*;
-    void addColumn(support::Context::UniquePtr<Column> column);
+    void addColumn(support::GlobalContext::UniquePtr<Column> column);
 
     void addRow();
     [[nodiscard]] inline auto getRowCount() const noexcept { return m_data.size(); }
@@ -34,8 +34,8 @@ private:
     using Row = std::pmr::unordered_map<const Column*, Value>;
     using Data = std::pmr::vector<Row>;
 
-    support::Context* m_ctx;
-    std::pmr::vector<support::Context::UniquePtr<Column>> m_columns;
+    support::GlobalContext* m_ctx;
+    std::pmr::vector<support::GlobalContext::UniquePtr<Column>> m_columns;
     Data m_data;
 };
 

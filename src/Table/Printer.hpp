@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Support/VisitorMixin.hpp"
 namespace table {
 class SymbolTable;
@@ -22,9 +22,9 @@ public:
     [[nodiscard]] auto output() const -> std::string;
 
 private:
-    void visit(const support::Context::UniquePtr<SymbolTable>& symbolTable);
-    void visit(const support::Context::UniquePtr<Table>& table);
-    void visit(const support::Context::UniquePtr<Column>& column);
+    void visit(const support::GlobalContext::UniquePtr<SymbolTable>& symbolTable);
+    void visit(const support::GlobalContext::UniquePtr<Table>& table);
+    void visit(const support::GlobalContext::UniquePtr<Column>& column);
 
     std::stringstream m_output;
     Symbol* m_symbol;

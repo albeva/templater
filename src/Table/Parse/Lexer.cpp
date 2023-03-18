@@ -2,10 +2,10 @@
 // Created by Albert on 05/03/2023.
 //
 #include "Lexer.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Support/Source.hpp"
 #include "Token.hpp"
-using support::Context;
+using support::GlobalContext;
 using support::Source;
 using support::SourceLoc;
 using table::parser::Lexer;
@@ -46,7 +46,7 @@ constexpr std::array kKeywords {
 };
 } // namespace
 
-Lexer::Lexer(Context* ctx, Source* source) noexcept
+Lexer::Lexer(GlobalContext* ctx, Source* source) noexcept
     : m_ctx(ctx)
     , m_source(source)
     , m_buffer(source->data())

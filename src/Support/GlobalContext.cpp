@@ -1,20 +1,20 @@
 //
 // Created by Albert on 12/03/2023.
 //
-#include "Context.hpp"
+#include "GlobalContext.hpp"
 #include "Source.hpp"
-using support::Context;
+using support::GlobalContext;
 
-Context::Context()
+GlobalContext::GlobalContext()
     : m_pa(&m_mbr)
     , m_uniquedStrings(m_pa)
     , m_sources(m_pa)
 {
 }
 
-Context::~Context() = default;
+GlobalContext::~GlobalContext() = default;
 
-auto Context::load(const std::filesystem::path& path) -> Source*
+auto GlobalContext::load(const std::filesystem::path& path) -> Source*
 {
     auto res = std::ranges::find_if(m_sources, [&](const auto& existing) {
         return existing->getName() == path;

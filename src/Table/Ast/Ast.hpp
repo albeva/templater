@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Token.hpp"
 #include "Table/Value.hpp"

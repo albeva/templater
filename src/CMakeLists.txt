@@ -3,8 +3,8 @@ add_library(
     templater_lib
     pch.hpp
     Support/Containers.hpp
-    Support/Context.cpp
-    Support/Context.hpp
+    Support/GlobalContext.cpp
+    Support/GlobalContext.hpp
     Support/Diagnostics.cpp
     Support/Diagnostics.hpp
     Support/GridLayout.cpp

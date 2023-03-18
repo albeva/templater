@@ -6,7 +6,7 @@
 #include "Table.hpp"
 using table::Symbol;
 
-Symbol::Symbol(std::string_view name, support::SourceLoc loc, Value value) noexcept
+Symbol::Symbol(std::string_view name, support::SourceLoc loc, SymValue value) noexcept
     : m_name(name)
     , m_loc(loc)
     , m_value(std::move(value))

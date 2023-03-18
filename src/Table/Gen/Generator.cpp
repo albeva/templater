@@ -9,11 +9,11 @@
 #include "Table/Table.hpp"
 #include "Table/Value.hpp"
 using namespace std::literals;
-using support::Context;
 using support::Diagnostics;
+using support::GlobalContext;
 using table::gen::Generator;
 
-Generator::Generator(Context* ctx, Diagnostics* diag)
+Generator::Generator(GlobalContext* ctx, Diagnostics* diag)
     : m_ctx(ctx)
     , m_diag(diag)
     , m_source(nullptr)
@@ -25,7 +25,7 @@ Generator::Generator(Context* ctx, Diagnostics* diag)
 
 Generator::~Generator() = default;
 
-auto Generator::visit(const ast::Content* node) -> support::Context::UniquePtr<SymbolTable>
+auto Generator::visit(const ast::Content* node) -> support::GlobalContext::UniquePtr<SymbolTable>
 {
     m_source = node->getSource();
     m_symbolTable = m_ctx->makeUnique<SymbolTable>(m_ctx, m_source);

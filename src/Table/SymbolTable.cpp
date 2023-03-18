@@ -2,13 +2,13 @@
 // Created by Albert on 13/03/2023.
 //
 #include "SymbolTable.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Table.hpp"
-using support::Context;
+using support::GlobalContext;
 using support::Source;
 using table::SymbolTable;
 
-SymbolTable::SymbolTable(Context* ctx, Source* source)
+SymbolTable::SymbolTable(GlobalContext* ctx, Source* source)
     : m_symbols(ctx->getAllocator())
     , m_source(source)
 {

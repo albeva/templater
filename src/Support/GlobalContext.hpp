@@ -6,14 +6,22 @@
 namespace support {
 class Source;
 
-class Context final {
+class GlobalContext final {
 public:
-    NO_COPY_AND_MOVE(Context)
-    Context();
-    ~Context();
+    NO_COPY_AND_MOVE(GlobalContext)
+    GlobalContext();
+    ~GlobalContext();
 
+    /**
+     * Objects allocated in memory pool don't need to deallocate their memory,
+     * but we still want the dtor to be called.
+     */
+    struct MonotonicBufferDelete {
+        template <typename T>
+        constexpr void operator()(T* obj) const { std::destroy_at(obj); }
+    };
     template <typename T>
-    using UniquePtr = std::unique_ptr<T, support::pmr::MonotonicBufferDelete>;
+    using UniquePtr = std::unique_ptr<T, MonotonicBufferDelete>;
 
     /**
      * Allocate memory for T in the memory pool and create T. This returns
@@ -28,8 +36,9 @@ public:
 
     /**
      * Allocate memory for T in the memory pool and create T
-     * While this returns unique_ptr, it only ensures object destructor will
-     * be called, memory is not freed while Context is alive.
+     *
+     * The UniquePtr will cause dtor to be called as expected, but
+     * memory will not be freed until Context itself is deallocated
      */
     template <typename T, typename... Args>
     [[nodiscard]] constexpr auto makeUnique(Args&&... args) -> UniquePtr<T>

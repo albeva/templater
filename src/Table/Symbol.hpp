@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Support/SourceLoc.hpp"
 
 namespace table {
@@ -14,8 +14,8 @@ class Symbol final {
 public:
     NO_COPY_AND_MOVE(Symbol)
 
-    using Value = std::variant<support::Context::UniquePtr<Table>, support::Context::UniquePtr<SymbolTable>>;
-    Symbol(std::string_view name, support::SourceLoc loc, Value value) noexcept;
+    using SymValue = std::variant<support::GlobalContext::UniquePtr<Table>, support::GlobalContext::UniquePtr<SymbolTable>>;
+    Symbol(std::string_view name, support::SourceLoc loc, SymValue value) noexcept;
     ~Symbol();
 
     [[nodiscard]] inline auto getName() const noexcept -> const auto& { return m_name; }
@@ -25,7 +25,7 @@ public:
 private:
     std::string_view m_name;
     support::SourceLoc m_loc;
-    Value m_value;
+    SymValue m_value;
 };
 
 } // namespace table

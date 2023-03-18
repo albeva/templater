@@ -4,11 +4,11 @@
 #pragma once
 #include "pch.hpp"
 #include "Ast/Ast.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 
 namespace support {
 class Diagnostics;
-class Context;
+class GlobalContext;
 class Source;
 }
 
@@ -22,7 +22,7 @@ public:
     ~Driver();
 
     [[nodiscard]] auto parse(const std::filesystem::path& path) -> ast::Content*;
-    [[nodiscard]] auto compile(const std::filesystem::path& path) -> support::Context::UniquePtr<SymbolTable>;
+    [[nodiscard]] auto compile(const std::filesystem::path& path) -> support::GlobalContext::UniquePtr<SymbolTable>;
 
     void printAst(const std::filesystem::path& path);
     void printTable(const std::filesystem::path& path);
@@ -30,7 +30,7 @@ public:
     [[nodiscard]] auto exitCode() const noexcept -> int;
 
 private:
-    std::unique_ptr<support::Context> m_context;
+    std::unique_ptr<support::GlobalContext> m_context;
     std::unique_ptr<support::Diagnostics> m_diag;
 };
 

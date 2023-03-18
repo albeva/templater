@@ -7,7 +7,7 @@
 namespace support {
 class Source;
 struct SourceLoc;
-class Context;
+class GlobalContext;
 }
 
 namespace table::parser {
@@ -17,7 +17,7 @@ enum class TokenKind;
 class Lexer final {
 public:
     NO_COPY_AND_MOVE(Lexer)
-    explicit Lexer(support::Context* ctx, support::Source* source) noexcept;
+    explicit Lexer(support::GlobalContext* ctx, support::Source* source) noexcept;
     ~Lexer() = default;
 
     void next(Token&);
@@ -36,7 +36,7 @@ private:
 
     auto loc(const char* start) noexcept -> support::SourceLoc;
 
-    support::Context* m_ctx;
+    support::GlobalContext* m_ctx;
     support::Source* m_source;
     const char* m_buffer;
     const char* m_input;

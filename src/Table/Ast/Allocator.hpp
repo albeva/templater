@@ -4,7 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "Ast.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 namespace table::ast {
 
 /**
@@ -15,7 +15,7 @@ namespace table::ast {
  */
 class Allocator final {
 public:
-    explicit Allocator(support::Context* context) noexcept
+    explicit Allocator(support::GlobalContext* context) noexcept
         : m_context(context)
     {
     }
@@ -33,6 +33,6 @@ public:
     }
 
 private:
-    support::Context* m_context;
+    support::GlobalContext* m_context;
 };
 } // namespace table::ast

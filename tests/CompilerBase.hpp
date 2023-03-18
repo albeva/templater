@@ -2,22 +2,22 @@
 // Created by Albert on 14/03/2023.
 //
 #pragma once
-#include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Support/Source.hpp"
+#include "Table/Ast/Ast.hpp"
 #include "Table/Gen/Generator.hpp"
 #include "Table/Parse/Lexer.hpp"
 #include "Table/Parse/Parser.hpp"
-#include "gtest/gtest.h"
-#include "Table/Ast/Ast.hpp"
 #include "Table/SymbolTable.hpp"
+#include "gtest/gtest.h"
 
 namespace tests {
 using namespace std::literals;
-using support::Context;
+using support::Diagnostics;
 using support::Source;
 using support::SourceException;
-using support::Diagnostics;
+using support::GlobalContext;
 using table::gen::Generator;
 using table::parser::Lexer;
 using table::parser::Parser;
@@ -36,7 +36,7 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
         return parser.parse();
     }
 
-    auto gen() -> Context::UniquePtr<table::SymbolTable>
+    auto gen() -> GlobalContext::UniquePtr<table::SymbolTable>
     {
         auto ast = parse();
         Generator gen { &m_ctx, &m_diag };
@@ -74,7 +74,7 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
 private:
     std::stringstream m_output {};
     Diagnostics m_diag { m_output };
-    Context m_ctx;
+    GlobalContext m_ctx;
     Source* m_source = nullptr;
 };
 

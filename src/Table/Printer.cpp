@@ -29,14 +29,14 @@ auto Printer::output() const -> std::string
     return m_output.str();
 }
 
-void Printer::visit(const support::Context::UniquePtr<SymbolTable>& symbolTable)
+void Printer::visit(const support::GlobalContext::UniquePtr<SymbolTable>& symbolTable)
 {
     fmt::print(m_output,
         "import {} as {}\n",
         symbolTable->getSource()->getName(), m_symbol->getName());
 }
 
-void Printer::visit(const support::Context::UniquePtr<Table>& table)
+void Printer::visit(const support::GlobalContext::UniquePtr<Table>& table)
 {
     fmt::print(m_output, "table {}", m_symbol->getName());
 
@@ -71,7 +71,7 @@ void Printer::visit(const support::Context::UniquePtr<Table>& table)
     fmt::print(m_output, "\n]\n");
 }
 
-void Printer::visit(const support::Context::UniquePtr<Column>& column)
+void Printer::visit(const support::GlobalContext::UniquePtr<Column>& column)
 {
     fmt::print(m_output, "{}", column->getName());
     if (auto value = column->getValue()) {

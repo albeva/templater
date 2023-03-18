@@ -23,7 +23,7 @@ class Parser final {
 public:
     NO_COPY_AND_MOVE(Parser)
     ~Parser() = default;
-    explicit Parser(support::Context* ctx, support::Diagnostics* diag, Lexer* lexer);
+    explicit Parser(support::GlobalContext* ctx, support::Diagnostics* diag, Lexer* lexer);
 
     [[nodiscard]] auto parse() -> ast::Content*;
 
@@ -61,7 +61,7 @@ private:
 
     [[noreturn]] void expected(std::string_view message);
 
-    support::Context* m_ctx;
+    support::GlobalContext* m_ctx;
     support::Diagnostics* m_diag;
     Lexer* m_lexer;
     ast::Allocator m_ast;

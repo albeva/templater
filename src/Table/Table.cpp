@@ -3,10 +3,10 @@
 //
 #include "Table.hpp"
 #include "Column.hpp"
-using support::Context;
+using support::GlobalContext;
 using table::Table;
 
-Table::Table(Context* ctx)
+Table::Table(GlobalContext* ctx)
     : m_ctx(ctx)
     , m_columns(ctx->getAllocator())
     , m_data(ctx->getAllocator())
@@ -18,13 +18,13 @@ Table::~Table() = default;
 
 auto Table::findColumn(std::string_view name) const noexcept -> Column*
 {
-    auto res = std::ranges::find_if(m_columns, [&](const support::Context::UniquePtr<Column>& col) {
+    auto res = std::ranges::find_if(m_columns, [&](const support::GlobalContext::UniquePtr<Column>& col) {
         return col->getName() == name;
     });
     return res != m_columns.end() ? res->get() : nullptr;
 }
 
-void Table::addColumn(support::Context::UniquePtr<Column> column)
+void Table::addColumn(support::GlobalContext::UniquePtr<Column> column)
 {
     m_columns.push_back(std::move(column));
 }

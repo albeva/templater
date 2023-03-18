@@ -1,7 +1,7 @@
 //
 // Created by Albert on 11/03/2023.
 //
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Support/Source.hpp"
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Lexer.hpp"
@@ -14,7 +14,7 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using support::Context;
+using support::GlobalContext;
 using support::Source;
 using table::parser::Lexer;
 using table::parser::Token;
@@ -24,7 +24,7 @@ class LexerTests : public testing::Test {
 protected:
     void load(std::string_view source)
     {
-        m_ctx = std::make_unique<Context>();
+        m_ctx = std::make_unique<GlobalContext>();
         m_source = std::make_unique<Source>("unnamed", std::string(source));
         m_lexer = std::make_unique<Lexer>(m_ctx.get(), m_source.get());
     }
@@ -56,7 +56,7 @@ protected:
     }
 
 private:
-    std::unique_ptr<Context> m_ctx;
+    std::unique_ptr<GlobalContext> m_ctx;
     std::unique_ptr<Lexer> m_lexer;
     std::unique_ptr<Source> m_source;
 };

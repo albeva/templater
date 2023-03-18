@@ -3,11 +3,11 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Support/Context.hpp"
+#include "Support/GlobalContext.hpp"
 #include "Symbol.hpp"
 
 namespace support {
-class Context;
+class GlobalContext;
 class Source;
 }
 
@@ -17,10 +17,10 @@ class Symbol;
 class SymbolTable final {
 public:
     NO_COPY_AND_MOVE(SymbolTable)
-    explicit SymbolTable(support::Context* ctx, support::Source* source);
+    explicit SymbolTable(support::GlobalContext* ctx, support::Source* source);
     ~SymbolTable();
 
-    using SymbolPtr = support::Context::UniquePtr<Symbol>;
+    using SymbolPtr = support::GlobalContext::UniquePtr<Symbol>;
 
     [[nodiscard]] auto getSymbols() const noexcept -> const auto& { return m_symbols; }
     [[nodiscard]] auto find(std::string_view name) const noexcept -> Symbol*;

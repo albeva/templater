@@ -3,10 +3,10 @@
 //
 #include "Parser.hpp"
 #include "Lexer.hpp"
-#include "Support/Context.hpp"
 #include "Support/Diagnostics.hpp"
-using support::Context;
+#include "Support/GlobalContext.hpp"
 using support::Diagnostics;
+using support::GlobalContext;
 using support::SourceLoc;
 using support::Visitor;
 using table::Identifier;
@@ -14,7 +14,7 @@ using table::StringLiteral;
 using table::parser::Parser;
 using namespace std::literals;
 
-Parser::Parser(Context* ctx, Diagnostics* diag, Lexer* lexer)
+Parser::Parser(GlobalContext* ctx, Diagnostics* diag, Lexer* lexer)
     : m_ctx(ctx)
     , m_diag(diag)
     , m_lexer(lexer)
