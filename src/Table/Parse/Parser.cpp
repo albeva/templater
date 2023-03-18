@@ -146,7 +146,7 @@ auto Parser::tableContent() -> ast::TableContent
 auto Parser::tableInherit() -> ast::TableInherit*
 {
     auto start = m_token.getLoc();
-    auto mber = member();
+    auto* mber = member();
 
     std::optional<ast::Expression> expr {};
     if (accept(TokenKind::ParenOpen)) {
@@ -154,7 +154,7 @@ auto Parser::tableInherit() -> ast::TableInherit*
         expect(TokenKind::ParenClose);
     }
 
-    return m_ast.node<ast::TableInherit>(makeLoc(start, m_lastLoc), std::move(mber), std::move(expr));
+    return m_ast.node<ast::TableInherit>(makeLoc(start, m_lastLoc), mber, expr);
 }
 
 // "[" [ TableRowList ] "]"
@@ -273,11 +273,11 @@ auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
         auto rhs = primary();
 
         while (m_token.getPrecedence() > prec) { // cppcheck-suppress knownConditionTrueFalse
-            rhs = expression(std::move(rhs), m_token.getPrecedence());
+            rhs = expression(rhs, m_token.getPrecedence());
         }
 
         auto end = std::visit(getLoc, rhs);
-        lhs = m_ast.node<ast::BinaryExpression>(makeLoc(start, end), op, std::move(lhs), std::move(rhs));
+        lhs = m_ast.node<ast::BinaryExpression>(makeLoc(start, end), op, lhs, rhs);
     }
     return lhs;
 }
@@ -300,7 +300,7 @@ auto Parser::operation() -> ast::Operation
 auto Parser::member() -> ast::Member*
 {
     auto start = m_token.getLoc();
-    auto members = std::pmr::vector<Identifier>(m_ctx->getAllocator());
+    auto members = m_ast.list<Identifier>();
 
     do {
         members.emplace_back(identifier());

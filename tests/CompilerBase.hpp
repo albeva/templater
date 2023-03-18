@@ -29,7 +29,7 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
         m_source = m_ctx.load(GetParam());
     }
 
-    auto parse() -> table::ast::Node<table::ast::Content>
+    auto parse() -> const auto*
     {
         Lexer lexer { &m_ctx, m_source };
         Parser parser { &m_ctx, &m_diag, &lexer };

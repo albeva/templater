@@ -35,7 +35,7 @@ void Printer::visit(const Table* node)
     if (!node->getColumns().empty()) {
         fmt::print(m_output, "(");
         Separator sep { " " };
-        for (const auto& col : node->getColumns()) {
+        for (const auto* col : node->getColumns()) {
             fmt::print(m_output, "{}", sep());
             visit(col);
         }
@@ -55,7 +55,7 @@ void Printer::visit(const Table* node)
 void Printer::visit(const TableColumn* node)
 {
     m_output << node->getIdentifier().getValue();
-    if (auto value = node->getValue()) {
+    if (const auto& value = node->getValue()) {
         fmt::print(m_output, " = {}", toString(value.value()));
     }
 }
@@ -73,7 +73,7 @@ void Printer::visit(const TableBody* node)
     fmt::print(m_output, "[");
     std::vector<std::vector<std::string>> content {};
     content.reserve(node->getRows().size());
-    for (const auto& row : node->getRows()) {
+    for (const auto* row : node->getRows()) {
         visit(content.emplace_back(), row);
     }
     printGrid(m_output, content);

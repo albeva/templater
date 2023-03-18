@@ -54,9 +54,12 @@ private:
 //--------------------------------------
 
 struct Content final : Root {
-    NO_COPY_AND_MOVE(Content)
-    Content(support::SourceLoc loc, support::Source* source, List<Statement> statements) noexcept;
-    ~Content();
+    Content(support::SourceLoc loc, support::Source* source, List<Statement> statements) noexcept
+        : Root(loc)
+        , m_source(source)
+        , m_statements(std::move(statements))
+    {
+    }
 
     [[nodiscard]] inline auto getSource() const noexcept -> const auto& { return m_source; }
     [[nodiscard]] inline auto getStatements() const noexcept -> const auto& { return m_statements; }
@@ -67,9 +70,12 @@ private:
 };
 
 struct Import final : Root {
-    NO_COPY_AND_MOVE(Import)
-    Import(support::SourceLoc loc, Identifier identifier, StringLiteral file) noexcept;
-    ~Import();
+    Import(support::SourceLoc loc, Identifier identifier, StringLiteral file) noexcept
+        : Root(loc)
+        , m_identifier(identifier)
+        , m_file(file)
+    {
+    }
 
     [[nodiscard]] inline auto getFile() const noexcept -> const auto& { return m_file; }
     [[nodiscard]] inline auto getIdentifier() const noexcept -> const auto& { return m_identifier; }
@@ -84,9 +90,13 @@ private:
 //--------------------------------------
 
 struct Table final : Root {
-    NO_COPY_AND_MOVE(Table)
-    Table(support::SourceLoc loc, Identifier identifier, List<TableColumn*> columns, List<TableContent> content) noexcept;
-    ~Table();
+    Table(support::SourceLoc loc, Identifier identifier, List<TableColumn*> columns, List<TableContent> content) noexcept
+        : Root(loc)
+        , m_identifier(identifier)
+        , m_columns(std::move(columns))
+        , m_content(std::move(content))
+    {
+    }
 
     [[nodiscard]] inline auto getIdentifier() const noexcept -> const auto& { return m_identifier; }
     [[nodiscard]] inline auto getColumns() const noexcept -> const auto& { return m_columns; }
@@ -99,9 +109,12 @@ private:
 };
 
 struct TableColumn final : Root {
-    NO_COPY_AND_MOVE(TableColumn)
-    TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<Value> value) noexcept;
-    ~TableColumn();
+    TableColumn(support::SourceLoc loc, Identifier identifier, std::optional<Value> value) noexcept
+        : Root(loc)
+        , m_identifier(identifier)
+        , m_value(value)
+    {
+    }
 
     [[nodiscard]] inline auto getIdentifier() const noexcept -> const auto& { return m_identifier; }
     [[nodiscard]] inline auto getValue() const noexcept -> const auto& { return m_value; }
@@ -112,9 +125,12 @@ private:
 };
 
 struct TableInherit final : Root {
-    NO_COPY_AND_MOVE(TableInherit)
-    TableInherit(support::SourceLoc loc, Member* member, std::optional<Expression> expression) noexcept;
-    ~TableInherit();
+    TableInherit(support::SourceLoc loc, Member* member, std::optional<Expression> expression) noexcept
+        : Root(loc)
+        , m_member(member)
+        , m_expression(expression)
+    {
+    }
 
     [[nodiscard]] inline auto getMember() const noexcept -> const auto& { return m_member; }
     [[nodiscard]] inline auto getExpression() const noexcept -> const auto& { return m_expression; }
@@ -125,9 +141,11 @@ private:
 };
 
 struct TableBody final : Root {
-    NO_COPY_AND_MOVE(TableBody)
-    TableBody(support::SourceLoc loc, List<TableRow*> rows) noexcept;
-    ~TableBody();
+    TableBody(support::SourceLoc loc, List<TableRow*> rows) noexcept
+        : Root(loc)
+        , m_rows(std::move(rows))
+    {
+    }
 
     [[nodiscard]] inline auto getRows() const noexcept -> const auto& { return m_rows; }
 
@@ -136,9 +154,11 @@ private:
 };
 
 struct TableRow final : Root {
-    NO_COPY_AND_MOVE(TableRow)
-    TableRow(support::SourceLoc loc, List<TableValue> values) noexcept;
-    ~TableRow();
+    TableRow(support::SourceLoc loc, List<TableValue> values) noexcept
+        : Root(loc)
+        , m_values(std::move(values))
+    {
+    }
 
     [[nodiscard]] inline auto getValues() const noexcept -> const auto& { return m_values; }
 
@@ -165,9 +185,12 @@ private:
 };
 
 struct UnaryExpression final : Root {
-    NO_COPY_AND_MOVE(UnaryExpression)
-    UnaryExpression(support::SourceLoc loc, Operation op, Expression rhs) noexcept;
-    ~UnaryExpression();
+    UnaryExpression(support::SourceLoc loc, Operation op, Expression rhs) noexcept
+        : Root(loc)
+        , m_op(op)
+        , m_rhs(rhs)
+    {
+    }
 
     [[nodiscard]] inline auto getOp() const noexcept -> const auto& { return m_op; }
     [[nodiscard]] inline auto getRhs() const noexcept -> const auto& { return m_rhs; }
@@ -178,9 +201,13 @@ private:
 };
 
 struct BinaryExpression final : Root {
-    NO_COPY_AND_MOVE(BinaryExpression)
-    BinaryExpression(support::SourceLoc loc, Operation op, Expression lhs, Expression rhs) noexcept;
-    ~BinaryExpression();
+    BinaryExpression(support::SourceLoc loc, Operation op, Expression lhs, Expression rhs) noexcept
+        : Root(loc)
+        , m_op(op)
+        , m_lhs(lhs)
+        , m_rhs(rhs)
+    {
+    }
 
     [[nodiscard]] inline auto getOp() const noexcept -> const auto& { return m_op; }
     [[nodiscard]] inline auto getLhs() const noexcept -> const auto& { return m_lhs; }
@@ -196,9 +223,11 @@ private:
 //--------------------------------------
 
 struct Member final : Root {
-    NO_COPY_AND_MOVE(Member)
-    Member(support::SourceLoc loc, List<Identifier> identifiers) noexcept;
-    ~Member();
+    Member(support::SourceLoc loc, List<Identifier> identifiers) noexcept
+        : Root(loc)
+        , m_identifiers(std::move(identifiers))
+    {
+    }
 
     [[nodiscard]] inline auto getIdentifiers() const noexcept -> const auto& { return m_identifiers; }
 
