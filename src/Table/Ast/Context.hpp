@@ -33,14 +33,15 @@ public:
         return std::pmr::vector<T>(m_pool.getAllocator());
     }
 
+    [[nodiscard]] inline auto getSource() const noexcept -> support::Source* { return m_source; }
+
     void setRoot(Content* root) noexcept { m_root = root; }
     [[nodiscard]] inline auto getRoot() const noexcept -> Content* { return m_root; }
-    [[nodiscard]] inline auto getSource() const noexcept -> support::Source* { return m_source; }
 
 private:
     support::MemoryPool m_pool;
-    Content* m_root;
     support::Source* m_source;
+    Content* m_root;
 };
 
 } // namespace table::ast

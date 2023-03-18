@@ -41,6 +41,20 @@ struct MemoryPool final {
     using UniquePtr = std::unique_ptr<T, MonotonicBufferDelete>;
 
     /**
+     * Create a unique_ptr of an object of type T with the provided arguments in the memory pool.
+     *
+     * @tparam T The type of the object to be created.
+     * @tparam Args The types of the arguments to be forwarded to the constructor of the object.
+     * @param args The arguments to be forwarded to the constructor of the object.
+     * @return A UniquePtr<T> pointing to the newly created object.
+     */
+    template <typename T, typename... Args>
+    [[nodiscard]] constexpr auto makeUnique(Args&&... args) -> UniquePtr<T>
+    {
+        return UniquePtr<T>(create<T>(std::forward<Args>(args)...));
+    }
+
+    /**
      * Create an object of type T with the provided arguments in the memory pool.
      *
      * @tparam T The type of the object to be created.
@@ -53,20 +67,6 @@ struct MemoryPool final {
     {
         auto* mem = m_pa.allocate_object<T>();
         return std::construct_at(mem, std::forward<Args>(args)...);
-    }
-
-    /**
-     * Create a unique_ptr of an object of type T with the provided arguments in the memory pool.
-     *
-     * @tparam T The type of the object to be created.
-     * @tparam Args The types of the arguments to be forwarded to the constructor of the object.
-     * @param args The arguments to be forwarded to the constructor of the object.
-     * @return A UniquePtr<T> pointing to the newly created object.
-     */
-    template <typename T, typename... Args>
-    [[nodiscard]] constexpr auto makeUnique(Args&&... args) -> UniquePtr<T>
-    {
-        return UniquePtr<T>(create<T>(std::forward<Args>(args)...));
     }
 
     /**

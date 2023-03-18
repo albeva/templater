@@ -6,8 +6,8 @@ using table::ast::Context;
 
 Context::Context(support::Source* source)
     : m_pool()
-    , m_root(nullptr)
     , m_source(source)
+    , m_root(nullptr)
 {
 }
 
