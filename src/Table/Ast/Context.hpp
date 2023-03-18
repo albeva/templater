@@ -4,6 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "Ast.hpp"
+#include "Support/MemoryPool.hpp"
 namespace support {
 class Source;
 }
@@ -23,14 +24,13 @@ public:
     template <class T, class... Args>
     [[nodiscard]] inline auto node(Args&&... args) -> T*
     {
-        auto obj = m_pa.allocate_object<T>();
-        return std::construct_at(obj, std::forward<Args>(args)...);
+        return m_pool.create<T>(std::forward<Args>(args)...);
     }
 
     template <class T>
     [[nodiscard]] inline auto list() -> List<T>
     {
-        return std::pmr::vector<T>(m_pa);
+        return std::pmr::vector<T>(m_pool.getAllocator());
     }
 
     void setRoot(Content* root) noexcept { m_root = root; }
@@ -38,8 +38,7 @@ public:
     [[nodiscard]] inline auto getSource() const noexcept -> support::Source* { return m_source; }
 
 private:
-    std::pmr::monotonic_buffer_resource m_mbr;
-    std::pmr::polymorphic_allocator<std::byte> m_pa;
+    support::MemoryPool m_pool;
     Content* m_root;
     support::Source* m_source;
 };

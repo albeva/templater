@@ -9,8 +9,8 @@ using table::Table;
 
 Table::Table(SymbolTable* owner)
     : m_owner(owner)
-    , m_columns(owner->getAllocator())
-    , m_data(owner->getAllocator())
+    , m_columns(owner->getPool()->getAllocator())
+    , m_data(owner->getPool()->getAllocator())
 {
 }
 
@@ -31,7 +31,7 @@ void Table::addColumn(Column* column)
 
 void Table::addRow()
 {
-    m_data.emplace_back(Row(m_owner->getAllocator()));
+    m_data.emplace_back(Row(m_owner->getPool()->getAllocator()));
 }
 
 void Table::addValue(size_t row, const Column* column, Value value)

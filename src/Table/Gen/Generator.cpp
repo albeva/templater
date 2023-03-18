@@ -47,10 +47,10 @@ void Generator::visit(const ast::Table* node)
         redefinition(id, existing->getLoc());
     }
 
-    m_table = m_symbolTable->create<Table>(m_symbolTable.get());
+    m_table = m_symbolTable->getPool()->create<Table>(m_symbolTable.get());
     visitEach(node->getColumns());
     visitEach(node->getContent());
-    auto* symbol = m_symbolTable->create<Symbol>(id.getValue(), id.getLoc(), m_table);
+    auto* symbol = m_symbolTable->getPool()->create<Symbol>(id.getValue(), id.getLoc(), m_table);
     m_symbolTable->insert(symbol);
 }
 
@@ -62,7 +62,7 @@ void Generator::visit(const ast::TableColumn* node)
         redefinition(id, existing->getLoc());
     }
 
-    auto* column = m_symbolTable->create<Column>(id.getValue(), id.getLoc(), node->getValue());
+    auto* column = m_symbolTable->getPool()->create<Column>(id.getValue(), id.getLoc(), node->getValue());
     m_table->addColumn(column);
 }
 

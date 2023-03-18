@@ -3,6 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
+#include "Support/MemoryPool.hpp"
 #include "Symbol.hpp"
 
 namespace support {
@@ -18,18 +19,7 @@ public:
     explicit SymbolTable(support::Source* source);
     ~SymbolTable();
 
-    /**
-     * Allocate and create ast node T. Destructor is never called symbol table objects
-     * instead whole memory pool is freed at once when SymbolTable deallocates.
-     */
-    template <class T, class... Args>
-    [[nodiscard]] inline auto create(Args&&... args) -> T*
-    {
-        auto obj = m_pa.allocate_object<T>();
-        return std::construct_at(obj, std::forward<Args>(args)...);
-    }
-
-    [[nodiscard]] inline auto getAllocator() const noexcept -> auto& { return m_pa; }
+    [[nodiscard]] auto getPool() const noexcept -> support::MemoryPool* { return m_pool.get(); }
 
     [[nodiscard]] auto getSymbols() const noexcept -> const auto& { return m_symbols; }
     [[nodiscard]] auto find(std::string_view name) const noexcept -> Symbol*;
@@ -39,10 +29,6 @@ public:
     [[nodiscard]] auto getSource() const noexcept { return m_source; }
 
 private:
-    support::Source* m_source;
-    std::pmr::monotonic_buffer_resource m_mbr;
-    std::pmr::polymorphic_allocator<std::byte> m_pa;
-
     struct Comparison {
         using is_transparent = std::true_type;
 
@@ -77,6 +63,8 @@ private:
         }
     };
 
+    support::Source* m_source;
+    std::unique_ptr<support::MemoryPool> m_pool;
     std::pmr::unordered_set<Symbol*, Hash, Comparison> m_symbols;
 };
 

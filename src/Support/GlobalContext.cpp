@@ -6,9 +6,9 @@
 using support::GlobalContext;
 
 GlobalContext::GlobalContext()
-    : m_pa(&m_mbr)
-    , m_uniquedStrings(m_pa)
-    , m_sources(m_pa)
+    : m_pool()
+    , m_uniquedStrings(m_pool.getAllocator())
+    , m_sources(m_pool.getAllocator())
 {
 }
 
@@ -23,5 +23,5 @@ auto GlobalContext::load(const std::filesystem::path& path) -> Source*
         return res->get();
     }
 
-    return m_sources.emplace_back(makeUnique<Source>(path)).get();
+    return m_sources.emplace_back(m_pool.makeUnique<Source>(path)).get();
 }

@@ -8,8 +8,8 @@ using table::SymbolTable;
 
 SymbolTable::SymbolTable(Source* source)
     : m_source(source)
-    , m_pa(&m_mbr)
-    , m_symbols(m_pa)
+    , m_pool(std::make_unique<support::MemoryPool>())
+    , m_symbols(m_pool->getAllocator())
 {
 }
 

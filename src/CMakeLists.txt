@@ -40,7 +40,7 @@ add_library(
     Table/SymbolTable.hpp
     Table/Table.cpp
     Table/Table.hpp
-    Table/Value.hpp)
+    Table/Value.hpp Support/MemoryPool.hpp)
 
 # fmt
 include(FetchContent)
