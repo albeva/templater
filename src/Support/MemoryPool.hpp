@@ -13,6 +13,14 @@ namespace support {
 struct MemoryPool final {
     NO_COPY_AND_MOVE(MemoryPool)
     MemoryPool() = default;
+
+    /**
+     * Constructor with upstream memory resource.
+     * @param upstream An upstream memory resource for the monotonic buffer resource.
+     */
+    explicit MemoryPool(std::pmr::memory_resource* upstream)
+        : m_mbr(upstream), m_pa(&m_mbr) {}
+
     ~MemoryPool() = default;
 
     /**
@@ -21,7 +29,7 @@ struct MemoryPool final {
      */
     struct MonotonicBufferDelete {
         template <typename T>
-        constexpr void operator()(T* obj) const { std::destroy_at(obj); }
+        constexpr void operator()(T* obj) const noexcept { std::destroy_at(obj); }
     };
 
     /**
@@ -67,6 +75,11 @@ struct MemoryPool final {
      * @return std::pmr::polymorphic_allocator used by the pool
      */
     [[nodiscard]] constexpr auto getAllocator() const noexcept -> auto& { return m_pa; }
+
+    /**
+     * Release memory held by the monotonic_buffer_resource
+     */
+    void reset() noexcept { m_mbr.release(); }
 
 private:
     std::pmr::monotonic_buffer_resource m_mbr;
