@@ -25,28 +25,28 @@ public:
     ~Parser() = default;
     explicit Parser(support::Context* ctx, support::Diagnostics* diag, Lexer* lexer);
 
-    [[nodiscard]] auto parse() -> ast::Node<ast::Content>;
+    [[nodiscard]] auto parse() -> ast::Content*;
 
 private:
     auto statement() -> ast::Statement;
-    auto kwImport() -> ast::Node<ast::Import>;
+    auto kwImport() -> ast::Import*;
 
-    auto kwTable() -> ast::Node<ast::Table>;
-    auto tableColumnList() -> ast::List<ast::Node<ast::TableColumn>>;
-    auto tableColumn() -> ast::Node<ast::TableColumn>;
+    auto kwTable() -> ast::Table*;
+    auto tableColumnList() -> ast::List<ast::TableColumn*>;
+    auto tableColumn() -> ast::TableColumn*;
     auto tableContentList() -> ast::List<ast::TableContent>;
     auto tableContent() -> ast::TableContent;
-    auto tableInherit() -> ast::Node<ast::TableInherit>;
-    auto tableBody() -> ast::Node<ast::TableBody>;
-    auto tableRowList() -> ast::List<ast::Node<ast::TableRow>>;
-    auto tableRow() -> ast::Node<ast::TableRow>;
+    auto tableInherit() -> ast::TableInherit*;
+    auto tableBody() -> ast::TableBody*;
+    auto tableRowList() -> ast::List<ast::TableRow*>;
+    auto tableRow() -> ast::TableRow*;
 
     auto expression() -> ast::Expression;
     auto primary() -> ast::Expression;
     auto expression(ast::Expression lhs, int min) -> ast::Expression;
     auto operation() -> ast::Operation;
 
-    auto member() -> ast::Node<ast::Member>;
+    auto member() -> ast::Member*;
 
     [[nodiscard]] auto value() -> Value;
 

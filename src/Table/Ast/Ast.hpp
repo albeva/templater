@@ -24,14 +24,11 @@ struct BinaryExpression;
 struct Member;
 
 template <typename T>
-using Node = support::Context::UniquePtr<T>;
-
-template <typename T>
 using List = std::pmr::vector<T>;
 
-using Statement = std::variant<Node<Import>, Node<Table>>;
-using Expression = std::variant<Node<Member>, StringLiteral, NumberLiteral, Node<UnaryExpression>, Node<BinaryExpression>>;
-using TableContent = std::variant<Node<TableInherit>, Node<TableBody>>;
+using Statement = std::variant<Import*, Table*>;
+using Expression = std::variant<Member*, StringLiteral, NumberLiteral, UnaryExpression*, BinaryExpression*>;
+using TableContent = std::variant<TableInherit*, TableBody*>;
 struct PipeLiteral { };
 using TableValue = std::variant<std::monostate, PipeLiteral, Value>;
 
@@ -88,7 +85,7 @@ private:
 
 struct Table final : Root {
     NO_COPY_AND_MOVE(Table)
-    Table(support::SourceLoc loc, Identifier identifier, List<Node<TableColumn>> columns, List<TableContent> content) noexcept;
+    Table(support::SourceLoc loc, Identifier identifier, List<TableColumn*> columns, List<TableContent> content) noexcept;
     ~Table();
 
     [[nodiscard]] inline auto getIdentifier() const noexcept -> const auto& { return m_identifier; }
@@ -97,7 +94,7 @@ struct Table final : Root {
 
 private:
     Identifier m_identifier;
-    List<Node<TableColumn>> m_columns;
+    List<TableColumn*> m_columns;
     List<TableContent> m_content;
 };
 
@@ -116,26 +113,26 @@ private:
 
 struct TableInherit final : Root {
     NO_COPY_AND_MOVE(TableInherit)
-    TableInherit(support::SourceLoc loc, Node<Member> member, std::optional<Expression> expression) noexcept;
+    TableInherit(support::SourceLoc loc, Member* member, std::optional<Expression> expression) noexcept;
     ~TableInherit();
 
     [[nodiscard]] inline auto getMember() const noexcept -> const auto& { return m_member; }
     [[nodiscard]] inline auto getExpression() const noexcept -> const auto& { return m_expression; }
 
 private:
-    Node<Member> m_member;
+    Member* m_member;
     std::optional<Expression> m_expression;
 };
 
 struct TableBody final : Root {
     NO_COPY_AND_MOVE(TableBody)
-    TableBody(support::SourceLoc loc, List<Node<TableRow>> rows) noexcept;
+    TableBody(support::SourceLoc loc, List<TableRow*> rows) noexcept;
     ~TableBody();
 
     [[nodiscard]] inline auto getRows() const noexcept -> const auto& { return m_rows; }
 
 private:
-    List<Node<TableRow>> m_rows;
+    List<TableRow*> m_rows;
 };
 
 struct TableRow final : Root {

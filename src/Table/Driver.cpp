@@ -25,7 +25,7 @@ Driver::Driver()
 
 Driver::~Driver() = default;
 
-auto Driver::parse(const std::filesystem::path& path) -> ast::Node<ast::Content>
+auto Driver::parse(const std::filesystem::path& path) -> ast::Content*
 {
     auto* src = m_context->load(path);
     Lexer lexer { m_context.get(), src };

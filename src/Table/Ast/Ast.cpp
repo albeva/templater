@@ -4,7 +4,7 @@
 #include "Ast.hpp"
 using namespace table::ast; // NOLINT
 
-Content::Content(support::SourceLoc loc, support::Source* source, List<std::variant<Node<Import>, Node<Table>>> statements) noexcept
+Content::Content(support::SourceLoc loc, support::Source* source, List<std::variant<Import*, Table*>> statements) noexcept
     : Root(loc)
     , m_source(source)
     , m_statements(std::move(statements))
@@ -20,7 +20,7 @@ Import::Import(support::SourceLoc loc, table::Identifier identifier, table::Stri
 }
 Import::~Import() = default;
 
-Table::Table(support::SourceLoc loc, table::Identifier identifier, List<Node<TableColumn>> columns, List<std::variant<Node<TableInherit>, Node<TableBody>>> content) noexcept
+Table::Table(support::SourceLoc loc, table::Identifier identifier, List<TableColumn*> columns, List<std::variant<TableInherit*, TableBody*>> content) noexcept
     : Root(loc)
     , m_identifier(identifier)
     , m_columns(std::move(columns))
@@ -37,7 +37,7 @@ TableColumn::TableColumn(support::SourceLoc loc, table::Identifier identifier, s
 }
 TableColumn::~TableColumn() = default;
 
-TableInherit::TableInherit(support::SourceLoc loc, Node<Member> member, std::optional<std::variant<Node<Member>, table::StringLiteral, table::NumberLiteral, Node<UnaryExpression>, Node<BinaryExpression>>> expression) noexcept
+TableInherit::TableInherit(support::SourceLoc loc, Member* member, std::optional<std::variant<Member*, table::StringLiteral, table::NumberLiteral, UnaryExpression*, BinaryExpression*>> expression) noexcept
     : Root(loc)
     , m_member(std::move(member))
     , m_expression(std::move(expression))
@@ -45,7 +45,7 @@ TableInherit::TableInherit(support::SourceLoc loc, Node<Member> member, std::opt
 }
 TableInherit::~TableInherit() = default;
 
-TableBody::TableBody(support::SourceLoc loc, List<Node<TableRow>> rows) noexcept
+TableBody::TableBody(support::SourceLoc loc, List<TableRow*> rows) noexcept
     : Root(loc)
     , m_rows(std::move(rows))
 {
@@ -59,7 +59,7 @@ TableRow::TableRow(support::SourceLoc loc, List<std::variant<std::monostate, Pip
 }
 TableRow::~TableRow() = default;
 
-UnaryExpression::UnaryExpression(support::SourceLoc loc, Operation op, std::variant<Node<Member>, table::StringLiteral, table::NumberLiteral, Node<UnaryExpression>, Node<BinaryExpression>> rhs) noexcept
+UnaryExpression::UnaryExpression(support::SourceLoc loc, Operation op, std::variant<Member*, table::StringLiteral, table::NumberLiteral, UnaryExpression*, BinaryExpression*> rhs) noexcept
     : Root(loc)
     , m_op(op)
     , m_rhs(std::move(rhs))
@@ -67,7 +67,7 @@ UnaryExpression::UnaryExpression(support::SourceLoc loc, Operation op, std::vari
 }
 UnaryExpression::~UnaryExpression() = default;
 
-BinaryExpression::BinaryExpression(support::SourceLoc loc, Operation op, std::variant<Node<Member>, table::StringLiteral, table::NumberLiteral, Node<UnaryExpression>, Node<BinaryExpression>> lhs, std::variant<Node<Member>, table::StringLiteral, table::NumberLiteral, Node<UnaryExpression>, Node<BinaryExpression>> rhs) noexcept
+BinaryExpression::BinaryExpression(support::SourceLoc loc, Operation op, std::variant<Member*, table::StringLiteral, table::NumberLiteral, UnaryExpression*, BinaryExpression*> lhs, std::variant<Member*, table::StringLiteral, table::NumberLiteral, UnaryExpression*, BinaryExpression*> rhs) noexcept
     : Root(loc)
     , m_op(op)
     , m_lhs(std::move(lhs))

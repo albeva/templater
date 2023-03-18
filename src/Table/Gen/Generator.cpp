@@ -25,7 +25,7 @@ Generator::Generator(Context* ctx, Diagnostics* diag)
 
 Generator::~Generator() = default;
 
-auto Generator::visit(const ast::Node<ast::Content>& node) -> support::Context::UniquePtr<SymbolTable>
+auto Generator::visit(const ast::Content* node) -> support::Context::UniquePtr<SymbolTable>
 {
     m_source = node->getSource();
     m_symbolTable = m_ctx->makeUnique<SymbolTable>(m_ctx, m_source);
@@ -34,13 +34,13 @@ auto Generator::visit(const ast::Node<ast::Content>& node) -> support::Context::
     return std::move(m_symbolTable);
 }
 
-void Generator::visit(const ast::Node<ast::Import>& node)
+void Generator::visit(const ast::Import* node)
 {
     (void)this;
     (void)node;
 }
 
-void Generator::visit(const ast::Node<ast::Table>& node)
+void Generator::visit(const ast::Table* node)
 {
     const auto& id = node->getIdentifier();
     const auto* existing = m_symbolTable->find(id.getValue());
@@ -55,7 +55,7 @@ void Generator::visit(const ast::Node<ast::Table>& node)
     m_symbolTable->insert(std::move(symbol));
 }
 
-void Generator::visit(const ast::Node<ast::TableColumn>& node)
+void Generator::visit(const ast::TableColumn* node)
 {
     const auto& id = node->getIdentifier();
     const auto* existing = m_table->findColumn(node->getIdentifier().getValue());
@@ -66,19 +66,19 @@ void Generator::visit(const ast::Node<ast::TableColumn>& node)
     m_table->addColumn(m_ctx->makeUnique<Column>(id.getValue(), id.getLoc(), node->getValue()));
 }
 
-void Generator::visit(const ast::Node<ast::TableInherit>& /*node*/)
+void Generator::visit(const ast::TableInherit* /*node*/)
 {
     (void)this;
     throw GeneratorException("Inheritance not implemented");
 }
 
-void Generator::visit(const ast::Node<ast::TableBody>& node)
+void Generator::visit(const ast::TableBody* node)
 {
     m_rowIndex = 0;
     visitEach(node->getRows());
 }
 
-void Generator::visit(const ast::Node<ast::TableRow>& node)
+void Generator::visit(const ast::TableRow* node)
 {
     m_table->addRow();
     const auto& values = node->getValues();
@@ -112,7 +112,7 @@ void Generator::visit(const ast::Node<ast::TableRow>& node)
     m_rowIndex++;
 }
 
-void Generator::visit(const ast::Node<ast::Member>& node)
+void Generator::visit(const ast::Member* node)
 {
     (void)this;
     (void)node;

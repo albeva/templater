@@ -21,7 +21,7 @@ public:
     Driver();
     ~Driver();
 
-    [[nodiscard]] auto parse(const std::filesystem::path& path) -> ast::Node<ast::Content>;
+    [[nodiscard]] auto parse(const std::filesystem::path& path) -> ast::Content*;
     [[nodiscard]] auto compile(const std::filesystem::path& path) -> support::Context::UniquePtr<SymbolTable>;
 
     void printAst(const std::filesystem::path& path);

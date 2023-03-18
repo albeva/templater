@@ -32,18 +32,18 @@ public:
     Generator(support::Context* ctx, support::Diagnostics* diag);
     ~Generator();
 
-    auto visit(const ast::Node<ast::Content>& node) -> support::Context::UniquePtr<SymbolTable>;
+    auto visit(const ast::Content* node) -> support::Context::UniquePtr<SymbolTable>;
 
     VISITOR_MIXIN
 
 private:
-    void visit(const ast::Node<ast::Import>& node);
-    void visit(const ast::Node<ast::Table>& node);
-    void visit(const ast::Node<ast::TableColumn>& node);
-    void visit(const ast::Node<ast::TableInherit>& node);
-    void visit(const ast::Node<ast::TableBody>& node);
-    void visit(const ast::Node<ast::TableRow>& node);
-    void visit(const ast::Node<ast::Member>& node);
+    void visit(const ast::Import* node);
+    void visit(const ast::Table* node);
+    void visit(const ast::TableColumn* node);
+    void visit(const ast::TableInherit* node);
+    void visit(const ast::TableBody* node);
+    void visit(const ast::TableRow* node);
+    void visit(const ast::Member* node);
 
     [[noreturn]] void redefinition(const Identifier& id, support::SourceLoc existing) const;
 

@@ -24,7 +24,7 @@ Parser::Parser(Context* ctx, Diagnostics* diag, Lexer* lexer)
 }
 
 // { Statement }
-auto Parser::parse() -> ast::Node<ast::Content>
+auto Parser::parse() -> ast::Content*
 {
     auto start = m_token.getLoc();
 
@@ -54,7 +54,7 @@ auto Parser::statement() -> ast::Statement
 }
 
 // "import" STRING "as" IDENTIFIER
-auto Parser::kwImport() -> ast::Node<ast::Import>
+auto Parser::kwImport() -> ast::Import*
 {
     auto start = m_token.getLoc();
     expect(TokenKind::KwImport);
@@ -71,14 +71,14 @@ auto Parser::kwImport() -> ast::Node<ast::Import>
 //------------------------------------------------------------------------------
 
 // "table" IDENTIFIER [ "(" TableColumnList ")" ] [ "=" TableContentList ]
-auto Parser::kwTable() -> ast::Node<ast::Table>
+auto Parser::kwTable() -> ast::Table*
 {
     auto start = m_token.getLoc();
     expect(TokenKind::KwTable);
 
     auto ident = identifier();
 
-    auto columns = m_ast.list<ast::Node<ast::TableColumn>>();
+    auto columns = m_ast.list<ast::TableColumn*>();
     if (accept(TokenKind::ParenOpen)) {
         columns = tableColumnList();
         expect(TokenKind::ParenClose);
@@ -91,9 +91,9 @@ auto Parser::kwTable() -> ast::Node<ast::Table>
 }
 
 // TableColumn { "," TableColumn }
-auto Parser::tableColumnList() -> ast::List<ast::Node<ast::TableColumn>>
+auto Parser::tableColumnList() -> ast::List<ast::TableColumn*>
 {
-    auto columns = m_ast.list<ast::Node<ast::TableColumn>>();
+    auto columns = m_ast.list<ast::TableColumn*>();
 
     do {
         columns.push_back(tableColumn());
@@ -103,7 +103,7 @@ auto Parser::tableColumnList() -> ast::List<ast::Node<ast::TableColumn>>
 }
 
 // IDENTIFIER [ "=" TableValue ]
-auto Parser::tableColumn() -> ast::Node<ast::TableColumn>
+auto Parser::tableColumn() -> ast::TableColumn*
 {
     auto start = m_token.getLoc();
     auto ident = identifier();
@@ -143,7 +143,7 @@ auto Parser::tableContent() -> ast::TableContent
 }
 
 // Member [ "(" Expression ")" ]
-auto Parser::tableInherit() -> ast::Node<ast::TableInherit>
+auto Parser::tableInherit() -> ast::TableInherit*
 {
     auto start = m_token.getLoc();
     auto mber = member();
@@ -158,13 +158,13 @@ auto Parser::tableInherit() -> ast::Node<ast::TableInherit>
 }
 
 // "[" [ TableRowList ] "]"
-auto Parser::tableBody() -> ast::Node<ast::TableBody>
+auto Parser::tableBody() -> ast::TableBody*
 {
     auto start = m_token.getLoc();
     expect(TokenKind::BracketOpen);
     accept(TokenKind::EndOfLine);
 
-    auto rows = m_ast.list<ast::Node<ast::TableRow>>();
+    auto rows = m_ast.list<ast::TableRow*>();
     if (m_token.isNot(TokenKind::BracketClose)) {
         rows = tableRowList();
     }
@@ -175,9 +175,9 @@ auto Parser::tableBody() -> ast::Node<ast::TableBody>
 }
 
 // TableRow { "\n" TableRow }
-auto Parser::tableRowList() -> ast::List<ast::Node<ast::TableRow>>
+auto Parser::tableRowList() -> ast::List<ast::TableRow*>
 {
-    auto rows = m_ast.list<ast::Node<ast::TableRow>>();
+    auto rows = m_ast.list<ast::TableRow*>();
 
     do {
         rows.push_back(tableRow());
@@ -190,7 +190,7 @@ auto Parser::tableRowList() -> ast::List<ast::Node<ast::TableRow>>
 }
 
 // Value { "," Value }
-auto Parser::tableRow() -> ast::Node<ast::TableRow>
+auto Parser::tableRow() -> ast::TableRow*
 {
     auto start = m_token.getLoc();
     auto values = m_ast.list<ast::TableValue>();
@@ -261,7 +261,7 @@ auto Parser::expression(ast::Expression lhs, int min) -> ast::Expression
         [](const StringLiteral& val) {
             return val.getLoc();
         },
-        []<typename T>(const ast::Node<T>& val) {
+        []<typename T>(const T* val) {
             return val->getLoc();
         },
     };
@@ -297,7 +297,7 @@ auto Parser::operation() -> ast::Operation
 //------------------------------------------------------------------------------
 
 // IDENTIFIER { "." IDENTIFIER };
-auto Parser::member() -> ast::Node<ast::Member>
+auto Parser::member() -> ast::Member*
 {
     auto start = m_token.getLoc();
     auto members = std::pmr::vector<Identifier>(m_ctx->getAllocator());

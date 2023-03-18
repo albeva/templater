@@ -7,6 +7,12 @@
 #include "Support/Context.hpp"
 namespace table::ast {
 
+/**
+ * Allocator for Ast nodes.
+ * No destructors are called for Ast nodes,
+ * instead memory is simply released when owning Context
+ * is deallocated.
+ */
 class Allocator final {
 public:
     explicit Allocator(support::Context* context) noexcept
@@ -15,9 +21,9 @@ public:
     }
 
     template <class T, class... Args>
-    [[nodiscard]] inline auto node(Args&&... args) -> Node<T>
+    [[nodiscard]] inline auto node(Args&&... args) -> T*
     {
-        return m_context->makeUnique<T>(std::forward<Args>(args)...);
+        return m_context->create<T>(std::forward<Args>(args)...);
     }
 
     template <class T>
