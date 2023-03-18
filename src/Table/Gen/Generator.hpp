@@ -16,12 +16,14 @@ namespace table {
 namespace parser {
     struct Token;
 }
+namespace ast {
+    class Context;
+}
 class SymbolTable;
 class Table;
 }
 
 namespace table::gen {
-
 class GeneratorException final : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
@@ -32,7 +34,7 @@ public:
     Generator(support::GlobalContext* ctx, support::Diagnostics* diag);
     ~Generator();
 
-    auto visit(const ast::Content* node) -> support::GlobalContext::UniquePtr<SymbolTable>;
+    auto visit(const ast::Context* ast) -> support::GlobalContext::UniquePtr<SymbolTable>;
 
     VISITOR_MIXIN
 

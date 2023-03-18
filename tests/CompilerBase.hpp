@@ -6,6 +6,7 @@
 #include "Support/GlobalContext.hpp"
 #include "Support/Source.hpp"
 #include "Table/Ast/Ast.hpp"
+#include "Table/Ast/Context.hpp"
 #include "Table/Gen/Generator.hpp"
 #include "Table/Parse/Lexer.hpp"
 #include "Table/Parse/Parser.hpp"
@@ -29,18 +30,18 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
         m_source = m_ctx.load(GetParam());
     }
 
-    auto parse() -> const auto*
+    auto parse()
     {
         Lexer lexer { &m_ctx, m_source };
         Parser parser { &m_ctx, &m_diag, &lexer };
         return parser.parse();
     }
 
-    auto gen() -> GlobalContext::UniquePtr<table::SymbolTable>
+    auto gen()
     {
         auto ast = parse();
         Generator gen { &m_ctx, &m_diag };
-        return gen.visit(ast);
+        return gen.visit(ast.get());
     }
 
     [[nodiscard]] auto expected() const -> std::string

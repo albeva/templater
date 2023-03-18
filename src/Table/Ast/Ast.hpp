@@ -7,9 +7,6 @@
 #include "Support/SourceLoc.hpp"
 #include "Table/Parse/Token.hpp"
 #include "Table/Value.hpp"
-namespace support {
-class Source;
-}
 namespace table::ast {
 struct Content;
 struct Import;
@@ -54,18 +51,15 @@ private:
 //--------------------------------------
 
 struct Content final : Root {
-    Content(support::SourceLoc loc, support::Source* source, List<Statement> statements) noexcept
+    Content(support::SourceLoc loc, List<Statement> statements) noexcept
         : Root(loc)
-        , m_source(source)
         , m_statements(std::move(statements))
     {
     }
 
-    [[nodiscard]] inline auto getSource() const noexcept -> const auto& { return m_source; }
     [[nodiscard]] inline auto getStatements() const noexcept -> const auto& { return m_statements; }
 
 private:
-    support::Source* m_source;
     List<Statement> m_statements;
 };
 

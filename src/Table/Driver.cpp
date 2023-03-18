@@ -2,6 +2,7 @@
 // Created by Albert on 17/03/2023.
 //
 #include "Driver.hpp"
+#include "Ast/Context.hpp"
 #include "Ast/Printer.hpp"
 #include "Gen/Generator.hpp"
 #include "Parse/Lexer.hpp"
@@ -25,7 +26,7 @@ Driver::Driver()
 
 Driver::~Driver() = default;
 
-auto Driver::parse(const std::filesystem::path& path) -> ast::Content*
+auto Driver::parse(const std::filesystem::path& path) -> std::unique_ptr<ast::Context>
 {
     auto* src = m_context->load(path);
     Lexer lexer { m_context.get(), src };
@@ -36,13 +37,13 @@ auto Driver::compile(const std::filesystem::path& path) -> support::GlobalContex
 {
     auto ast = parse(path);
     Generator gen { m_context.get(), m_diag.get() };
-    return gen.visit(ast);
+    return gen.visit(ast.get());
 }
 
 void Driver::printAst(const std::filesystem::path& path)
 {
     auto ast = parse(path);
-    std::cout << ast::Printer { ast };
+    std::cout << ast::Printer { ast.get() };
 }
 
 void Driver::printTable(const std::filesystem::path& path)

@@ -3,6 +3,7 @@
 //
 #include "Generator.hpp"
 #include "Support/Diagnostics.hpp"
+#include "Table/Ast/Context.hpp"
 #include "Table/Column.hpp"
 #include "Table/Symbol.hpp"
 #include "Table/SymbolTable.hpp"
@@ -25,11 +26,11 @@ Generator::Generator(GlobalContext* ctx, Diagnostics* diag)
 
 Generator::~Generator() = default;
 
-auto Generator::visit(const ast::Content* node) -> support::GlobalContext::UniquePtr<SymbolTable>
+auto Generator::visit(const ast::Context* ast) -> support::GlobalContext::UniquePtr<SymbolTable>
 {
-    m_source = node->getSource();
+    m_source = ast->getSource();
     m_symbolTable = m_ctx->makeUnique<SymbolTable>(m_ctx, m_source);
-    visitEach(node->getStatements());
+    visitEach(ast->getRoot()->getStatements());
     m_source = nullptr;
     return std::move(m_symbolTable);
 }

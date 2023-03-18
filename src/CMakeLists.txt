@@ -3,10 +3,10 @@ add_library(
     templater_lib
     pch.hpp
     Support/Containers.hpp
-    Support/GlobalContext.cpp
-    Support/GlobalContext.hpp
     Support/Diagnostics.cpp
     Support/Diagnostics.hpp
+    Support/GlobalContext.cpp
+    Support/GlobalContext.hpp
     Support/GridLayout.cpp
     Support/GridLayout.hpp
     Support/Separator.hpp
@@ -15,8 +15,9 @@ add_library(
     Support/SourceLoc.hpp
     Support/Utils.hpp
     Support/VisitorMixin.hpp
-    Table/Ast/Allocator.hpp
     Table/Ast/Ast.hpp
+    Table/Ast/Context.cpp
+    Table/Ast/Context.hpp
     Table/Ast/Printer.cpp
     Table/Ast/Printer.hpp
     Table/Column.hpp

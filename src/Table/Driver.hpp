@@ -13,6 +13,9 @@ class Source;
 }
 
 namespace table {
+namespace ast {
+    class Context;
+}
 class SymbolTable;
 
 class Driver final {
@@ -21,7 +24,7 @@ public:
     Driver();
     ~Driver();
 
-    [[nodiscard]] auto parse(const std::filesystem::path& path) -> ast::Content*;
+    [[nodiscard]] auto parse(const std::filesystem::path& path) -> std::unique_ptr<ast::Context>;
     [[nodiscard]] auto compile(const std::filesystem::path& path) -> support::GlobalContext::UniquePtr<SymbolTable>;
 
     void printAst(const std::filesystem::path& path);

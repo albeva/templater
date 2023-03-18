@@ -7,12 +7,13 @@
 #include "Support/VisitorMixin.hpp"
 #include "Table/Value.hpp"
 namespace table::ast {
+class Context;
 
 class Printer final {
 public:
     NO_COPY_AND_MOVE(Printer)
     Printer() = default;
-    explicit Printer(const Content* node) { visit(node); }
+    explicit Printer(const Context* ctx);
     ~Printer() = default;
 
     VISITOR_MIXIN

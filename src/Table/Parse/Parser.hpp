@@ -3,13 +3,16 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Table/Ast/Allocator.hpp"
 #include "Table/Ast/Ast.hpp"
 #include "Table/Value.hpp"
 #include "Token.hpp"
 
 namespace support {
 class Diagnostics;
+}
+
+namespace table::ast {
+class Context;
 }
 
 namespace table::parser {
@@ -25,7 +28,7 @@ public:
     ~Parser() = default;
     explicit Parser(support::GlobalContext* ctx, support::Diagnostics* diag, Lexer* lexer);
 
-    [[nodiscard]] auto parse() -> ast::Content*;
+    [[nodiscard]] auto parse() -> std::unique_ptr<ast::Context>;
 
 private:
     auto statement() -> ast::Statement;
@@ -64,7 +67,7 @@ private:
     support::GlobalContext* m_ctx;
     support::Diagnostics* m_diag;
     Lexer* m_lexer;
-    ast::Allocator m_ast;
+    std::unique_ptr<ast::Context> m_ast;
     Token m_token {};
     support::SourceLoc m_lastLoc {};
 };

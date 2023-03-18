@@ -3,6 +3,7 @@
 //
 #include "Printer.hpp"
 #include "Ast.hpp"
+#include "Context.hpp"
 #include "Support/GridLayout.hpp"
 #include "Support/Separator.hpp"
 #include "Table/Parse/Token.hpp"
@@ -12,6 +13,11 @@ using table::toString;
 using table::ast::Printer;
 using table::parser::Token;
 using table::parser::TokenKind;
+
+table::ast::Printer::Printer(const table::ast::Context* ctx)
+{
+    visit(ctx->getRoot());
+}
 
 void Printer::visit(const Content* node)
 {
