@@ -6,12 +6,13 @@
 #include "Containers.hpp"
 #include "MemoryPool.hpp"
 namespace support {
+class Diagnostics;
 class Source;
 
 class GlobalContext final {
 public:
     NO_COPY_AND_MOVE(GlobalContext)
-    GlobalContext();
+    explicit GlobalContext(std::ostream& output = std::cerr);
     ~GlobalContext();
 
     [[nodiscard]] inline auto getPool() const noexcept -> auto& { return m_pool; }
@@ -34,10 +35,16 @@ public:
      */
     [[nodiscard]] auto load(const std::filesystem::path& path) -> Source*;
 
+    /**
+     * Get global diagnostics object. It generates output to std::cerr
+     */
+    [[nodiscard]] inline auto getDiagnostics() const noexcept -> Diagnostics* { return m_diag.get(); }
+
 private:
     MemoryPool m_pool;
     pmr::StringSet m_uniquedStrings;
     std::pmr::vector<MemoryPool::UniquePtr<Source>> m_sources;
+    MemoryPool::UniquePtr<Diagnostics> m_diag;
 };
 
 } // namespace support

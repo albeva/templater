@@ -20,7 +20,7 @@ class SymbolTable;
 class Driver final {
 public:
     NO_COPY_AND_MOVE(Driver)
-    Driver(support::GlobalContext* ctx, support::Diagnostics* diag);
+    explicit Driver(support::GlobalContext* ctx);
     ~Driver();
 
     [[nodiscard]] auto parse(const std::filesystem::path& path) -> std::unique_ptr<ast::Context>;
@@ -31,7 +31,6 @@ public:
 
 private:
     support::GlobalContext* m_context;
-    support::Diagnostics* m_diag;
 };
 
 } // namespace table

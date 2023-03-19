@@ -2,7 +2,6 @@
 // Created by Albert on 14/03/2023.
 //
 #pragma once
-#include "Support/Diagnostics.hpp"
 #include "Support/GlobalContext.hpp"
 #include "Support/Source.hpp"
 #include "Table/Ast/Ast.hpp"
@@ -15,10 +14,9 @@
 
 namespace tests {
 using namespace std::literals;
-using support::Diagnostics;
+using support::GlobalContext;
 using support::Source;
 using support::SourceException;
-using support::GlobalContext;
 using table::gen::Generator;
 using table::parser::Lexer;
 using table::parser::Parser;
@@ -33,14 +31,14 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
     auto parse()
     {
         Lexer lexer { &m_ctx, m_source };
-        Parser parser { &m_diag, &lexer };
+        Parser parser { m_ctx.getDiagnostics(), &lexer };
         return parser.parse();
     }
 
     auto gen()
     {
         auto ast = parse();
-        Generator gen { &m_diag };
+        Generator gen { m_ctx.getDiagnostics() };
         return gen.visit(ast.get());
     }
 
@@ -74,8 +72,7 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
 
 private:
     std::stringstream m_output {};
-    Diagnostics m_diag { m_output };
-    GlobalContext m_ctx;
+    GlobalContext m_ctx { m_output };
     Source* m_source = nullptr;
 };
 

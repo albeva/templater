@@ -8,7 +8,6 @@
 #include "Parse/Lexer.hpp"
 #include "Parse/Parser.hpp"
 #include "Printer.hpp"
-#include "Support/Diagnostics.hpp"
 #include "Support/GlobalContext.hpp"
 #include "Support/Source.hpp"
 #include "SymbolTable.hpp"
@@ -18,9 +17,8 @@ using table::gen::Generator;
 using table::parser::Lexer;
 using table::parser::Parser;
 
-Driver::Driver(support::GlobalContext* ctx, support::Diagnostics* diag)
+Driver::Driver(support::GlobalContext* ctx)
     : m_context(ctx)
-    , m_diag(diag)
 {
 }
 
@@ -30,13 +28,13 @@ auto Driver::parse(const std::filesystem::path& path) -> std::unique_ptr<ast::Co
 {
     auto* src = m_context->load(path);
     Lexer lexer { m_context, src };
-    return Parser { m_diag, &lexer }.parse();
+    return Parser { m_context->getDiagnostics(), &lexer }.parse();
 }
 
 auto Driver::compile(const std::filesystem::path& path) -> std::unique_ptr<SymbolTable>
 {
     auto ast = parse(path);
-    return Generator(m_diag).visit(ast.get());
+    return Generator(m_context->getDiagnostics()).visit(ast.get());
 }
 
 void Driver::printAst(const std::filesystem::path& path)

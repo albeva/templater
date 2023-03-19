@@ -6,6 +6,7 @@
 
 namespace support {
 class Source;
+class GlobalContext;
 }
 namespace table {
 class SymbolTable;
@@ -16,12 +17,13 @@ namespace tpl {
 class Templater final {
 public:
     NO_COPY_AND_MOVE(Templater)
-    Templater(support::Source* source, table::SymbolTable* symbolTable);
+    Templater(support::GlobalContext* ctx, support::Source* source, table::SymbolTable* symbolTable);
     ~Templater();
 
     [[nodiscard]] inline auto output() const { return m_output.str(); }
 
 private:
+    support::GlobalContext* m_ctx;
     support::Source* m_source;
     table::SymbolTable* m_symbolTable;
     std::stringstream m_output;
