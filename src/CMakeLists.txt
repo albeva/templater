@@ -1,7 +1,6 @@
-# Main executable
+# Library
 add_library(
     templater_lib
-    pch.hpp
     Support/Containers.hpp
     Support/Diagnostics.cpp
     Support/Diagnostics.hpp
@@ -54,19 +53,21 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/fmtlib/fmt
     GIT_TAG 9.1.0)
 FetchContent_MakeAvailable(fmt)
+target_disable_static_analysis(fmt)
 
 # lib options
-target_link_libraries(templater_lib PUBLIC fmt::fmt)
-target_link_libraries(templater_lib PRIVATE project_options project_warnings)
+target_link_libraries(
+    templater_lib
+    PUBLIC fmt::fmt
+    PRIVATE project_options project_warnings)
+target_include_directories(
+    templater_lib
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    PRIVATE "${CMAKE_BINARY_DIR}/configured_files/include")
 target_precompile_headers(templater_lib PRIVATE pch.hpp)
-target_include_directories(templater_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(templater_lib PRIVATE "${CMAKE_BINARY_DIR}/configured_files/include")
 
-# lbc executable
+# main executable
 add_executable(templater main.cpp)
-target_precompile_headers(templater REUSE_FROM templater_lib)
 target_link_libraries(templater PRIVATE templater_lib project_options project_warnings)
+target_precompile_headers(templater REUSE_FROM templater_lib)
 set_target_properties(templater PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-
-# avoid cppcheck errors from 3rd party
-target_disable_static_analysis(fmt)
