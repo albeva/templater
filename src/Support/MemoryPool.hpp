@@ -19,7 +19,10 @@ struct MemoryPool final {
      * @param upstream An upstream memory resource for the monotonic buffer resource.
      */
     explicit MemoryPool(std::pmr::memory_resource* upstream)
-        : m_mbr(upstream), m_pa(&m_mbr) {}
+        : m_mbr(upstream)
+        , m_pa(&m_mbr)
+    {
+    }
 
     ~MemoryPool() = default;
 

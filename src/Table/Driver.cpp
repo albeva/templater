@@ -18,9 +18,9 @@ using table::gen::Generator;
 using table::parser::Lexer;
 using table::parser::Parser;
 
-Driver::Driver()
-    : m_context(std::make_unique<support::GlobalContext>())
-    , m_diag(std::make_unique<support::Diagnostics>(std::cerr))
+Driver::Driver(support::GlobalContext* ctx, support::Diagnostics* diag)
+    : m_context(ctx)
+    , m_diag(diag)
 {
 }
 
@@ -29,15 +29,14 @@ Driver::~Driver() = default;
 auto Driver::parse(const std::filesystem::path& path) -> std::unique_ptr<ast::Context>
 {
     auto* src = m_context->load(path);
-    Lexer lexer { m_context.get(), src };
-    return Parser { m_diag.get(), &lexer }.parse();
+    Lexer lexer { m_context, src };
+    return Parser { m_diag, &lexer }.parse();
 }
 
 auto Driver::compile(const std::filesystem::path& path) -> std::unique_ptr<SymbolTable>
 {
     auto ast = parse(path);
-    Generator gen { m_diag.get() };
-    return gen.visit(ast.get());
+    return Generator(m_diag).visit(ast.get());
 }
 
 void Driver::printAst(const std::filesystem::path& path)
@@ -50,9 +49,4 @@ void Driver::printTable(const std::filesystem::path& path)
 {
     auto table = compile(path);
     std::cout << Printer { table.get() };
-}
-
-auto table::Driver::exitCode() const noexcept -> int
-{
-    return m_diag->hasErrors() ? EXIT_FAILURE : EXIT_SUCCESS;
 }

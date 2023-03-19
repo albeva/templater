@@ -1,12 +1,6 @@
 # Simpel table
-table Animal(name species comment) = [
+table Animals(name species comment) = [
     Dog             "Lupus Familiaris"  -
     Cat             Catus               "Memes"
     "Guinea Pig"    Porcellus           -
-]
-
-table Furniture(name size) = [
-    Bed Single
-    |   Double
-    |   King
 ]

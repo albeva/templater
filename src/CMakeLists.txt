@@ -9,6 +9,7 @@ add_library(
     Support/GlobalContext.hpp
     Support/GridLayout.cpp
     Support/GridLayout.hpp
+    Support/MemoryPool.hpp
     Support/Separator.hpp
     Support/Source.cpp
     Support/Source.hpp
@@ -40,7 +41,9 @@ add_library(
     Table/SymbolTable.hpp
     Table/Table.cpp
     Table/Table.hpp
-    Table/Value.hpp Support/MemoryPool.hpp)
+    Table/Value.hpp
+    Tpl/Templater.cpp
+    Tpl/Templater.hpp)
 
 # fmt
 include(FetchContent)
