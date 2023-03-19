@@ -75,7 +75,7 @@ auto Token::describe(TokenKind kind) noexcept -> std::string_view
 auto Token::getString() const noexcept -> std::string_view
 {
     if (isValue() || is(TokenKind::Invalid)) {
-        return m_value;
+        return getValue();
     }
     return description();
 }

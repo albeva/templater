@@ -10,7 +10,6 @@ Templater::Templater(support::GlobalContext* ctx, support::Source* source, table
     : m_ctx(ctx)
     , m_source(source)
     , m_symbolTable(symbolTable)
-    , m_output()
 {
     (void)m_ctx;
     (void)m_source;

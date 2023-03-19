@@ -5,3 +5,4 @@ IncludeCategories:
     Regex: ^"pch\.hpp"
   - Priority: 2
     Regex: .*
+AlignTrailingComments: true

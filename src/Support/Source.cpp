@@ -59,8 +59,8 @@ auto Source::highlight(SourcePos pos) const -> std::string
     return fmt::format(
         "{0}\n{1:>{3}}{2:~>{4}}",
         getLine(pos.getLine()), // 0
-        '^', // 1
-        "", // 2
+        '^',                    // 1
+        "",                     // 2
         pos.getCol(),
         pos.getLength() > 1 ? pos.getLength() - 1 : 0);
 }

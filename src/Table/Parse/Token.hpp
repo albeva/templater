@@ -4,6 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "Support/SourceLoc.hpp"
+#include "Support/TokenBase.hpp"
 namespace table::parser {
 
 enum class TokenKind {
@@ -38,27 +39,15 @@ enum class TokenKind {
     KwAs,
 };
 
-struct Token final {
-    inline void set(TokenKind kind, support::SourceLoc loc, std::string_view value = {}) noexcept
-    {
-        m_kind = kind;
-        m_loc = loc;
-        m_value = value;
-    }
-
-    [[nodiscard]] inline auto getKind() const noexcept -> const TokenKind& { return m_kind; }
-    [[nodiscard]] inline auto getLoc() const noexcept -> const support::SourceLoc& { return m_loc; }
-    [[nodiscard]] inline auto getValue() const noexcept -> const std::string_view& { return m_value; }
+struct Token final : support::TokenBase<TokenKind> {
     [[nodiscard]] inline auto isValue() const noexcept -> bool
     {
-        return m_kind == TokenKind::Number
-            || m_kind == TokenKind::Identifier
-            || m_kind == TokenKind::String;
+        return is(TokenKind::Number, TokenKind::Identifier, TokenKind::String);
     }
 
     [[nodiscard]] inline auto getPrecedence() const noexcept -> int
     {
-        switch (m_kind) {
+        switch (getKind()) {
         case TokenKind::LogicalNot:
             return 6; // NOLINT
         case TokenKind::Less:
@@ -80,21 +69,8 @@ struct Token final {
     }
 
     [[nodiscard]] auto getString() const noexcept -> std::string_view;
-    [[nodiscard]] auto description() const noexcept -> std::string_view { return describe(m_kind); }
+    [[nodiscard]] auto description() const noexcept -> std::string_view { return describe(getKind()); }
     [[nodiscard]] static auto describe(TokenKind kind) noexcept -> std::string_view;
-
-    [[nodiscard]] inline auto is(TokenKind kind) const noexcept -> bool { return m_kind == kind; }
-    template <typename... Ty>
-    [[nodiscard]] inline auto is(TokenKind kind, Ty... ty) const noexcept -> bool { return is(kind) || is(ty...); }
-
-    [[nodiscard]] inline auto isNot(TokenKind kind) const noexcept -> bool { return m_kind != kind; }
-    template <typename... Ty>
-    [[nodiscard]] inline auto isNot(TokenKind kind, Ty... ty) const noexcept -> bool { return isNot(kind) && isNot(ty...); }
-
-private:
-    TokenKind m_kind {};
-    support::SourceLoc m_loc {};
-    std::string_view m_value {};
 };
 
 } // namespace table::parser

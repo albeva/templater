@@ -132,13 +132,19 @@ The following filters are provided by the implementation:
 For Loops
 ---------
 
+    {% for id in expression %}
+        {{ for.index1 }}. {{ id }}
+    {% endfor %}
+
 Iteration works via for loops. Inside loops you can query `for` for runtime information:
 
     ====================== ===================================================
     Variable               Description
     ====================== ===================================================
     ``for.index``          The current iteration of the loop
+    ``for.index1``         Same as above, 1-indexed
     ``for.revindex``       The number of iterations from the end of the
+    ``for.index11``        Same as above, 1-indexed
     ``for.first``          True if this is the first time through the loop
     ``for.last``           True if this is the last time through the loop
     ``for.count``          Number of loops to be performed in total
@@ -146,8 +152,6 @@ Iteration works via for loops. Inside loops you can query `for` for runtime info
 
 If Conditions
 -------------
-
-If conditions work like Ruby, PHP and Python.
 
     {% if expr1 %}
         ...
