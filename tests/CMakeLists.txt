@@ -21,6 +21,7 @@ FetchContent_MakeAvailable(googletest)
 
 # Link
 target_link_libraries(tests PRIVATE templater_lib project_options gtest_main)
+target_precompile_headers(tests REUSE_FROM templater_lib)
 
 include(GoogleTest)
 gtest_discover_tests(tests WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tables")

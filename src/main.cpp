@@ -14,7 +14,7 @@ using tpl::Templater;
 auto main() -> int
 {
     try {
-        GlobalContext ctx;
+        GlobalContext ctx{};
 
         auto symbols = Driver(&ctx).compile("../samples/Simple.tbl");
 

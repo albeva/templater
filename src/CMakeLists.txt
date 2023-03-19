@@ -42,6 +42,8 @@ add_library(
     Table/Table.cpp
     Table/Table.hpp
     Table/Value.hpp
+    Tpl/Lexer.cpp
+    Tpl/Lexer.hpp
     Tpl/Templater.cpp
     Tpl/Templater.hpp)
 
@@ -62,6 +64,7 @@ target_include_directories(templater_lib PRIVATE "${CMAKE_BINARY_DIR}/configured
 
 # lbc executable
 add_executable(templater main.cpp)
+target_precompile_headers(templater REUSE_FROM templater_lib)
 target_link_libraries(templater PRIVATE templater_lib project_options project_warnings)
 set_target_properties(templater PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 

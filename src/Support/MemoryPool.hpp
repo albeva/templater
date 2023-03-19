@@ -7,28 +7,17 @@
 namespace support {
 
 /**
- * A memory pool allocator that uses C++20 pmr (polymorphic memory resource) features.
+ * A memory pool allocator that uses C++17 pmr (polymorphic memory resource) features.
  * This memory pool is designed to provide efficient memory allocation for objects.
  */
 struct MemoryPool final {
     NO_COPY_AND_MOVE(MemoryPool)
     MemoryPool() = default;
-
-    /**
-     * Constructor with upstream memory resource.
-     * @param upstream An upstream memory resource for the monotonic buffer resource.
-     */
-    explicit MemoryPool(std::pmr::memory_resource* upstream)
-        : m_mbr(upstream)
-        , m_pa(&m_mbr)
-    {
-    }
-
     ~MemoryPool() = default;
 
     /**
      * A custom deleter for the unique_ptr that destructs the object without deallocating memory.
-     * This deleter is suitable for objctex created in the pool, as the memory will be deallocated by the pool itself.
+     * This deleter is suitable for objects created in the pool, as the memory will be deallocated by the pool itself.
      */
     struct MonotonicBufferDelete {
         template <typename T>

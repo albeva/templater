@@ -23,14 +23,14 @@ namespace {
 
 Diagnostics::Diagnostics(std::ostream& output) noexcept
     : m_output(output)
-    , m_errorCount(0)
+    , m_hasErrors(false)
 {
 }
 
 void Diagnostics::print(Level level, const Source* source, const SourceLoc& loc, const std::string& message)
 {
     if (level == Level::Error) {
-        m_errorCount++;
+        m_hasErrors = true;
     }
 
     auto pos = source->getPosition(loc);

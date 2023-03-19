@@ -30,11 +30,11 @@ public:
         print(Level::Notice, source, loc, message);
     }
 
-    [[nodiscard]] inline auto hasErrors() const noexcept { return m_errorCount != 0; }
+    [[nodiscard]] inline auto hasErrors() const noexcept { return m_hasErrors; }
 
 private:
-    std::ostream& m_output; // cppcoreguidelines-avoid-const-or-ref-data-members
-    int m_errorCount;
+    std::ostream& m_output; // NOLINT cppcoreguidelines-avoid-const-or-ref-data-members
+    bool m_hasErrors;
 };
 
 } // namespace support
