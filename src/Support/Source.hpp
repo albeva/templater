@@ -25,6 +25,8 @@ public:
     [[nodiscard]] auto getPosition(SourceLoc loc) const -> SourcePos;
     [[nodiscard]] auto highlight(SourcePos pos) const -> std::string;
 
+    [[nodiscard]] inline auto source() const noexcept -> std::string_view { return m_source; }
+
     [[nodiscard]] inline auto data() const noexcept -> const char* { return m_source.data(); }
     [[nodiscard]] inline auto end() const noexcept -> const char* { return m_source.data() + m_source.length(); /*  NOLINT */ }
     [[nodiscard]] inline auto length() const noexcept -> std::size_t { return m_source.length(); }

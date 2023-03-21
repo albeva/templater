@@ -3,23 +3,19 @@
 //
 #pragma once
 #include "pch.hpp"
+#include "Support/LexerBase.hpp"
+#include "Token.hpp"
 
 namespace support {
 class Source;
-struct SourceLoc;
 class GlobalContext;
 }
 
 namespace table::parser {
-struct Token;
-enum class TokenKind;
 
-class Lexer final {
+class Lexer final : support::LexerBase<Token> {
 public:
-    NO_COPY_AND_MOVE(Lexer)
     explicit Lexer(support::GlobalContext* ctx, support::Source* source) noexcept;
-    ~Lexer() = default;
-
     void next(Token&);
     [[nodiscard]] auto getSource() const noexcept { return m_source; }
 
@@ -27,19 +23,7 @@ private:
     void skipToLineEnd() noexcept;
     void skipToNextLine() noexcept;
 
-    void make(Token& token, TokenKind kind, std::size_t len = 1) noexcept;
-    void unexpected(Token& token, std::string_view message = {}) noexcept;
-    void string(Token& token);
-    [[nodiscard]] auto escape() noexcept -> std::expected<char, std::string_view>;
-    void identifier(Token& token);
-    void number(Token& token);
-
-    auto loc(const char* start) noexcept -> support::SourceLoc;
-
-    support::GlobalContext* m_ctx;
     support::Source* m_source;
-    const char* m_buffer;
-    const char* m_input;
     bool m_hasStmt = false;
 };
 

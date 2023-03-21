@@ -39,7 +39,13 @@ enum class TokenKind {
     KwAs,
 };
 
-struct Token final : support::TokenBase<TokenKind> {
+struct TokenInformation final {
+    using Kind = TokenKind;
+    static auto describe(Kind kind) noexcept -> std::string_view;
+    static auto getKind(std::string_view id) noexcept -> Kind;
+};
+
+struct Token final : support::TokenBase<TokenInformation> {
     [[nodiscard]] inline auto isValue() const noexcept -> bool
     {
         return is(TokenKind::Number, TokenKind::Identifier, TokenKind::String);
@@ -69,8 +75,6 @@ struct Token final : support::TokenBase<TokenKind> {
     }
 
     [[nodiscard]] auto getString() const noexcept -> std::string_view;
-    [[nodiscard]] auto description() const noexcept -> std::string_view { return describe(getKind()); }
-    [[nodiscard]] static auto describe(TokenKind kind) noexcept -> std::string_view;
 };
 
 } // namespace table::parser

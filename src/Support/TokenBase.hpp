@@ -6,17 +6,40 @@
 #include "SourceLoc.hpp"
 namespace support {
 
+template <typename Info, typename Kind = typename Info::Kind>
+concept TokenInformation2
+    = std::is_scoped_enum_v<Kind>
+    && requires {
+           typename Info::Kind;
+           {
+               Info::describe(Kind {})
+           } -> std::same_as<std::string_view>;
+           {
+               Info::getKind(std::string_view {})
+           } -> std::same_as<Kind>;
+       };
+
 /**
  * @brief A base class for tokens produced by a lexer.
  *
  * This class is a generic template for defining tokens used in a lexer.
  * It contains methods for setting, getting, and checking properties of the tokens.
  *
- * @tparam Kind The type of the token's kind. Usually an enum or integral type.
- * @tparam Value The type of the token's value. Defaults to std::string_view.
+ * @tparam K The type of the token's kind. Usually an enum or integral type.
+ * @tparam V The type of the token's value. Defaults to std::string_view.
  */
-template <typename Kind, typename Value = std::string_view>
+template <TokenInformation2 Info, typename V = std::string_view>
 struct TokenBase {
+    using Kind = typename Info::Kind;
+    using Value = V;
+
+    constexpr TokenBase() noexcept = default;
+    constexpr TokenBase(Kind kind, support::SourceLoc loc, Value value = {}) noexcept
+        : m_kind(kind)
+        , m_loc(loc)
+        , m_value(value)
+    {
+    }
 
     /**
      * @brief Sets the token properties.
@@ -90,6 +113,24 @@ struct TokenBase {
      */
     template <typename... Ty>
     [[nodiscard]] constexpr auto isNot(Kind kind, Ty... ty) const noexcept -> bool { return isNot(kind) && isNot(ty...); }
+
+    /**
+     * @brief Get token description
+     * @return string_view describing the token
+     */
+    [[nodiscard]] auto description() const noexcept -> std::string_view { return Info::describe(m_kind); }
+
+    /**
+     * Get description for given Kind
+     * @param kind
+     * @return string_view
+     */
+    [[nodiscard]] static auto describe(Kind kind) noexcept -> std::string_view { return Info::describe(kind); }
+
+    /**
+     * Get matching Kind for potential keyword
+     */
+    [[nodiscard]] static auto getKind(std::string_view id) noexcept -> Kind { return Info::getKind(id); }
 
 private:
     Kind m_kind {};

@@ -44,7 +44,7 @@ add_library(
     Tpl/Lexer.cpp
     Tpl/Lexer.hpp
     Tpl/Templater.cpp
-    Tpl/Templater.hpp Support/TokenBase.hpp)
+    Tpl/Templater.hpp Support/TokenBase.hpp Tpl/Token.cpp Tpl/Token.hpp Support/LexerBase.hpp)
 
 # fmt
 include(FetchContent)

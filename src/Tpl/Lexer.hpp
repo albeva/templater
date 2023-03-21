@@ -3,39 +3,18 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Support/TokenBase.hpp"
+#include "Support/LexerBase.hpp"
+#include "Token.hpp"
+
+namespace support {
+class GlobalContext;
+}
+
 namespace tpl {
-
-enum class TokenKind {
-    Invalid,
-    EndOfFile,
-    Text,
-    Identifier,
-    String,
-    Number,
-    StatementOpen,   // {%
-    StatementClose,  // %}
-    ExpressionOpen,  // ${
-    ExpressionClose, // }
-    Pipe,            // |
-    Period,          // .
-    ParenOpen,       // (
-    ParenClose,      // )
-    BracketOpen,     // [
-    BracketClose,    // ]
-    KwFor,           // for
-    KwIn,            // in
-    KwEndFor,        // endfor
-    KwIf,            // if
-    KwElseIf,        // elseif
-    KwElse,          // else
-    KwEndIf,         // endif
-};
-
-struct Token : support::TokenBase<TokenKind> {
-};
-
-class Lexer final {
+class Lexer : support::LexerBase<Token> {
+public:
+    Lexer(support::GlobalContext* ctx, std::string_view buffer) noexcept;
+    void next(Token& token);
 };
 
 } // namespace tpl
