@@ -7,7 +7,7 @@
 namespace support {
 
 template <typename Info, typename Kind = typename Info::Kind>
-concept TokenInformation2
+concept TokenInformation
     = std::is_scoped_enum_v<Kind>
     && requires {
            typename Info::Kind;
@@ -28,13 +28,13 @@ concept TokenInformation2
  * @tparam K The type of the token's kind. Usually an enum or integral type.
  * @tparam V The type of the token's value. Defaults to std::string_view.
  */
-template <TokenInformation2 Info, typename V = std::string_view>
+template <TokenInformation TokenInfo>
 struct TokenBase {
+    using Info = TokenInfo;
     using Kind = typename Info::Kind;
-    using Value = V;
 
     constexpr TokenBase() noexcept = default;
-    constexpr TokenBase(Kind kind, support::SourceLoc loc, Value value = {}) noexcept
+    constexpr TokenBase(Kind kind, support::SourceLoc loc, std::string_view value = {}) noexcept
         : m_kind(kind)
         , m_loc(loc)
         , m_value(value)
@@ -48,7 +48,7 @@ struct TokenBase {
      * @param loc The source location where the token appears.
      * @param value The value of the token (default: empty).
      */
-    constexpr void set(Kind kind, support::SourceLoc loc, Value value = {}) noexcept
+    constexpr void set(Kind kind, support::SourceLoc loc, std::string_view value = {}) noexcept
     {
         m_kind = kind;
         m_loc = loc;
@@ -74,7 +74,7 @@ struct TokenBase {
      *
      * @return A const reference to the token's value.
      */
-    [[nodiscard]] constexpr auto getValue() const noexcept -> const Value& { return m_value; }
+    [[nodiscard]] constexpr auto getValue() const noexcept -> const std::string_view& { return m_value; }
 
     /**
      * @brief Checks if the token is of a specific kind.
@@ -135,7 +135,7 @@ struct TokenBase {
 private:
     Kind m_kind {};
     support::SourceLoc m_loc {};
-    Value m_value {};
+    std::string_view m_value {};
 };
 
 } // namespace support

@@ -22,16 +22,13 @@ namespace support {
  * a `Kind` value.
  */
 template <typename Token, typename Kind = typename Token::Kind>
-concept TokenInformation
-    = std::is_scoped_enum_v<Kind>
+concept LexedTokenInformation
+    = std::derived_from<Token, TokenBase<typename Token::Info>>
     && requires {
            Kind::Invalid;
            Kind::String;
            Kind::Number;
            Kind::Identifier;
-           {
-               Token::getKind(std::string_view {})
-           } -> std::same_as<Kind>;
        };
 
 /**
@@ -41,7 +38,7 @@ concept TokenInformation
  * This class provides a basic templated lexer that abstracts common operations for lexing source
  * code. It is intended to be subclassed and extended with language-specific rules.
  */
-template <TokenInformation Token>
+template <LexedTokenInformation Token>
 class LexerBase {
 protected:
     NO_COPY_AND_MOVE(LexerBase)
@@ -123,6 +120,12 @@ protected:
      * @return A pointer to the `support::GlobalContext` object.
      */
     [[nodiscard]] inline auto getContext() const noexcept { return m_ctx; }
+
+    /**
+     * @brief Gets the input buffer.
+     * @return A string_view to the input buffer
+     */
+    [[nodiscard]] inline auto getBuffer() const noexcept { return m_buffer; }
 
     /**
      * @brief Constructs a token with the specified kind and advances the input by the given length.
