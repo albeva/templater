@@ -15,11 +15,9 @@ namespace support {
  * @tparam Token A type representing tokens; defaults to the `Token` type nested within `Info`.
  * @tparam Kind A type representing token kinds; defaults to the `Kind` type nested within `Token`.
  *
- * This concept checks whether a given type `Info` satisfies the requirements for token information
+ * This concept checks whether a given type `Token` satisfies the requirements for token information
  * used by the `LexerBase` class. It requires that `Kind` is a scoped enumeration and defines the
- * following enumerator values: `Invalid`, `String`, `Number`, and `Identifier`. Additionally, it
- * requires a static member function `getKind` in `Info` that takes a `std::string_view` and returns
- * a `Kind` value.
+ * following enumerator values: `Invalid`, `String`, `Number`, and `Identifier`.
  */
 template <typename Token, typename Kind = typename Token::Kind>
 concept LexedTokenInformation
@@ -33,7 +31,7 @@ concept LexedTokenInformation
 
 /**
  * @class LexerBase
- * @tparam Info A type satisfying the `TokenInformation` concept.
+ * @tparam Token A type satisfying the `LexedTokenInformation` concept.
  *
  * This class provides a basic templated lexer that abstracts common operations for lexing source
  * code. It is intended to be subclassed and extended with language-specific rules.
@@ -289,7 +287,6 @@ protected:
     }
 
     /**
-     * @fn auto loc(const char* start) noexcept -> support::SourceLoc
      * @brief Computes the location of a token in the source buffer.
      * @param start A pointer to the starting character of the token.
      * @return A `support::SourceLoc` object representing the location of the token.
@@ -304,6 +301,11 @@ protected:
             static_cast<unsigned>(std::distance(m_buffer.begin(), m_input))
         };
     }
+
+    /**
+     * Get current index into the buffer
+     */
+    [[nodiscard]] inline auto getIndex() const noexcept { return m_input; }
 
     /**
      * @brief Advances the lexer's position in the input buffer by the specified length.
@@ -341,7 +343,7 @@ protected:
      * This method provides access to individual characters in the input buffer, allowing the lexer
      * to inspect specific characters during parsing.
      */
-    [[nodiscard]] inline auto peek() const noexcept { return m_input[1]; }
+    [[nodiscard]] inline auto peek() const noexcept { return isValid() ? m_input[1] : '\0'; }
 
     /**
      * @brief Gets a substring of the input buffer representing a lexeme.

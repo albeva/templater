@@ -3,7 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
-#include "Table/Parse/Token.hpp"
+#include "Support/SourceLoc.hpp"
 namespace table {
 namespace details {
     struct Tag { };

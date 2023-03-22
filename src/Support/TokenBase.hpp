@@ -10,7 +10,6 @@ template <typename Info, typename Kind = typename Info::Kind>
 concept TokenInformation
     = std::is_scoped_enum_v<Kind>
     && requires {
-           typename Info::Kind;
            {
                Info::describe(Kind {})
            } -> std::same_as<std::string_view>;
