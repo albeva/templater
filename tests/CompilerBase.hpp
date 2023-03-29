@@ -46,15 +46,17 @@ struct CompilerBase : testing::TestWithParam<std::filesystem::path> {
     {
         static constexpr auto prefix = "# CHECK: "sv;
         std::stringstream checks {};
-        try {
-            for (unsigned line = 1;; line++) {
-                auto str = m_source->getLine(line);
-                if (str.starts_with(prefix)) {
-                    checks << str.substr(prefix.length()) << '\n';
+
+        for (unsigned line = 1;; line++) {
+            if (auto str = m_source->getLine(line)) {
+                if (str.value().starts_with(prefix)) {
+                    checks << str.value().substr(prefix.length()) << '\n';
                 }
+            } else {
+                break;
             }
-        } catch (SourceException&) {
         }
+
         return checks.str();
     }
 

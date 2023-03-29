@@ -3,6 +3,7 @@
 //
 #pragma once
 #include "pch.hpp"
+#include "Token.hpp"
 
 namespace support {
 class Source;
@@ -23,10 +24,13 @@ public:
     [[nodiscard]] inline auto output() const { return m_output.str(); }
 
 private:
+    void collectTokens();
+
     support::GlobalContext* m_ctx;
     support::Source* m_source;
     table::SymbolTable* m_symbolTable;
     std::stringstream m_output;
+    std::vector<Token> m_tokens;
 };
 
 auto inline operator<<(std::ostream& os, const Templater& tpl) -> std::ostream&

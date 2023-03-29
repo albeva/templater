@@ -276,8 +276,8 @@ protected:
         while (isValid() && isIdentChar(*m_input)) {
             ++m_input;
         }
-
         auto id = lexeme(start, m_input);
+
         auto kind = Token::getKind(id);
         if (kind == Kind::Identifier) {
             token.set(Kind::Identifier, loc(start), m_ctx->retain(id));
@@ -305,7 +305,7 @@ protected:
     /**
      * Get current index into the buffer
      */
-    [[nodiscard]] inline auto getIndex() const noexcept { return m_input; }
+    [[nodiscard]] inline auto getInput() const noexcept { return m_input; }
 
     /**
      * @brief Advances the lexer's position in the input buffer by the specified length.
@@ -343,7 +343,14 @@ protected:
      * This method provides access to individual characters in the input buffer, allowing the lexer
      * to inspect specific characters during parsing.
      */
-    [[nodiscard]] inline auto peek() const noexcept { return isValid() ? m_input[1] : '\0'; }
+    [[nodiscard]] inline auto peek() const noexcept
+    {
+        auto next = std::next(m_input);
+        if (next < m_buffer.end()) {
+            return *next;
+        }
+        return '\0';
+    }
 
     /**
      * @brief Gets a substring of the input buffer representing a lexeme.

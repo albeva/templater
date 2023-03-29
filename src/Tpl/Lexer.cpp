@@ -26,11 +26,11 @@ void Lexer::next(Token& token)
 
 void Lexer::text(Token& token)
 {
-    auto start = getIndex();
+    auto start = getInput();
     while (isValid()) {
         auto ch = current();
         if (ch == '{' && peek() == '%') {
-            if (start != getIndex()) {
+            if (start != getInput()) {
                 goto makeText; // NOLINT
             }
             advance(2);
@@ -38,7 +38,7 @@ void Lexer::text(Token& token)
             return make(token, Kind::StatementOpen, 2);
         }
         if (ch == '$' && peek() == '{') {
-            if (start != getIndex()) {
+            if (start != getInput()) {
                 goto makeText; // NOLINT
             }
             advance(2);
@@ -49,12 +49,12 @@ void Lexer::text(Token& token)
         advance();
     }
 
-    if (start == getIndex()) {
+    if (start == getInput()) {
         return make(token, TokenKind::EndOfFile, 0);
     }
 
-    makeText:
-    return token.set(Kind::Text, loc(start), lexeme(start, getIndex()));
+makeText:
+    return token.set(Kind::Text, loc(start), lexeme(start, getInput()));
 }
 
 void Lexer::grammar(Token& token)
@@ -88,15 +88,15 @@ void Lexer::grammar(Token& token)
                     m_state = State::Text;
                     return make(token, TokenKind::StatementClose, 2);
                 }
-                unexpected(token, "did you mean '%}'?"sv);
+                return unexpected(token, "did you mean '%}'?"sv);
             }
-            unexpected(token, "did you mean '}'?"sv);
+            return unexpected(token, "did you mean '}'?"sv);
         case '}':
             if (m_state == State::Expression) {
                 m_state = State::Text;
                 return make(token, Kind::ExpressionClose);
             }
-            unexpected(token, "did you mean '%}'?"sv);
+            return unexpected(token, "did you mean '%}'?"sv);
         default:
             if (isDigit(ch)) {
                 return number(token);

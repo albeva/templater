@@ -41,11 +41,32 @@ auto Source::getPosition(SourceLoc loc) const -> SourcePos
     };
 }
 
-auto Source::getLine(std::size_t line) const -> std::string_view
+auto Source::getLine(std::size_t line) const noexcept -> std::optional<std::string_view>
 {
-    const char* from = getLineStart(line);
-    const char* to = std::find_if(from, end(), [](char ch) { return ch == '\r' || ch == '\n'; });
-    return { from, to };
+    assert(line > 0 && "Line is indexed from 1");
+    --line;
+
+    auto start = m_source.begin();
+    auto iter = start;
+
+    for (; iter != m_source.end(); iter++) {
+        if (*iter == '\n') {
+            if (line == 0) {
+                auto prev = std::prev(iter);
+                if (*prev == '\r') {
+                    iter = prev;
+                }
+                return std::string_view { start, iter };
+            }
+            start = iter + 1;
+            --line;
+        }
+    }
+
+    if (line == 0) {
+        return std::string_view { start, iter };
+    }
+    return {};
 }
 
 auto Source::getString(SourceLoc loc) const -> std::string_view
@@ -56,13 +77,16 @@ auto Source::getString(SourceLoc loc) const -> std::string_view
 
 auto Source::highlight(SourcePos pos) const -> std::string
 {
-    return fmt::format(
-        "{0}\n{1:>{3}}{2:~>{4}}",
-        getLine(pos.getLine()), // 0
-        '^',                    // 1
-        "",                     // 2
-        pos.getCol(),
-        pos.getLength() > 1 ? pos.getLength() - 1 : 0);
+    if (auto line = getLine(pos.getLine())) {
+        return fmt::format(
+            "{0}\n{1:>{3}}{2:~>{4}}",
+            line.value(), // 0
+            '^',          // 1
+            "",           // 2
+            pos.getCol(),
+            pos.getLength() > 1 ? pos.getLength() - 1 : 0);
+    }
+    return ""s;
 }
 
 auto Source::normalize(const SourceLoc& loc) const -> Range
@@ -78,23 +102,4 @@ auto Source::normalize(const SourceLoc& loc) const -> Range
     }
 
     return { from, to };
-}
-
-auto Source::getLineStart(size_t line) const -> const char*
-{
-    if (line == 1) {
-        return data();
-    }
-
-    const char* start = std::find_if(data(), end(), [&](char ch) {
-        if (ch != '\n') {
-            return false;
-        }
-        return --line == 1;
-    });
-    if (start == end()) {
-        throw SourceException(fmt::format("Kube {} us out of Source range", line));
-    }
-    std::advance(start, 1); // skip \n
-    return start;
 }

@@ -19,7 +19,7 @@ public:
 
     [[nodiscard]] inline auto getName() const noexcept -> const auto& { return m_name; }
 
-    [[nodiscard]] auto getLine(std::size_t line) const -> std::string_view;
+    [[nodiscard]] auto getLine(std::size_t line) const noexcept -> std::optional<std::string_view>;
     [[nodiscard]] auto getString(SourceLoc loc) const -> std::string_view;
 
     [[nodiscard]] auto getPosition(SourceLoc loc) const -> SourcePos;
@@ -35,7 +35,6 @@ private:
     using Range = std::pair<const char*, const char*>;
 
     [[nodiscard]] auto normalize(const SourceLoc& loc) const -> Range;
-    [[nodiscard]] auto getLineStart(size_t line) const -> const char*;
 
     std::string m_name;
     std::string m_source;
