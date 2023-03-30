@@ -12,21 +12,19 @@ using table::Driver;
 using tpl::Templater;
 
 auto main() -> int
-{
-    try {
-        GlobalContext ctx {};
+try {
+    GlobalContext ctx {};
 
-        auto symbols = Driver(&ctx).compile("../samples/Simple.tbl");
+    auto symbols = Driver(&ctx).compile("../samples/Simple.tbl");
 
-        Source* src = ctx.load("../samples/Simple.md.tpl");
-        std::cout << Templater(&ctx, src, symbols.get());
+    Source* src = ctx.load("../samples/Simple.md.tpl");
+    std::cout << Templater(&ctx, src, symbols.get());
 
-        return EXIT_SUCCESS;
-    } catch (std::exception& exc) {
-        std::cerr << exc.what();
-        return EXIT_FAILURE;
-    } catch (...) {
-        std::cerr << "Unknown error\n";
-        return EXIT_FAILURE;
-    }
+    return EXIT_SUCCESS;
+} catch (std::exception& exc) {
+    std::cerr << exc.what();
+    return EXIT_FAILURE;
+} catch (...) {
+    std::cerr << "Unknown error";
+    return EXIT_FAILURE;
 }

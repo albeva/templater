@@ -11,7 +11,7 @@ using table::parser::TokenKind;
 using namespace std::literals;
 
 Lexer::Lexer(support::GlobalContext* ctx, support::Source* source) noexcept
-    : LexerBase(ctx, source->source())
+    : LexerBase(ctx, source->buffer())
     , m_source(source)
 {
 }

@@ -1,4 +1,6 @@
 ---
+# clang-tidy seem drunk, had to add "-cert-dcl58-cpp" and "-bugprone-branch-clone"
+# which seem to not behave correctly.
 Checks: "*,
     -abseil-*,
     -altera-*,
@@ -7,12 +9,14 @@ Checks: "*,
     -llvm*,
     -zircon-*,
     -bugprone-easily-swappable-parameters,
+    
+    -cert-dcl58-cpp,
+    -bugprone-branch-clone,
 "
 WarningsAsErrors:   ''
 HeaderFilterRegex:  ''
 FormatStyle:        webkit
 CheckOptions:
-  - key:    readability-identifier-length.MinimumVariableNameLength
-    value:  2
-  - key:    readability-identifier-length.MinimumParameterNameLength
-    value:  2
+  readability-identifier-length:
+    MinimumVariableNameLength: 2
+    MinimumParameterNameLength: 2

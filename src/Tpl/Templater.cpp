@@ -20,7 +20,7 @@ Templater::~Templater() = default;
 
 void Templater::collectTokens()
 {
-    Lexer lexer(m_ctx, m_source->source());
+    Lexer lexer(m_ctx, m_source->buffer());
     Token tkn {};
     do {
         lexer.next(tkn);

@@ -4,6 +4,7 @@
 #pragma once
 #include "pch.hpp"
 #include "SourceLoc.hpp"
+#include <string>
 namespace support {
 
 class SourceException final : public std::runtime_error {
@@ -19,25 +20,18 @@ public:
 
     [[nodiscard]] inline auto getName() const noexcept -> const auto& { return m_name; }
 
-    [[nodiscard]] auto getLine(std::size_t line) const noexcept -> std::optional<std::string_view>;
-    [[nodiscard]] auto getString(SourceLoc loc) const -> std::string_view;
-
     [[nodiscard]] auto getPosition(SourceLoc loc) const -> SourcePos;
+    [[nodiscard]] auto getLine(std::size_t line) const noexcept -> std::optional<std::string_view>;
     [[nodiscard]] auto highlight(SourcePos pos) const -> std::string;
 
-    [[nodiscard]] inline auto source() const noexcept -> std::string_view { return m_source; }
-
-    [[nodiscard]] inline auto data() const noexcept -> const char* { return m_source.data(); }
-    [[nodiscard]] inline auto end() const noexcept -> const char* { return m_source.data() + m_source.length(); /*  NOLINT */ }
-    [[nodiscard]] inline auto length() const noexcept -> std::size_t { return m_source.length(); }
+    [[nodiscard]] inline auto buffer() const noexcept -> std::string_view { return m_buffer; }
 
 private:
-    using Range = std::pair<const char*, const char*>;
-
-    [[nodiscard]] auto normalize(const SourceLoc& loc) const -> Range;
+    using Range = std::pair<std::string::const_iterator, std::string::const_iterator>;
+    [[nodiscard]] auto getRange(const SourceLoc& loc) const -> Range;
 
     std::string m_name;
-    std::string m_source;
+    std::string m_buffer;
 };
 
 } // namespace support

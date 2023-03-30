@@ -3,6 +3,7 @@
 //
 #include "Source.hpp"
 #include <fstream>
+#include <optional>
 using support::Source;
 using namespace std::literals;
 
@@ -18,21 +19,21 @@ Source::Source(const std::filesystem::path& path)
         throw SourceException("Failed to open '" + m_name + "'");
     }
 
-    m_source = std::string { std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
+    m_buffer = std::string { std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
 }
 
 Source::Source(std::string name, std::string source) noexcept
     : m_name { std::move(name) }
-    , m_source { std::move(source) }
+    , m_buffer { std::move(source) }
 {
 }
 
 auto Source::getPosition(SourceLoc loc) const -> SourcePos
 {
-    auto range = normalize(loc);
+    auto range = getRange(loc);
 
-    auto line = std::count(data(), range.first, '\n');
-    auto start = std::find(std::make_reverse_iterator(range.first), std::make_reverse_iterator(data()), '\n');
+    auto line = std::count(m_buffer.begin(), range.first, '\n');
+    auto start = std::find(std::make_reverse_iterator(range.first), std::make_reverse_iterator(m_buffer.begin()), '\n');
 
     return {
         static_cast<unsigned>(line + 1),
@@ -46,17 +47,17 @@ auto Source::getLine(std::size_t line) const noexcept -> std::optional<std::stri
     assert(line > 0 && "Line is indexed from 1");
     --line;
 
-    auto start = m_source.begin();
+    auto start = m_buffer.begin();
     auto iter = start;
 
-    for (; iter != m_source.end(); iter++) {
+    for (; iter != m_buffer.end(); iter++) {
         if (*iter == '\n') {
             if (line == 0) {
                 auto prev = std::prev(iter);
                 if (*prev == '\r') {
                     iter = prev;
                 }
-                return std::string_view { start, iter };
+                return { { start, iter } };
             }
             start = iter + 1;
             --line;
@@ -64,15 +65,9 @@ auto Source::getLine(std::size_t line) const noexcept -> std::optional<std::stri
     }
 
     if (line == 0) {
-        return std::string_view { start, iter };
+        return { { start, iter } };
     }
     return {};
-}
-
-auto Source::getString(SourceLoc loc) const -> std::string_view
-{
-    auto range = normalize(loc);
-    return { range.first, range.second };
 }
 
 auto Source::highlight(SourcePos pos) const -> std::string
@@ -89,15 +84,15 @@ auto Source::highlight(SourcePos pos) const -> std::string
     return ""s;
 }
 
-auto Source::normalize(const SourceLoc& loc) const -> Range
+auto Source::getRange(const SourceLoc& loc) const -> Range
 {
-    const char* from = data();
+    auto from = m_buffer.begin();
     std::advance(from, loc.getStart());
 
-    const char* to = data();
+    auto to = m_buffer.begin();
     std::advance(to, loc.getEnd());
 
-    if (from > end() || to > end()) {
+    if (from > to || to > m_buffer.end()) {
         throw SourceException("SourceLoc outside Source range");
     }
 
