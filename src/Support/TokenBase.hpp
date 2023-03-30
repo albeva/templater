@@ -33,7 +33,7 @@ struct TokenBase {
     using Kind = typename Info::Kind;
 
     constexpr TokenBase() noexcept = default;
-    constexpr TokenBase(Kind kind, support::SourceLoc loc, std::string_view value = {}) noexcept
+    constexpr TokenBase(Kind kind, SourceLoc loc, std::string_view value = {}) noexcept
         : m_kind(kind)
         , m_loc(loc)
         , m_value(value)
@@ -47,7 +47,7 @@ struct TokenBase {
      * @param loc The source location where the token appears.
      * @param value The value of the token (default: empty).
      */
-    constexpr void set(Kind kind, support::SourceLoc loc, std::string_view value = {}) noexcept
+    constexpr void set(Kind kind, SourceLoc loc, std::string_view value = {}) noexcept
     {
         m_kind = kind;
         m_loc = loc;
@@ -66,7 +66,7 @@ struct TokenBase {
      *
      * @return A const reference to the token's source location.
      */
-    [[nodiscard]] constexpr auto getLoc() const noexcept -> const support::SourceLoc& { return m_loc; }
+    [[nodiscard]] constexpr auto getLoc() const noexcept -> const SourceLoc& { return m_loc; }
 
     /**
      * @brief Gets the token value.
@@ -133,7 +133,7 @@ struct TokenBase {
 
 private:
     Kind m_kind {};
-    support::SourceLoc m_loc {};
+    SourceLoc m_loc {};
     std::string_view m_value {};
 };
 
