@@ -33,7 +33,6 @@ void Lexer::text(Token& token)
             if (start != getInput()) {
                 goto makeText; // NOLINT
             }
-            advance(2);
             m_state = State::Statement;
             return make(token, Kind::StatementOpen, 2);
         }
@@ -41,7 +40,6 @@ void Lexer::text(Token& token)
             if (start != getInput()) {
                 goto makeText; // NOLINT
             }
-            advance(2);
             m_state = State::Expression;
             return make(token, Kind::ExpressionOpen, 2);
         }

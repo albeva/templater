@@ -8,11 +8,13 @@ add_library(
     Support/GlobalContext.hpp
     Support/GridLayout.cpp
     Support/GridLayout.hpp
+    Support/LexerBase.hpp
     Support/MemoryPool.hpp
     Support/Separator.hpp
     Support/Source.cpp
     Support/Source.hpp
     Support/SourceLoc.hpp
+    Support/TokenBase.hpp
     Support/Utils.hpp
     Support/VisitorMixin.hpp
     Table/Ast/Ast.hpp
@@ -44,7 +46,9 @@ add_library(
     Tpl/Lexer.cpp
     Tpl/Lexer.hpp
     Tpl/Templater.cpp
-    Tpl/Templater.hpp Support/TokenBase.hpp Tpl/Token.cpp Tpl/Token.hpp Support/LexerBase.hpp)
+    Tpl/Templater.hpp
+    Tpl/Token.cpp
+    Tpl/Token.hpp)
 
 # fmt
 include(FetchContent)

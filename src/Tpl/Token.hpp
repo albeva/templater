@@ -46,6 +46,7 @@ struct Token : support::TokenBase<TokenInformation> {
     {
         return is(TokenKind::Identifier, TokenKind::String, TokenKind::Number);
     }
+
     [[nodiscard]] auto getString() const noexcept -> std::string_view;
 };
 

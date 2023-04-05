@@ -4,6 +4,7 @@
 #pragma once
 #include "Support/GlobalContext.hpp"
 #include "Support/Source.hpp"
+#include "Support/Diagnostics.hpp"
 #include "Table/Ast/Ast.hpp"
 #include "Table/Ast/Context.hpp"
 #include "Table/Gen/Generator.hpp"

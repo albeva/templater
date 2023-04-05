@@ -387,7 +387,7 @@ void Parser::expected(std::string_view message)
     m_diag->error(
         m_lexer->getSource(), m_token.getLoc(),
         fmt::format("Expected {}, got {}", message, m_token.getString()));
-    throw ParserException("");
+    throw support::EmptyException();
 }
 
 auto Parser::makeLoc(SourceLoc start, SourceLoc end) noexcept -> SourceLoc

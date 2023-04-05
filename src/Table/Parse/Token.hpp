@@ -46,6 +46,8 @@ struct TokenInformation final {
 };
 
 struct Token final : support::TokenBase<TokenInformation> {
+    using TokenBase::TokenBase;
+
     [[nodiscard]] inline auto isValue() const noexcept -> bool
     {
         return is(TokenKind::Number, TokenKind::Identifier, TokenKind::String);

@@ -7,6 +7,8 @@ namespace support {
 class Source;
 struct SourceLoc;
 
+class EmptyException final { };
+
 class Diagnostics final {
 public:
     enum class Level {

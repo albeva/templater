@@ -1,6 +1,7 @@
 //
 // Created by Albert on 04/03/2023.
 //
+#include "Support/Diagnostics.hpp"
 #include "Support/GlobalContext.hpp"
 #include "Support/Source.hpp"
 #include "Table/Driver.hpp"
@@ -16,13 +17,14 @@ try {
     GlobalContext ctx {};
 
     auto symbols = Driver(&ctx).compile("../samples/Simple.tbl");
-
     Source* src = ctx.load("../samples/Simple.md.tpl");
     std::cout << Templater(&ctx, src, symbols.get());
 
     return EXIT_SUCCESS;
+} catch (support::EmptyException&) {
+    return EXIT_FAILURE;
 } catch (std::exception& exc) {
-    std::cerr << exc.what();
+    std::cerr << exc.what() << std::endl;
     return EXIT_FAILURE;
 } catch (...) {
     std::cerr << "Unknown error";
