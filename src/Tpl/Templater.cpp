@@ -95,5 +95,5 @@ void Templater::expected(std::string_view message)
     m_ctx->getDiagnostics()->error(
         m_source, token.getLoc(),
         fmt::format("Expected {}, got {}", message, token.getString()));
-    throw support::EmptyException();
+    throw support::DiagException();
 }

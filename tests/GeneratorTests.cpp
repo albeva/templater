@@ -11,7 +11,7 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using support::EmptyException;
+using support::DiagException;
 using table::gen::GeneratorException;
 using tests::CompilerBase;
 
@@ -19,7 +19,7 @@ struct GeneratorTests : CompilerBase { };
 
 TEST_P(GeneratorTests, GeneratorFails)
 {
-    EXPECT_THROW(gen(), EmptyException);
+    EXPECT_THROW(gen(), DiagException);
     EXPECT_EQ(expected(), reality());
 }
 

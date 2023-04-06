@@ -21,7 +21,7 @@ try {
     std::cout << Templater(&ctx, src, symbols.get());
 
     return EXIT_SUCCESS;
-} catch (support::EmptyException&) {
+} catch (support::DiagException&) {
     return EXIT_FAILURE;
 } catch (std::exception& exc) {
     std::cerr << exc.what() << std::endl;

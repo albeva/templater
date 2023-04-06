@@ -10,7 +10,7 @@
 //              cppcoreguidelines-owning-memory)
 
 namespace {
-using support::EmptyException;
+using support::DiagException;
 using table::parser::ParserException;
 using tests::CompilerBase;
 
@@ -18,7 +18,7 @@ struct ParserTests : CompilerBase { };
 
 TEST_P(ParserTests, ParserFails)
 {
-    EXPECT_THROW(parse(), EmptyException);
+    EXPECT_THROW(parse(), DiagException);
     EXPECT_EQ(expected(), reality());
 }
 

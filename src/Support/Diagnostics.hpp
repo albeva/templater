@@ -7,7 +7,7 @@ namespace support {
 class Source;
 struct SourceLoc;
 
-class EmptyException final { };
+class DiagException final { };
 
 class Diagnostics final {
 public:
